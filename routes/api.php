@@ -118,3 +118,8 @@ Route::prefix('/gis')->namespace('Gis')->group(function () {
     Route::get('/element/geometries/{id}', 'GeometryController@getByElementId');
     Route::get('/layer/geometries/{id}', 'GeometryController@getByLayerId');
 });
+
+
+
+Route::post('/constructor_create', 'Constructor\ConstructorController@createTable');
+Route::post('/constructor_drop', 'Constructor\ConstructorController@dropTable');
