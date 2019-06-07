@@ -1,38 +1,53 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Constructor;
 
 
 use App\Http\Controllers\Controller;
+use App\src\Services\Constructor\ConstructorService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 
 class ConstructorController extends Controller
 {
+    private $constructorService;
 
-    public function createTable(Request $request)
+    /**
+     * ConstructorController constructor.
+     * @param ConstructorService $constructorService
+     */
+    public function __construct(ConstructorService $constructorService)
     {
-        Schema::create($request->table_title, function (Blueprint $table) use ($request) {
-
-            $colArr = json_decode($request->columns);
-
-            foreach ($colArr as $col) {
-                $typePr = $col->type;
-                $table->$typePr(''.$col->title.'');
-            }
-
-        });
-
-        return response($request->table_title.' table has been created', 200);
+        $this->constructorService = $constructorService;
     }
 
 
+    /**
+     * Создание таблицы
+     * @param Request $request :
+     * table_title - название таблицы
+     * columns - массив столбцов: type, title
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function createTable(Request $request)
+    {
+        $this->constructorService->createTable($request);
+
+        return response($request->table_title . ' table has been created', 200);
+    }
+
+
+    /**
+     * Удаление таблицы
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function dropTable(Request $request)
     {
-        Schema::dropIfExists($request->table_title);
+        $this->constructorService->dropTable($request);
 
-        return response($request->table_title.' table has been dropped', 200);
+        return response($request->table_title . ' table has been dropped', 200);
     }
 
     public function updateTable()
