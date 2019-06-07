@@ -12,13 +12,37 @@ class ConstructorControllerTest extends TestCase
     use WithoutMiddleware;
 
     /**
-     * A basic test example.
+     * Конструктор - создание таблицы.
      *
      * @return void
      */
     public function testTableCanBeCreated()
     {
-        $response = $this->post('/api/constructor_create');
+        $data = [
+            'table_title' => 'insomnia',
+            'columns' => '[{"type":"string", "title":"dream"},{"type":"integer", "title":"hours"}]',
+        ];
+
+
+        $response = $this->call('POST', env('APP_URL').'/api/constructor_create', $data);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Конструктор - удаление таблицы.
+     *
+     * @return void
+     */
+    public function testTableCanBeDropped()
+    {
+        $data = [
+            'table_title' => 'insomnia',
+        ];
+
+        $response = $this->call('POST', env('APP_URL').'/api/constructor_drop', $data);
 
         $response->assertStatus(200);
     }
