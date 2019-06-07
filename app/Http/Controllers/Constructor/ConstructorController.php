@@ -13,19 +13,32 @@ class ConstructorController extends Controller
 
     public function createTable(Request $request)
     {
-        Schema::create($request->title, function (Blueprint $table) use ($request) {
-            $table->string('field_1');
+        Schema::create($request->table_title, function (Blueprint $table) use ($request) {
+
+            $colArr = json_decode($request->columns);
+
+            foreach ($colArr as $col) {
+                $typePr = $col->type;
+                $table->$typePr(''.$col->title.'');
+            }
+
         });
 
-        return response($request->title.' table has been created', 200);
+        return response($request->table_title.' table has been created', 200);
     }
 
 
     public function dropTable(Request $request)
     {
-        Schema::dropIfExists($request->title);
+        Schema::dropIfExists($request->table_title);
 
-        return response($request->title.' table has been dropped', 200);
+        return response($request->table_title.' table has been dropped', 200);
     }
+
+    public function updateTable()
+    {
+
+    }
+
 
 }
