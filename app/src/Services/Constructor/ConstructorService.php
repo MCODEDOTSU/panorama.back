@@ -5,12 +5,25 @@ declare(strict_types=1);
 namespace App\src\Services\Constructor;
 
 
+use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
 class ConstructorService
 {
+    private $fieldsResolver;
+
+    /**
+     * ConstructorService constructor.
+     * @param $fieldsResolver
+     */
+    public function __construct(FieldsResolver $fieldsResolver)
+    {
+        $this->fieldsResolver = $fieldsResolver;
+    }
+
+
     public function createTable(Request $request): void
     {
         Schema::create($request->table_title, function (Blueprint $table) use ($request) {
@@ -36,21 +49,19 @@ class ConstructorService
      */
     private function parseColumns($request, $table): void
     {
-        $tableTitle = $request->table_title;
-
         $colArr = $request->columns;
 
         foreach ($colArr as $col) {
-            $typePr = $col['type'];
+            $fieldType = $this->fieldsResolver->selectFieldType($col['type']);
+
+            $typePr = $fieldType->getType();
             $table->$typePr(''.$col['title'].'');
         }
-
-        $step = 'step';
     }
 
     public function getSpecificType(string $type)
     {
-        return $this->constructorService->getSpecificType($type);
+        return $type;
     }
 
 

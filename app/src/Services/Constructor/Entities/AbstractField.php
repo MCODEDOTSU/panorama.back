@@ -6,12 +6,6 @@ namespace App\src\Services\Constructor\Entities;
 class AbstractField
 {
     /**
-     * Наименования типа поля (его сущность)
-     * @var
-     */
-    public $name;
-
-    /**
      * Наименование поля
      * @var
      */
@@ -40,6 +34,14 @@ class AbstractField
             'type' => $this->type,
             'length' => $this->length
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
 }
