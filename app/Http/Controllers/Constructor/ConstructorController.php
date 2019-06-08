@@ -50,6 +50,16 @@ class ConstructorController extends Controller
         return response($request->table_title . ' table has been dropped', 200);
     }
 
+    /**
+     * Получить информацию о полях таблицы: наименование, тип, required
+     * @param string $tableName
+     * @return array
+     */
+    public function getTableInfo(string $tableName)
+    {
+        return $this->constructorService->getTableInfo($tableName);
+    }
+
     public function getSpecificType(string $type)
     {
         return $this->constructorService->getSpecificType($type);

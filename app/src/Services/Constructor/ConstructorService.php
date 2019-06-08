@@ -8,6 +8,7 @@ namespace App\src\Services\Constructor;
 use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class ConstructorService
@@ -33,7 +34,7 @@ class ConstructorService
 
     /**
      * Удалить таблицу
-     * @param $request:
+     * @param $request :
      * Название таблицы
      */
     public function dropTable(Request $request): void
@@ -55,13 +56,36 @@ class ConstructorService
             $fieldType = $this->fieldsResolver->selectFieldType($col);
 
             $typePr = $fieldType->getType();
-            $table->$typePr(''.$fieldType->getTitle().'');
+            $table->$typePr('' . $fieldType->getTitle() . '');
         }
     }
 
     public function getSpecificType(string $type)
     {
         return $type;
+    }
+
+    /**
+     * Получить сводную информацию о столбцах
+     * @param string $tableName
+     * @return array
+     */
+    public function getTableInfo(string $tableName): array
+    {
+        $tableCols = Schema::getColumnListing($tableName);
+
+        $tableColsSummary = array();
+
+        foreach ($tableCols as $tableCol) {
+            array_push($tableColsSummary, [
+                'title' => $tableCol,
+                'type' => DB::getSchemaBuilder()->getColumnType($tableName, $tableCol)
+            ]);
+        }
+
+        return $tableColsSummary;
+
+
     }
 
 
