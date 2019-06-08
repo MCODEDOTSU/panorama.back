@@ -21,12 +21,15 @@ class FieldsResolver
     }
 
 
-    public function selectFieldType(string $fieldType): AbstractField
+    public function selectFieldType(array $columnInfo)
     {
-        $class = $this->path . $this->snakeToCamel($fieldType);
+        $class = $this->path . $this->snakeToCamel($columnInfo['type']);
 
         if (class_exists($class)) {
-            return $this->container->make($class);
+            $readyBakedClass = $this->container->make($class);
+            $readyBakedClass->setTitle($columnInfo['title']);
+
+            return $readyBakedClass;
         }
 
         return new Exception('There is no such field type. Add which is necessary');
@@ -36,7 +39,7 @@ class FieldsResolver
      * @param $str
      * @return string
      */
-    private function snakeToCamel($str)
+    private function snakeToCamel($str): string
     {
         return ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $str))));
     }

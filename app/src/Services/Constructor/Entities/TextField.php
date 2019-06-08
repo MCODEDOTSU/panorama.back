@@ -7,4 +7,6 @@ class TextField extends AbstractField
 {
     public $type = 'string';
 
+    public $title;
+
 }

@@ -24,6 +24,12 @@ class AbstractField
     public $length;
 
     /**
+     * Может ли быть nullable
+     * @var
+     */
+    public $required;
+
+    /**
      * Получить информацию по типу поля
      * @return array
      */
@@ -37,11 +43,43 @@ class AbstractField
     }
 
     /**
+     * Выяснить, является ли поле обязательным или нет
+     */
+    public function checkIfFieldIsNullable()
+    {
+        // TODO: выясняем
+    }
+
+    /**
      * @return mixed
      */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type): void
+    {
+        $this->type = $type;
     }
 
 }

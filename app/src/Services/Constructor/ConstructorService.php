@@ -52,10 +52,10 @@ class ConstructorService
         $colArr = $request->columns;
 
         foreach ($colArr as $col) {
-            $fieldType = $this->fieldsResolver->selectFieldType($col['type']);
+            $fieldType = $this->fieldsResolver->selectFieldType($col);
 
             $typePr = $fieldType->getType();
-            $table->$typePr(''.$col['title'].'');
+            $table->$typePr(''.$fieldType->getTitle().'');
         }
     }
 
