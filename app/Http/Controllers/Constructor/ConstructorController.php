@@ -50,6 +50,11 @@ class ConstructorController extends Controller
         return response($request->table_title . ' table has been dropped', 200);
     }
 
+    public function getSpecificType(string $type)
+    {
+        return $this->constructorService->getSpecificType($type);
+    }
+
     public function updateTable()
     {
 

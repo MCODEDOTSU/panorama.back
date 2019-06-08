@@ -123,3 +123,4 @@ Route::prefix('/gis')->namespace('Gis')->group(function () {
 
 Route::post('/constructor_create', 'Constructor\ConstructorController@createTable');
 Route::post('/constructor_drop', 'Constructor\ConstructorController@dropTable');
+Route::get('/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');

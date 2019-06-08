@@ -36,11 +36,22 @@ class ConstructorService
      */
     private function parseColumns($request, $table): void
     {
-        $colArr = json_decode($request->columns);
+        $tableTitle = $request->table_title;
+
+        $colArr = $request->columns;
 
         foreach ($colArr as $col) {
-            $typePr = $col->type;
-            $table->$typePr(''.$col->title.'');
+            $typePr = $col['type'];
+            $table->$typePr(''.$col['title'].'');
         }
+
+        $step = 'step';
     }
+
+    public function getSpecificType(string $type)
+    {
+        return $this->constructorService->getSpecificType($type);
+    }
+
+
 }
