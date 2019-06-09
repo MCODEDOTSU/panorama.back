@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Schema;
 
 class ConstructorService
 {
+    /**
+     * Префикс используется при создании кастомных таблиц.
+     * constructed_{id слоя}
+     * @var string
+     */
+    private $tablePrefix = 'constructed_';
+
     private $fieldsResolver;
 
     /**
@@ -25,12 +32,14 @@ class ConstructorService
     }
 
 
-    public function createTable(Request $request): void
+    public function createTable(Request $request): string
     {
-        Schema::create($request->table_title, function (Blueprint $table) use ($request) {
+        Schema::create($this->tablePrefix.$request->table_title, function (Blueprint $table) use ($request) {
             $this->parseColumns($request, $table);
             $this->addGeoElementsAsForeignKey($table);
         });
+
+        return $this->tablePrefix.$request->table_title;
     }
 
     /**

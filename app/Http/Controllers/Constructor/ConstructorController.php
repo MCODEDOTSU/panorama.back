@@ -32,9 +32,9 @@ class ConstructorController extends Controller
      */
     public function createTable(Request $request)
     {
-        $this->constructorService->createTable($request);
+        $newTableName = $this->constructorService->createTable($request);
 
-        return response($request->table_title . ' table has been created', 200);
+        return response($newTableName . ' table has been created', 200);
     }
 
 
