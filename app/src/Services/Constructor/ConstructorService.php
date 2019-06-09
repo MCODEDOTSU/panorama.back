@@ -29,6 +29,7 @@ class ConstructorService
     {
         Schema::create($request->table_title, function (Blueprint $table) use ($request) {
             $this->parseColumns($request, $table);
+            $this->addGeoElementsAsForeignKey($table);
         });
     }
 
@@ -55,10 +56,21 @@ class ConstructorService
         foreach ($colArr as $col) {
             $fieldType = $this->fieldsResolver->selectFieldType($col);
 
-            $typePr = $fieldType->getType();
-            $table->$typePr('' . $fieldType->getTitle() . '');
+            $fieldType->constructField($table);
         }
     }
+
+    /**
+     * Добавить внещний ключ на таблицу geo_elements
+     * TODO: Нужен ли только на geo_elements или на geo_layers - тоже???
+     * @param $table - таблица с готовыми столбцами
+     */
+    private function addGeoElementsAsForeignKey($table)
+    {
+        $table->integer('element_id')->unsigned();
+        $table->foreign('element_id')->references('id')->on('geo_elements');
+    }
+
 
     public function getSpecificType(string $type)
     {
@@ -84,8 +96,6 @@ class ConstructorService
         }
 
         return $tableColsSummary;
-
-
     }
 
 

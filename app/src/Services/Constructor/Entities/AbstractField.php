@@ -43,11 +43,30 @@ class AbstractField
     }
 
     /**
-     * Выяснить, является ли поле обязательным или нет
+     * Сформировать поле таблицы согласно различным параметрам
+     * @param $table
      */
-    public function checkIfFieldIsNullable()
+    public function constructField($table)
     {
-        // TODO: выясняем
+        $typePr = $this->getType();
+
+        $composedCol = $table->$typePr('' . $this->getTitle() . '');
+        $this->checkIfFieldIsNullable($composedCol);
+
+    }
+
+    /**
+     * Выяснить, является ли поле обязательным или нет
+     * @param $composedCol - сформирован тип и название столбца
+     * @return mixed
+     */
+    public function checkIfFieldIsNullable($composedCol)
+    {
+        if ($this->required) {
+            return $composedCol->nullable();
+        }
+
+        return $composedCol;
     }
 
     /**
@@ -80,6 +99,22 @@ class AbstractField
     public function setType($type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequired()
+    {
+        return $this->required;
+    }
+
+    /**
+     * @param mixed $required
+     */
+    public function setRequired($required): void
+    {
+        $this->required = $required;
     }
 
 }
