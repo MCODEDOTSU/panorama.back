@@ -52,12 +52,22 @@ class ConstructorController extends Controller
 
     /**
      * Получить информацию о полях таблицы: наименование, тип, required
-     * @param string $tableName
+     * @param string $tableIdentifier
      * @return array
      */
-    public function getTableInfo(string $tableName)
+    public function getTableInfo(string $tableIdentifier)
     {
-        return $this->constructorService->getTableInfo($tableName);
+        return response($this->constructorService->getTableInfo($tableIdentifier), 200);
+    }
+
+    /**
+     * Проверить, существует ли таблица
+     * @param string $tableIdentifier
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function isTableExists(string $tableIdentifier)
+    {
+        return response($this->constructorService->isTableExists($tableIdentifier), 200);
     }
 
     public function getSpecificType(string $type)

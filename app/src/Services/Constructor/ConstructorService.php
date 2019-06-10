@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\src\Services\Constructor;
 
 
+use App\src\Repositories\Constructor\ConstructorRepository;
 use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -21,25 +23,28 @@ class ConstructorService
     private $tablePrefix = 'constructed_';
 
     private $fieldsResolver;
+    private $constructorRepository;
 
     /**
      * ConstructorService constructor.
-     * @param $fieldsResolver
+     * @param FieldsResolver $fieldsResolver
+     * @param ConstructorRepository $constructorRepository
      */
-    public function __construct(FieldsResolver $fieldsResolver)
+    public function __construct(FieldsResolver $fieldsResolver, ConstructorRepository $constructorRepository)
     {
         $this->fieldsResolver = $fieldsResolver;
+        $this->constructorRepository = $constructorRepository;
     }
 
 
     public function createTable(Request $request): string
     {
-        Schema::create($this->tablePrefix.$request->table_title, function (Blueprint $table) use ($request) {
+        Schema::create($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
             $this->parseColumns($request, $table);
             $this->addGeoElementsAsForeignKey($table);
         });
 
-        return $this->tablePrefix.$request->table_title;
+        return $this->tablePrefix . $request->table_title;
     }
 
     /**
@@ -88,23 +93,65 @@ class ConstructorService
 
     /**
      * Получить сводную информацию о столбцах
-     * @param string $tableName
-     * @return array
+     * @param string $tableIdentifier
+     * @return Collection
      */
-    public function getTableInfo(string $tableName): array
+    public function getTableInfo(string $tableIdentifier): Collection
     {
-        $tableCols = Schema::getColumnListing($tableName);
+        $tableCols = Schema::getColumnListing($this->tablePrefix . $tableIdentifier);
 
-        $tableColsSummary = array();
+        $tableColsSummary = new Collection();
 
         foreach ($tableCols as $tableCol) {
-            array_push($tableColsSummary, [
+            $tableColsSummary->push([
                 'title' => $tableCol,
-                'type' => DB::getSchemaBuilder()->getColumnType($tableName, $tableCol)
+                'type' => DB::getSchemaBuilder()->getColumnType($this->tablePrefix . $tableIdentifier, $tableCol)
             ]);
+
         }
 
-        return $tableColsSummary;
+        $columnsNullableInfo = $this->constructorRepository
+            ->getInfoConcerningTableRequiredFields($this->tablePrefix . $tableIdentifier);
+
+        // Сформировать required field
+        // TODO: Вынести в отдельный метод
+        $columnsNullableInfo->each(function ($column) use ($tableColsSummary) {
+            switch ($column->required) {
+                case 'YES':
+                    return $column->required = true;
+                    break;
+                case 'NO':
+                    return $column->required = false;
+                    break;
+            }
+        });
+
+        // Добавить type (тип) к коллекции
+        // TODO: Вынести в отдельный метод
+        $columnsNullableInfo->each(function ($column) use ($tableColsSummary) {
+            foreach ($tableColsSummary as $item) {
+                if ($item['title'] === $column->title) {
+                    $column->type = $item['type'];
+                }
+            }
+        });
+
+        return $columnsNullableInfo;
+
+    }
+
+    /**
+     * Проверить - существует ли таблица
+     * @param string $tableIdentifier
+     * @return string
+     */
+    public function isTableExists(string $tableIdentifier): string
+    {
+        if (!Schema::hasTable($this->tablePrefix . $tableIdentifier)) {
+            return 'false';
+        }
+
+        return 'true';
     }
 
 
