@@ -44,6 +44,8 @@ class ConstructorService
             $this->addGeoElementsAsForeignKey($table);
         });
 
+        $this->saveTableInfo($request->columns, $request->table_title);
+
         return $this->tablePrefix . $request->table_title;
     }
 
@@ -55,6 +57,24 @@ class ConstructorService
     public function dropTable(Request $request): void
     {
         Schema::dropIfExists($request->table_title);
+    }
+
+    /**
+     * Сохранить информацию о вновь созданной таблице в БД
+     * @param array $columns
+     * @param string $tableTitle
+     */
+    private function saveTableInfo(array $columns, string $tableTitle)
+    {
+        foreach ($columns as $col) {
+            $this->constructorRepository->saveTableInfo([
+                'table_identifier' => $this->tablePrefix.$tableTitle,
+                'title' => $col['title'],
+                'tech_title' => $col['tech_title'],
+                'required' => $col['required'],
+                'type' => $col['type'],
+            ]);
+        }
     }
 
 
@@ -98,46 +118,7 @@ class ConstructorService
      */
     public function getTableInfo(string $tableIdentifier): Collection
     {
-        $tableCols = Schema::getColumnListing($this->tablePrefix . $tableIdentifier);
-
-        $tableColsSummary = new Collection();
-
-        foreach ($tableCols as $tableCol) {
-            $tableColsSummary->push([
-                'title' => $tableCol,
-                'type' => DB::getSchemaBuilder()->getColumnType($this->tablePrefix . $tableIdentifier, $tableCol)
-            ]);
-
-        }
-
-        $columnsNullableInfo = $this->constructorRepository
-            ->getInfoConcerningTableRequiredFields($this->tablePrefix . $tableIdentifier);
-
-        // Сформировать required field
-        // TODO: Вынести в отдельный метод
-        $columnsNullableInfo->each(function ($column) use ($tableColsSummary) {
-            switch ($column->required) {
-                case 'YES':
-                    return $column->required = true;
-                    break;
-                case 'NO':
-                    return $column->required = false;
-                    break;
-            }
-        });
-
-        // Добавить type (тип) к коллекции
-        // TODO: Вынести в отдельный метод
-        $columnsNullableInfo->each(function ($column) use ($tableColsSummary) {
-            foreach ($tableColsSummary as $item) {
-                if ($item['title'] === $column->title) {
-                    $column->type = $item['type'];
-                }
-            }
-        });
-
-        return $columnsNullableInfo;
-
+        return $this->constructorRepository->getTableInfo($this->tablePrefix . $tableIdentifier);
     }
 
     /**

@@ -28,6 +28,7 @@ class FieldsResolver
         if (class_exists($class)) {
             $readyBakedClass = $this->container->make($class);
             $readyBakedClass->setTitle($columnInfo['title']);
+            $readyBakedClass->setTechTitle($columnInfo['tech_title']);
             $readyBakedClass->setRequired($columnInfo['required']);
 
             return $readyBakedClass;

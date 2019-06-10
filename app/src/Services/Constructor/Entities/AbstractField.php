@@ -12,6 +12,12 @@ class AbstractField
     public $title;
 
     /**
+     * Техническое наименование
+     * @var
+     */
+    public $techTitle;
+
+    /**
      * Тип поля
      * @var
      */
@@ -50,7 +56,7 @@ class AbstractField
     {
         $typePr = $this->getType();
 
-        $composedCol = $table->$typePr('' . $this->getTitle() . '');
+        $composedCol = $table->$typePr('' . $this->getTechTitle() . '');
         $this->checkIfFieldIsNullable($composedCol);
 
     }
@@ -115,6 +121,22 @@ class AbstractField
     public function setRequired($required): void
     {
         $this->required = $required;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTechTitle()
+    {
+        return $this->techTitle;
+    }
+
+    /**
+     * @param mixed $techTitle
+     */
+    public function setTechTitle($techTitle): void
+    {
+        $this->techTitle = $techTitle;
     }
 
 }
