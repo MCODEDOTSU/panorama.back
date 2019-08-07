@@ -2,6 +2,7 @@
 
 namespace App\src\Services\Manager;
 use App\src\Repositories\Manager\ElementRepository;
+use App\src\Services\Constructor\AdditionalInfoService;
 use Illuminate\Http\Request;
 
 /**
@@ -11,14 +12,17 @@ use Illuminate\Http\Request;
 class ElementService
 {
     protected $elementRepository;
+    protected $additionalInfoService;
 
     /**
      * ElementService constructor.
      * @param ElementRepository $elementRepository
+     * @param AdditionalInfoService $additionalInfoService
      */
-    public function __construct(ElementRepository $elementRepository)
+    public function __construct(ElementRepository $elementRepository, AdditionalInfoService $additionalInfoService)
     {
         $this->elementRepository = $elementRepository;
+        $this->additionalInfoService = $additionalInfoService;
     }
 
     /**
@@ -49,6 +53,7 @@ class ElementService
      */
     public function update(int $id, Request $data)
     {
+        $this->additionalInfoService->update($id, $data->additionalData);
         return $this->elementRepository->update($id, $data);
     }
 
@@ -59,6 +64,7 @@ class ElementService
      */
     public function create(Request $data)
     {
+        $this->additionalInfoService->create($data->additionalData);
         return $this->elementRepository->create($data);
     }
 
@@ -66,6 +72,7 @@ class ElementService
      * Удалить элемент.
      * @param int $id
      * @return array
+     * @throws \Exception
      */
     public function delete(int $id)
     {
