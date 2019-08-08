@@ -36,12 +36,24 @@ class ConstructorService
         $this->constructorRepository = $constructorRepository;
     }
 
-
     public function createTable(Request $request): string
     {
         Schema::create($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
             $this->parseColumns($request, $table);
             $this->addGeoElementsAsForeignKey($table);
+        });
+
+        $this->saveTableInfo($request->columns, $request->table_title);
+
+        return $this->tablePrefix . $request->table_title;
+    }
+
+    public function updateTable(Request $request)
+    {
+//        return $this->checkChangesInColumns($request->columns, $request->table_title);
+
+        Schema::table($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
+            $this->checkChangesInColumns($request->columns, $request->table_title, $table);
         });
 
         $this->saveTableInfo($request->columns, $request->table_title);
@@ -135,5 +147,37 @@ class ConstructorService
         return 'true';
     }
 
+    /**
+     * Проверить изменения в колонках (для обновления структуры таблицы)
+     * @param array $columns
+     * @param $tableNumber
+     * @param $updatedTable - Обновляемая таблица по Schema
+     * @return mixed
+     */
+    private function checkChangesInColumns(array $columns, $tableNumber, Blueprint $updatedTable)
+    {
+        $tableTitle = $this->tablePrefix . $tableNumber;
+        $tableInfo = $this->constructorRepository->getTableInfo($tableTitle);
 
+        // Проверить изменения в составе таблицы
+        foreach ($columns as $column) {
+            return $this->checkChangesInColumn($tableInfo, $column, $updatedTable);
+        }
+    }
+
+    /**
+     * Проверить изменения в столбце
+     * @param array $tableInfo
+     * @param $column
+     * @param Blueprint $updatedTable - обновляемая таблица
+     * @return mixed
+     */
+    private function checkChangesInColumn($tableInfo, $column, Blueprint $updatedTable)
+    {
+        foreach ($tableInfo as $tableColumn) {
+            if ($tableColumn->name == $column['tech_title']) {
+                $updatedTable->unsignedInteger('address')->nullable()->change();
+            }
+        }
+    }
 }

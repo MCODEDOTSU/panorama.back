@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Constructor;
 
 use App\Http\Controllers\Controller;
 use App\src\Services\Constructor\ConstructorService;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ConstructorController extends Controller
 {
@@ -28,7 +30,7 @@ class ConstructorController extends Controller
      * @param Request $request :
      * table_title - название таблицы
      * columns - массив столбцов: type, title
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function createTable(Request $request)
     {
@@ -41,7 +43,7 @@ class ConstructorController extends Controller
     /**
      * Удаление таблицы
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function dropTable(Request $request)
     {
@@ -63,7 +65,7 @@ class ConstructorController extends Controller
     /**
      * Проверить, существует ли таблица
      * @param string $tableIdentifier
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function isTableExists(string $tableIdentifier)
     {
@@ -75,10 +77,15 @@ class ConstructorController extends Controller
         return $this->constructorService->getSpecificType($type);
     }
 
-    public function updateTable()
+    /**
+     * Обновление данных (некоторые данные могут быть удаены в связи с удалением определенных столбцов)
+     * @param Request $request
+     * @return ResponseFactory|Response
+     */
+    public function updateTable(Request $request)
     {
+        $newTableName = $this->constructorService->updateTable($request);
 
+        return response($newTableName . ' table has been updated', 200);
     }
-
-
 }
