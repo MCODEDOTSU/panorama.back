@@ -3,29 +3,37 @@
 namespace App\src\Services\Constructor\Entities;
 
 
+use Illuminate\Database\Schema\Blueprint;
+
 class AbstractField
 {
     /**
      * Наименование поля
-     * @var
+     * @var string
      */
     public $title;
 
     /**
      * Техническое наименование
-     * @var
+     * @var string
      */
     public $techTitle;
 
     /**
+     * Новое техническое наименование
+     * @var string
+     */
+    public $newTechTitle;
+
+    /**
      * Тип поля
-     * @var
+     * @var string
      */
     public $type;
 
     /**
      * Длина - для строковых полей
-     * @var
+     * @var int
      */
     public $length;
 
@@ -52,13 +60,21 @@ class AbstractField
      * Сформировать поле таблицы согласно различным параметрам
      * @param $table
      */
-    public function constructField($table)
+    public function constructField(Blueprint $table)
     {
         $typePr = $this->getType();
 
         $composedCol = $table->$typePr('' . $this->getTechTitle() . '');
         $this->checkIfFieldIsNullable($composedCol);
+    }
 
+    /**
+     * Изменить колонку в таблице
+     * @param Blueprint $table
+     */
+    public function renameField(Blueprint $table)
+    {
+        $table->renameColumn($this->getTechTitle(), $this->getNewTechTitle());
     }
 
     /**
@@ -139,4 +155,19 @@ class AbstractField
         $this->techTitle = $techTitle;
     }
 
+    /**
+     * @return string
+     */
+    public function getNewTechTitle(): string
+    {
+        return $this->newTechTitle;
+    }
+
+    /**
+     * @param string $newTechTitle
+     */
+    public function setNewTechTitle(string $newTechTitle): void
+    {
+        $this->newTechTitle = $newTechTitle;
+    }
 }

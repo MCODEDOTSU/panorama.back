@@ -10,7 +10,6 @@ use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class ConstructorService
@@ -24,6 +23,8 @@ class ConstructorService
 
     private $fieldsResolver;
     private $constructorRepository;
+
+    private $fieldType;
 
     /**
      * ConstructorService constructor.
@@ -50,13 +51,11 @@ class ConstructorService
 
     public function updateTable(Request $request)
     {
-//        return $this->checkChangesInColumns($request->columns, $request->table_title);
-
         Schema::table($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
             $this->checkChangesInColumns($request->columns, $request->table_title, $table);
         });
 
-        $this->saveTableInfo($request->columns, $request->table_title);
+        $this->constructorRepository->updateTableInfo($request->columns, $request->table_title);
 
         return $this->tablePrefix . $request->table_title;
     }
@@ -95,7 +94,7 @@ class ConstructorService
      * @param $request
      * @param $table
      */
-    private function parseColumns($request, $table): void
+    private function parseColumns($request, Blueprint $table): void
     {
         $colArr = $request->columns;
 
@@ -104,6 +103,11 @@ class ConstructorService
 
             $fieldType->constructField($table);
         }
+    }
+
+    private function parseSingleColumn($column, Blueprint $table)
+    {
+
     }
 
     /**
@@ -175,8 +179,9 @@ class ConstructorService
     private function checkChangesInColumn($tableInfo, $column, Blueprint $updatedTable)
     {
         foreach ($tableInfo as $tableColumn) {
-            if ($tableColumn->name == $column['tech_title']) {
-                $updatedTable->unsignedInteger('address')->nullable()->change();
+            if ($tableColumn->tech_title == $column['tech_title']) {
+                $fieldType = $this->fieldsResolver->selectFieldType($column);
+                $fieldType->renameField($updatedTable);
             }
         }
     }

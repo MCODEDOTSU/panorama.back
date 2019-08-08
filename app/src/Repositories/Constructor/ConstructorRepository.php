@@ -4,9 +4,6 @@ namespace App\src\Repositories\Constructor;
 
 
 use App\src\Models\ConstructorMetadata;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ConstructorRepository
 {
@@ -41,5 +38,15 @@ class ConstructorRepository
         return $this->constructorMetadata
             ->where('table_identifier', $tableIdentifier)
             ->get();
+    }
+
+    /**
+     * Обновить данные о таблице в constructor_metadata
+     * @param $columns
+     * @param $table_title
+     */
+    public function updateTableInfo(array $columns, string $tableTitle)
+    {
+
     }
 }
