@@ -76,6 +76,16 @@ class AbstractField
     {
         $table->renameColumn($this->getTechTitle(), $this->getNewTechTitle());
     }
+    
+    /**
+     * Изменить тип поля
+     * @param Blueprint $table
+     */
+    public function changeFieldType(Blueprint $table)
+    {
+        $typePr = $this->getType();
+        $table->$typePr('' . $this->getTechTitle() . '')->change();
+    }
 
     /**
      * Выяснить, является ли поле обязательным или нет

@@ -20,46 +20,49 @@ class ConstructorService
      * @var string
      */
     private $tablePrefix = 'constructed_';
-
+    
     private $fieldsResolver;
     private $constructorRepository;
-
+    private $constructorMetadataService;
+    
     private $fieldType;
-
+    
     /**
      * ConstructorService constructor.
      * @param FieldsResolver $fieldsResolver
      * @param ConstructorRepository $constructorRepository
+     * @param ConstructorMetadataService $constructorMetadataService
      */
-    public function __construct(FieldsResolver $fieldsResolver, ConstructorRepository $constructorRepository)
+    public function __construct(FieldsResolver $fieldsResolver, ConstructorRepository $constructorRepository, ConstructorMetadataService $constructorMetadataService)
     {
         $this->fieldsResolver = $fieldsResolver;
         $this->constructorRepository = $constructorRepository;
+        $this->constructorMetadataService = $constructorMetadataService;
     }
-
+    
     public function createTable(Request $request): string
     {
         Schema::create($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
             $this->parseColumns($request, $table);
             $this->addGeoElementsAsForeignKey($table);
         });
-
-        $this->saveTableInfo($request->columns, $request->table_title);
-
+        
+        $this->constructorMetadataService->saveTableInfo($request->columns, $request->table_title);
+        
         return $this->tablePrefix . $request->table_title;
     }
-
+    
     public function updateTable(Request $request)
     {
         Schema::table($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
             $this->checkChangesInColumns($request->columns, $request->table_title, $table);
         });
-
-        $this->constructorRepository->updateTableInfo($request->columns, $request->table_title);
-
+        
+        $this->constructorMetadataService->updateMetadataInformation($request->columns, $request->table_title);
+        
         return $this->tablePrefix . $request->table_title;
     }
-
+    
     /**
      * Удалить таблицу
      * @param $request :
@@ -69,26 +72,7 @@ class ConstructorService
     {
         Schema::dropIfExists($request->table_title);
     }
-
-    /**
-     * Сохранить информацию о вновь созданной таблице в БД
-     * @param array $columns
-     * @param string $tableTitle
-     */
-    private function saveTableInfo(array $columns, string $tableTitle)
-    {
-        foreach ($columns as $col) {
-            $this->constructorRepository->saveTableInfo([
-                'table_identifier' => $this->tablePrefix.$tableTitle,
-                'title' => $col['title'],
-                'tech_title' => $col['tech_title'],
-                'required' => $col['required'],
-                'type' => $col['type'],
-            ]);
-        }
-    }
-
-
+    
     /**
      * Конвертирует json массив в столбцы новой таблицы
      * @param $request
@@ -97,19 +81,19 @@ class ConstructorService
     private function parseColumns($request, Blueprint $table): void
     {
         $colArr = $request->columns;
-
+        
         foreach ($colArr as $col) {
             $fieldType = $this->fieldsResolver->selectFieldType($col);
-
+            
             $fieldType->constructField($table);
         }
     }
-
+    
     private function parseSingleColumn($column, Blueprint $table)
     {
-
+    
     }
-
+    
     /**
      * Добавить внещний ключ на таблицу geo_elements
      * TODO: Нужен ли только на geo_elements или на geo_layers - тоже???
@@ -120,13 +104,13 @@ class ConstructorService
         $table->integer('element_id')->unsigned();
         $table->foreign('element_id')->references('id')->on('geo_elements');
     }
-
-
+    
+    
     public function getSpecificType(string $type)
     {
         return $type;
     }
-
+    
     /**
      * Получить сводную информацию о столбцах
      * @param string $tableIdentifier
@@ -136,7 +120,7 @@ class ConstructorService
     {
         return $this->constructorRepository->getTableInfo($this->tablePrefix . $tableIdentifier);
     }
-
+    
     /**
      * Проверить - существует ли таблица
      * @param string $tableIdentifier
@@ -147,10 +131,10 @@ class ConstructorService
         if (!Schema::hasTable($this->tablePrefix . $tableIdentifier)) {
             return 'false';
         }
-
+        
         return 'true';
     }
-
+    
     /**
      * Проверить изменения в колонках (для обновления структуры таблицы)
      * @param array $columns
@@ -162,13 +146,13 @@ class ConstructorService
     {
         $tableTitle = $this->tablePrefix . $tableNumber;
         $tableInfo = $this->constructorRepository->getTableInfo($tableTitle);
-
+        
         // Проверить изменения в составе таблицы
         foreach ($columns as $column) {
             return $this->checkChangesInColumn($tableInfo, $column, $updatedTable);
         }
     }
-
+    
     /**
      * Проверить изменения в столбце
      * @param array $tableInfo
@@ -182,6 +166,7 @@ class ConstructorService
             if ($tableColumn->tech_title == $column['tech_title']) {
                 $fieldType = $this->fieldsResolver->selectFieldType($column);
                 $fieldType->renameField($updatedTable);
+                $fieldType->changeFieldType($updatedTable);
             }
         }
     }

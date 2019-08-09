@@ -39,14 +39,20 @@ class ConstructorRepository
             ->where('table_identifier', $tableIdentifier)
             ->get();
     }
-
+    
     /**
-     * Обновить данные о таблице в constructor_metadata
-     * @param $columns
-     * @param $table_title
+     * Получить метаданные об отдельном столбце
+     * @param string $columnIdentifier - tech_title
+     * @param string $tableIdentifier - table_identifier
+     * @return
      */
-    public function updateTableInfo(array $columns, string $tableTitle)
+    public function getColumnMetadataInfo(string $columnIdentifier, string $tableIdentifier): ConstructorMetadata
     {
-
+        return $this->constructorMetadata
+            ->where([
+                'table_identifier' => $tableIdentifier,
+                'tech_title' => $columnIdentifier
+            ])
+            ->first();
     }
 }
