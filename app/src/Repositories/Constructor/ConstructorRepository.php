@@ -76,4 +76,9 @@ class ConstructorRepository
 
         return $columnModel;
     }
+
+    public function delete(ConstructorMetadata $metadataInfo)
+    {
+        $metadataInfo->delete();
+    }
 }

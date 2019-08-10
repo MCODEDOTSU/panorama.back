@@ -10,6 +10,7 @@ use App\src\Services\Constructor\ConstructorService;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ConstructorController extends Controller
 {
@@ -34,6 +35,17 @@ class ConstructorController extends Controller
      */
     public function createTable(Request $request)
     {
+        $data = [ 'data' => $request->columns ];
+
+        $validator = Validator::make($data, [
+            'data.*.title' => 'required|string',
+            'data.*.tech_title' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response($validator->errors(), 422);
+        }
+
         $newTableName = $this->constructorService->createTable($request);
 
         return response($newTableName . ' table has been created', 200);
@@ -84,8 +96,40 @@ class ConstructorController extends Controller
      */
     public function updateTable(Request $request)
     {
+        $data = [ 'data' => $request->columns ];
+
+        $validator = Validator::make($data, [
+            'data.*.title' => 'required|string',
+            'data.*.tech_title' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response($validator->errors(), 422);
+        }
+
         $newTableName = $this->constructorService->updateTable($request);
 
         return response($newTableName . ' table has been updated', 200);
+    }
+
+    /**
+     * Удалить поле из таблицы
+     * @param Request $request :
+     * columnTechTitle - техническое наименование столбца
+     * tableId - ид таблицы
+     * @return ResponseFactory|Response
+     */
+    public function dropColumn(Request $request)
+    {
+        $this->constructorService->dropColumn($request->column_tech_title, $request->table_id);
+
+        return response($request->columnTechTitle . ' has been deleted');
+    }
+
+    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        foreach ($request->columns as $columnData) {
+            return $columnData;
+        }
     }
 }

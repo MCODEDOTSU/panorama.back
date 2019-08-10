@@ -124,6 +124,7 @@ Route::prefix('/gis')->namespace('Gis')->group(function () {
 Route::post('/constructor/constructor_create', 'Constructor\ConstructorController@createTable');
 Route::post('/constructor/constructor_update', 'Constructor\ConstructorController@updateTable');
 Route::post('/constructor/constructor_drop', 'Constructor\ConstructorController@dropTable');
+Route::post('/constructor/drop_column', 'Constructor\ConstructorController@dropColumn');
 Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
 Route::get('/constructor/get_table_info/{identifier}', 'Constructor\ConstructorController@getTableInfo');
 Route::get('/constructor/is_table_exists/{identifier}', 'Constructor\ConstructorController@isTableExists');

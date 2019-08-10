@@ -74,4 +74,15 @@ class ConstructorMetadataService
             'type' => $columnData['type'],
         ]);
     }
+
+    /**
+     * Удалить информацию о столбце из метаданных
+     * @param $columnTechTitle
+     * @param $tableName
+     */
+    public function deleteColumnMetadata(string $columnTechTitle, string $tableName): void
+    {
+        $metadataInfo = $this->constructorRepository->getColumnMetadataInfo($columnTechTitle, $tableName);
+        $this->constructorRepository->delete($metadataInfo);
+    }
 }

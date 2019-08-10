@@ -175,4 +175,18 @@ class ConstructorService
 
         $this->constructorRepository->updateColumnInfo($savedColumnInfo, $columnData);
     }
+
+    /**
+     * Удалить столбец
+     * @param $columnTechTitle
+     * @param $tableId
+     */
+    public function dropColumn($columnTechTitle, $tableId): void
+    {
+        Schema::table($this->tablePrefix . $tableId, function (Blueprint $table) use ($columnTechTitle) {
+            $table->dropColumn($columnTechTitle);
+        });
+
+        $this->constructorMetadataService->deleteColumnMetadata($columnTechTitle, $this->tablePrefix . $tableId);
+    }
 }
