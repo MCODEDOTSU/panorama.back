@@ -39,7 +39,7 @@ class ConstructorMetadataService
             if (isset($column['tech_title'])) {
                 $columnModel = $this->constructorRepository->getColumnMetadataInfo($column['tech_title'], $this->tablePrefix . $tableIdentifier);
                 $column['tech_title'] = $column['new_tech_title'];
-                $this->updateColumnInfo($columnModel, $column);
+                $this->constructorRepository->updateColumnInfo($columnModel, $column);
             } else {
                 $column['tech_title'] = $column['new_tech_title'];
                 $this->createColumn($column, $this->tablePrefix . $tableIdentifier);
@@ -60,27 +60,11 @@ class ConstructorMetadataService
     }
     
     /**
-     * Обновить информацию о таблице
-     * @param ConstructorMetadata $columnModel
-     * @param $column
-     * @return ConstructorMetadata
-     */
-    private function updateColumnInfo(ConstructorMetadata $columnModel, $column): ConstructorMetadata
-    {
-        $columnModel->tech_title = $column['new_tech_title'];
-        $columnModel->title = $column['title'];
-        $columnModel->type = $column['type'];
-        $columnModel->save();
-        
-        return $columnModel;
-    }
-    
-    /**
      * Добавить информацию о поле
      * @param array $columnData
      * @param string $tableName
      */
-    private function createColumn(array $columnData, string $tableName)
+    public function createColumn(array $columnData, string $tableName)
     {
         $this->constructorRepository->saveTableInfo([
             'table_identifier' => $tableName,

@@ -55,4 +55,25 @@ class ConstructorRepository
             ])
             ->first();
     }
+
+    public function getById(int $id): ConstructorMetadata
+    {
+        return $this->constructorMetadata->find($id);
+    }
+
+    /**
+     * Обновить информацию о таблице
+     * @param ConstructorMetadata $columnModel
+     * @param $column
+     * @return ConstructorMetadata
+     */
+    public function updateColumnInfo(ConstructorMetadata $columnModel, $column)
+    {
+        $columnModel->tech_title = $column['tech_title'];
+        $columnModel->title = $column['title'];
+        $columnModel->type = $column['type'];
+        $columnModel->save();
+
+        return $columnModel;
+    }
 }

@@ -57,7 +57,8 @@ class AbstractField
     }
 
     /**
-     * Сформировать поле таблицы согласно различным параметрам
+     * Добавить тип поля
+     * Проверить, является ли поле nullable
      * @param $table
      */
     public function constructField(Blueprint $table)
@@ -79,12 +80,15 @@ class AbstractField
     
     /**
      * Изменить тип поля
+     * Проверить, является ли поле nullable
      * @param Blueprint $table
      */
     public function changeFieldType(Blueprint $table)
     {
         $typePr = $this->getType();
-        $table->$typePr('' . $this->getTechTitle() . '')->change();
+        $composedCol = $table->$typePr('' . $this->getTechTitle() . '');
+        $composedColNullable = $this->checkIfFieldIsNullable($composedCol);
+        $composedColNullable->change();
     }
 
     /**

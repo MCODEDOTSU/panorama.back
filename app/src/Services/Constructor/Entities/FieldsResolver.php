@@ -29,9 +29,6 @@ class FieldsResolver
             /** @var AbstractField $readyBakedClass */
             $readyBakedClass = $this->container->make($class);
             $readyBakedClass->setTitle($columnInfo['title']);
-            if (isset($columnInfo['new_tech_title'])) {
-                $readyBakedClass->setNewTechTitle($columnInfo['new_tech_title']);
-            }
             $readyBakedClass->setTechTitle($columnInfo['tech_title']);
             $readyBakedClass->setRequired($columnInfo['required']);
 

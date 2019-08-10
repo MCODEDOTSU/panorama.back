@@ -57,9 +57,7 @@ class ConstructorService
         Schema::table($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
             $this->checkChangesInColumns($request->columns, $request->table_title, $table);
         });
-        
-        $this->constructorMetadataService->updateMetadataInformation($request->columns, $request->table_title);
-        
+
         return $this->tablePrefix . $request->table_title;
     }
     
@@ -89,9 +87,11 @@ class ConstructorService
         }
     }
     
-    private function parseSingleColumn($column, Blueprint $table)
+    private function parseSingleColumn(array $columnData, Blueprint $updatedTable, $tableNumber)
     {
-    
+        $fieldType = $this->fieldsResolver->selectFieldType($columnData);
+        $fieldType->constructField($updatedTable);
+        $this->constructorMetadataService->createColumn($columnData, $this->tablePrefix . $tableNumber);
     }
     
     /**
@@ -144,30 +144,35 @@ class ConstructorService
      */
     private function checkChangesInColumns(array $columns, $tableNumber, Blueprint $updatedTable)
     {
-        $tableTitle = $this->tablePrefix . $tableNumber;
-        $tableInfo = $this->constructorRepository->getTableInfo($tableTitle);
-        
         // Проверить изменения в составе таблицы
-        foreach ($columns as $column) {
-            return $this->checkChangesInColumn($tableInfo, $column, $updatedTable);
-        }
-    }
-    
-    /**
-     * Проверить изменения в столбце
-     * @param array $tableInfo
-     * @param $column
-     * @param Blueprint $updatedTable - обновляемая таблица
-     * @return mixed
-     */
-    private function checkChangesInColumn($tableInfo, $column, Blueprint $updatedTable)
-    {
-        foreach ($tableInfo as $tableColumn) {
-            if ($tableColumn->tech_title == $column['tech_title']) {
-                $fieldType = $this->fieldsResolver->selectFieldType($column);
-                $fieldType->renameField($updatedTable);
-                $fieldType->changeFieldType($updatedTable);
+        foreach ($columns as $columnData) {
+            if(isset($columnData['id'])) {
+                $savedColumnInfo = $this->constructorRepository->getById($columnData['id']);
+                $this->updateColumnInfo($columnData, $savedColumnInfo, $updatedTable);
+            } else {
+                $this->parseSingleColumn($columnData, $updatedTable, $tableNumber);
             }
         }
+    }
+
+    /**
+     * Изменить структуру таблицы
+     * @param $columnData
+     * @param $savedColumnInfo
+     * @param Blueprint $updatedTable
+     */
+    private function updateColumnInfo($columnData, $savedColumnInfo, Blueprint $updatedTable)
+    {
+        $fieldType = $this->fieldsResolver->selectFieldType($columnData);
+        $fieldType->setNewTechTitle($columnData['tech_title']);
+        $fieldType->setTechTitle($savedColumnInfo->tech_title);
+
+        // Поле не подлежит переименованию, если старое и новое названия совпадают
+        if($fieldType->getTechTitle() != $fieldType->getNewTechTitle()) {
+            $fieldType->renameField($updatedTable);
+        }
+        $fieldType->changeFieldType($updatedTable);
+
+        $this->constructorRepository->updateColumnInfo($savedColumnInfo, $columnData);
     }
 }

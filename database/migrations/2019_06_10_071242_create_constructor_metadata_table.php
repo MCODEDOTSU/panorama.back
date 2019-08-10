@@ -18,7 +18,7 @@ class CreateConstructorMetadataTable extends Migration
             $table->string('table_identifier'); // Название таблицы (идентификатор)
             $table->string('title'); // Название столбца (читабельное)
             $table->string('tech_title'); // Техническое название столбца
-            $table->string('required'); // nullable столбца
+            $table->boolean('required'); // nullable столбца
             $table->string('type'); // Тип столбца (text_field, long_text_field, number_field, image_field...)
             $table->timestamps();
         });
