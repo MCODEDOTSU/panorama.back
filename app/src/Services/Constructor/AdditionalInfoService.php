@@ -19,6 +19,12 @@ class AdditionalInfoService
      */
     public function update(int $elementId, array $additionalFields)
     {
+        foreach ($additionalFields as $additionalField) {
+            DB::table($additionalField['table_identifier'])
+                ->where('column_name', 1)
+                ->update(['column_name' => 1]);
+        }
+
         DB::table('table_name')
             ->where('column_name', 1)
             ->update(['column_name' => 1]);
@@ -30,10 +36,15 @@ class AdditionalInfoService
      * Добавляет информацию в таблицу с дополнительными данными
      * @param array $additionalData
      */
-    public function create(array $additionalData)
+    public function create(array $additionalData, $elementId)
     {
-        DB::table('table_name')
-            ->where('column_name', 1)
-            ->create();
+        $fieldsArray = [];
+        foreach ($additionalData as $additionalField) {
+            $fieldsArray[$additionalField['tech_title']] = $additionalField['value'];
+        }
+
+        $fieldsArray['element_id'] = $elementId;
+
+        DB::table($additionalField['table_identifier'])->insert($fieldsArray);
     }
 }

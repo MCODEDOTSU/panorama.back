@@ -64,8 +64,8 @@ class ElementService
      */
     public function create(Request $data)
     {
-        $this->additionalInfoService->create($data->additionalData);
-        return $this->elementRepository->create($data);
+        $element = $this->elementRepository->create($data);
+        $this->additionalInfoService->create($data->additionalData, $element->id);
     }
 
     /**
