@@ -128,3 +128,5 @@ Route::post('/constructor/drop_column', 'Constructor\ConstructorController@dropC
 Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
 Route::get('/constructor/get_table_info/{identifier}', 'Constructor\ConstructorController@getTableInfo');
 Route::get('/constructor/is_table_exists/{identifier}', 'Constructor\ConstructorController@isTableExists');
+
+Route::get('/additional_data/get_additional_data/{element_id}/{layer_id}', 'Constructor\AdditionalInfoController@getData');

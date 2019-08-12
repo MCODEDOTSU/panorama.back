@@ -60,7 +60,7 @@ class ElementService
     /**
      * Создать элемент.
      * @param Request $data
-     * @return \App\src\Models\Element
+     * @return void
      */
     public function create(Request $data)
     {
