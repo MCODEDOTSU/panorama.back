@@ -53,7 +53,7 @@ class ElementService
      */
     public function update(int $id, Request $data)
     {
-        $this->additionalInfoService->update($id, $data->additionalData);
+        return $this->additionalInfoService->update($id, $data->additionalData);
         return $this->elementRepository->update($id, $data);
     }
 

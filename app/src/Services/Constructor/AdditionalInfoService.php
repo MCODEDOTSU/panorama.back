@@ -12,7 +12,14 @@ use Illuminate\Support\Facades\DB;
 class AdditionalInfoService
 {
     private $tablePrefix = 'constructed_';
-
+    
+    private $constructorService;
+    
+    public function __construct(ConstructorService $constructorService)
+    {
+        $this->constructorService = $constructorService;
+    }
+    
     /**
      * Обновляет информацию в таблице с дополнительными данными
      * @param int $elementId - ид геоэлемента
@@ -21,15 +28,19 @@ class AdditionalInfoService
      */
     public function update(int $elementId, array $additionalFields)
     {
-        foreach ($additionalFields as $additionalField) {
-            DB::table($additionalField['table_identifier'])
+        return $elementId;
+        return $additionalFields;
+       
+        if($this->checkIfAdditionalDataAlreadyExists($elementId, $additionalField['table_identifier'])) {
+            foreach ($additionalFields as $additionalField) {
+                // update data
+                DB::table('table_name')
                 ->where('column_name', 1)
                 ->update(['column_name' => 1]);
+            }
         }
 
-        DB::table('table_name')
-            ->where('column_name', 1)
-            ->update(['column_name' => 1]);
+
 
         return $additionalFields;
     }
@@ -50,13 +61,46 @@ class AdditionalInfoService
 
         DB::table($additionalField['table_identifier'])->insert($fieldsArray);
     }
-
+    
+    /**
+     * Получить данные о таблице и получить дополнительные данные к ней
+     * @param int $elementId
+     * @param int $tableIdentifier
+     * @return \Illuminate\Support\Collection
+     */
     public function getData(int $elementId, int $tableIdentifier)
+    {
+        $tableInfo = $this->constructorService->getTableInfo($tableIdentifier);
+    
+        $additionalInfo = DB::table($this->tablePrefix.$tableIdentifier)
+            ->where('element_id', $elementId)
+            ->first();
+        
+        $decodedAdditionalInfo = json_decode(json_encode($additionalInfo), true);
+        
+        foreach ($tableInfo as $infoItem) {
+            $infoItem->value = $decodedAdditionalInfo[$infoItem->tech_title];
+        }
+        
+        return $tableInfo;
+    }
+    
+    /**
+     * Проверить заполнены ли дополнительные данные
+     * @param int $elementId
+     * @param $tableIdentifier - идентификатор таблицы
+     * @return bool
+     */
+    public function checkIfAdditionalDataAlreadyExists(int $elementId, $tableIdentifier): bool
     {
         $additionalInfo = DB::table($this->tablePrefix.$tableIdentifier)
             ->where('element_id', $elementId)
             ->first();
-
-        return json_decode(json_encode($additionalInfo), true);
+        
+        if($additionalInfo) {
+            return true;
+        }
+        
+        return false;
     }
 }
