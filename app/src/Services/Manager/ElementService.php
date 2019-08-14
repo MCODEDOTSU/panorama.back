@@ -47,13 +47,13 @@ class ElementService
 
     /**
      * Обновить элемент.
-     * @param int $id
+     * @param int $id - elementId
      * @param Request $data
      * @return \App\src\Models\Element
      */
     public function update(int $id, Request $data)
     {
-        return $this->additionalInfoService->update($id, $data->additionalData);
+        $this->additionalInfoService->update($id, $data->additionalData, $data->layer_id);
         return $this->elementRepository->update($id, $data);
     }
 

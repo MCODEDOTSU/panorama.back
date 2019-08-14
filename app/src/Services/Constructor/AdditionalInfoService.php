@@ -24,23 +24,25 @@ class AdditionalInfoService
      * Обновляет информацию в таблице с дополнительными данными
      * @param int $elementId - ид геоэлемента
      * @param array $additionalFields - дополнительные поля
+     * @param $tableIdentifier - ИД слоя (или таблицы)
      * @return array
      */
-    public function update(int $elementId, array $additionalFields)
+    public function update(int $elementId, array $additionalFields, $tableIdentifier)
     {
-        return $elementId;
-        return $additionalFields;
-       
-        if($this->checkIfAdditionalDataAlreadyExists($elementId, $additionalField['table_identifier'])) {
+        if($this->checkIfAdditionalDataAlreadyExists($elementId, $tableIdentifier)) {
+            $fieldsArray = [];
+    
             foreach ($additionalFields as $additionalField) {
-                // update data
-                DB::table('table_name')
-                ->where('column_name', 1)
-                ->update(['column_name' => 1]);
+                $fieldsArray[$additionalField['tech_title']] = $additionalField['value'];
             }
+            
+            DB::table($this->tablePrefix.$tableIdentifier)
+                ->where('element_id', $elementId)
+                ->update($fieldsArray);
+        } else {
+            // На случай, если был добавлен элемент без данного функционала
+            $this->create($additionalFields, $elementId);
         }
-
-
 
         return $additionalFields;
     }
@@ -66,10 +68,14 @@ class AdditionalInfoService
      * Получить данные о таблице и получить дополнительные данные к ней
      * @param int $elementId
      * @param int $tableIdentifier
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection|string
      */
     public function getData(int $elementId, int $tableIdentifier)
     {
+        if($this->constructorService->isTableExists($tableIdentifier) == 'false') {
+            return 'false';
+        }
+        
         $tableInfo = $this->constructorService->getTableInfo($tableIdentifier);
     
         $additionalInfo = DB::table($this->tablePrefix.$tableIdentifier)
