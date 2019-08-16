@@ -39,7 +39,7 @@ class ConstructorController extends Controller
 
         $validator = Validator::make($data, [
             'data.*.title' => 'required|string',
-            'data.*.tech_title' => 'required|string'
+            'data.*.tech_title' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -100,7 +100,7 @@ class ConstructorController extends Controller
 
         $validator = Validator::make($data, [
             'data.*.title' => 'required|string',
-            'data.*.tech_title' => 'required|string'
+            'data.*.tech_title' => 'required'
         ]);
 
         if ($validator->fails()) {
