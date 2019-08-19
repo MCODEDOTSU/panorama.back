@@ -6,6 +6,7 @@ namespace App\src\Services\Constructor;
 
 use App\src\Models\ConstructorMetadata;
 use App\src\Repositories\Constructor\ConstructorRepository;
+use App\src\Services\Constructor\Entities\FieldsResolver;
 
 class ConstructorMetadataService
 {
@@ -17,14 +18,17 @@ class ConstructorMetadataService
     private $tablePrefix = 'constructed_';
     
     private $constructorRepository;
-    
+    private $fieldsResolver;
+
     /**
      * ConstructorMetadataService constructor.
      * @param ConstructorRepository $constructorRepository
+     * @param FieldsResolver $fieldsResolver
      */
-    public function __construct(ConstructorRepository $constructorRepository)
+    public function __construct(ConstructorRepository $constructorRepository, FieldsResolver $fieldsResolver)
     {
         $this->constructorRepository = $constructorRepository;
+        $this->fieldsResolver = $fieldsResolver;
     }
     
     /**
@@ -66,13 +70,11 @@ class ConstructorMetadataService
      */
     public function createColumn(array $columnData, string $tableName)
     {
-        $this->constructorRepository->saveTableInfo([
-            'table_identifier' => $tableName,
-            'title' => $columnData['title'],
-            'tech_title' => $columnData['tech_title'],
-            'required' => $columnData['required'],
-            'type' => $columnData['type'],
-        ]);
+        $resolvedField = $this->fieldsResolver->selectFieldType($columnData);
+        $fieldsArray = $resolvedField->getFieldsToSaveInMetadataTable($columnData);
+        $fieldsArray['table_identifier'] = $tableName;
+
+        $this->constructorRepository->saveTableInfo($fieldsArray);
     }
 
     /**

@@ -3,10 +3,9 @@
 namespace App\src\Services\Constructor\Entities;
 
 
-class OneFromManyField extends AbstractField implements FieldInterface
+class OneFromManyField extends AbstractField implements FieldsChooseableInterface
 {
-    // TODO: json_b - является встроенным типом postgres - будет ли он отрабатывать???
-    public $type = 'json_b';
+    public $type = 'string';
     
     public function setDefaultValue()
     {
@@ -20,5 +19,19 @@ class OneFromManyField extends AbstractField implements FieldInterface
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * Получить таблицы для метода внесения данных в constructor_metadata.
+     * Для OneFromMany - добавляются данные enums
+     * @param array $columnData
+     * @return array
+     */
+    public function getFieldsToSaveInMetadataTable(array $columnData): array
+    {
+        $fieldsArray = parent::getFieldsToSaveInMetadataTable($columnData);
+        $fieldsArray['enums'] = json_encode($columnData['enums']);
+
+        return $fieldsArray;
     }
 }

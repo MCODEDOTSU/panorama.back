@@ -106,6 +106,16 @@ class AbstractField
         return $composedCol;
     }
 
+    public function getFieldsToSaveInMetadataTable(array $columnData): array
+    {
+        return [
+            'title' => $columnData['title'],
+            'tech_title' => $columnData['tech_title'],
+            'required' => $columnData['required'],
+            'type' => $columnData['type'],
+        ];
+    }
+
     /**
      * @return mixed
      */

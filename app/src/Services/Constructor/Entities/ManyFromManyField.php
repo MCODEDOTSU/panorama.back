@@ -3,9 +3,9 @@
 namespace App\src\Services\Constructor\Entities;
 
 
-class ManyFromManyField extends AbstractField implements FieldInterface
+class ManyFromManyField extends AbstractField implements FieldsChooseableInterface
 {
-    public $type = 'json_b';
+    public $type = 'jsonb';
     
     public function setDefaultValue()
     {
@@ -19,5 +19,19 @@ class ManyFromManyField extends AbstractField implements FieldInterface
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * Получить таблицы для метода внесения данных в constructor_metadata.
+     * Для OneFromMany - добавляются данные enums
+     * @param array $columnData
+     * @return array
+     */
+    public function getFieldsToSaveInMetadataTable(array $columnData): array
+    {
+        $fieldsArray = parent::getFieldsToSaveInMetadataTable($columnData);
+        $fieldsArray['enums'] = json_encode($columnData['enums']);
+
+        return $fieldsArray;
     }
 }
