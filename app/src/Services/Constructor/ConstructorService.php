@@ -150,6 +150,7 @@ class ConstructorService
                 $savedColumnInfo = $this->constructorRepository->getById($columnData['id']);
                 $this->updateColumnInfo($columnData, $savedColumnInfo, $updatedTable);
             } else {
+                // Если добавляются новые столбцы с данными - добавить новые
                 $this->parseSingleColumn($columnData, $updatedTable, $tableNumber);
             }
         }

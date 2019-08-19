@@ -67,6 +67,7 @@ class AbstractField
 
         $composedCol = $table->$typePr('' . $this->getTechTitle() . '');
         $this->checkIfFieldIsNullable($composedCol);
+        $composedCol->default($this->setDefaultValue());
     }
 
     /**
