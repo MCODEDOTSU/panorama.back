@@ -5,7 +5,8 @@ namespace App\src\Services\Constructor\Entities;
 
 class DateField extends AbstractField implements FieldInterface
 {
-    protected $type = 'date';
+    // TODO: При присвоении полю private или protected - выдается фатальная ошибка. Нужно проверить
+    public $type = 'date';
     
     public function setDefaultValue()
     {
