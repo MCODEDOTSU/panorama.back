@@ -45,6 +45,7 @@ class ConstructorService
         Schema::create($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
             $this->parseColumns($request, $table);
             $this->addGeoElementsAsForeignKey($table);
+            
         });
         
         $this->constructorMetadataService->saveTableInfo($request->columns, $request->table_title);
