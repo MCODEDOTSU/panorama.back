@@ -88,8 +88,8 @@ class AbstractField
     {
         $typePr = $this->getType();
         $composedCol = $table->$typePr('' . $this->getTechTitle() . '');
-        $composedColNullable = $this->checkIfFieldIsNullable($composedCol);
-        $composedColNullable->change();
+        $this->checkIfFieldIsNullable($composedCol);
+        $composedCol->change();
     }
 
     /**

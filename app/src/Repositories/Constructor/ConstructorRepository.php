@@ -72,6 +72,7 @@ class ConstructorRepository
         $columnModel->tech_title = $column['tech_title'];
         $columnModel->title = $column['title'];
         $columnModel->type = $column['type'];
+        $columnModel->required = $column['required'];
         $columnModel->enums = json_encode($column['enums']);
         $columnModel->save();
 
