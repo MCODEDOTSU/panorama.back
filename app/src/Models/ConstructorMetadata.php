@@ -21,4 +21,9 @@ class ConstructorMetadata extends Model
         'type', // Тип столбца (namespace: src/Services/Constructor/Entities)
         'enums' // Перечисляемые значения для таблиц типа OneFromMany и ManyFromMany
     ];
+    
+    public function getEnumsAttribute($value)
+    {
+        return json_decode($value, true);
+    }
 }
