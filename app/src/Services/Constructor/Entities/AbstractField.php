@@ -99,7 +99,7 @@ class AbstractField
      */
     public function checkIfFieldIsNullable($composedCol)
     {
-        if ($this->required) {
+        if (!$this->required) {
             return $composedCol->nullable();
         }
 

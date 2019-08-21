@@ -26,4 +26,13 @@ class ConstructorMetadata extends Model
     {
         return json_decode($value, true);
     }
+    
+    public function getRequiredAttribute($value)
+    {
+        if($value == 1) {
+            return true;
+        }
+        
+        return false;
+    }
 }
