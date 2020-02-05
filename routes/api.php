@@ -9,7 +9,7 @@ Route::post('register', 'Auth\UserController@register');
 
 Route::group([ 'middleware' => 'auth:api' ], function() {
 
-    Route::get('logout', 'LoginController@logout');
+    Route::get('logout', 'Auth\LoginController@logout');
     Route::get('user', 'UserController@getUser');
 
     /**
@@ -50,6 +50,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::post('/', 'ModuleController@create');
         Route::delete('/{id}', 'ModuleController@delete');
     });
+
     /**
      * Редактор слоев
      */
@@ -59,17 +60,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::put('/{id}', 'LayerController@update');
         Route::post('/', 'LayerController@create');
         Route::delete('/{id}', 'LayerController@delete');
-    });
-
-    /**
-     * Редактор состава слоя
-     */
-    Route::prefix('/manager/composition')->namespace('Manager')->group(function () {
-        Route::get('/{layerId}', 'LayerCompositionController@getAll');
-        Route::put('/{id}', 'LayerCompositionController@update');
-        Route::post('/', 'LayerCompositionController@create');
-        Route::delete('/{id}', 'LayerCompositionController@delete');
-        Route::post('/upload', 'LayerCompositionController@uploadIcon');
+        Route::post('/upload', 'LayerController@uploadIcon');
     });
 
     /**
@@ -84,28 +75,26 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     });
 
     /**
-     * Редактор геометрии элемента
-     */
-    Route::prefix('/manager/geometry')->namespace('Manager')->group(function () {
-        Route::get('/{elementId}', 'GeometryController@getAll');
-        Route::put('/{type}/{id}', 'GeometryController@update');
-        Route::post('/{type}/', 'GeometryController@create');
-        Route::delete('/{type}/{id}', 'GeometryController@delete');
-    });
-
-    /**
      * GIS-редактор
      */
     Route::prefix('/gis')->namespace('Gis')->group(function () {
         Route::get('/layer/contractor', 'LayerController@getAllToContractor');
-        Route::get('/compositions/contractor', 'LayerCompositionController@getAllToContractor');
         Route::post('/element', 'ElementController@create');
         Route::put('/element/{id}', 'ElementController@update');
+        Route::put('/geometry/{id}', 'ElementController@updateGeometry');
         Route::delete('/element/{id}', 'ElementController@delete');
-        Route::post('/geometry/{type}', 'GeometryController@create');
-        Route::put('/geometry/{type}/{id}', 'GeometryController@update');
-        Route::delete('/geometry/{type}/{id}', 'GeometryController@delete');
     });
+
+    /**
+     * Конструктор полей
+     */
+    Route::prefix('/constructor')->namespace('Constructor')->group(function () {
+        Route::get('/{layerId}', 'ConstructorController@getToLayer');
+        Route::post('/{layerId}', 'ConstructorController@create');
+        Route::put('/{layerId}', 'ConstructorController@update');
+    });
+    //Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
+
 
 });
 
@@ -114,19 +103,11 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
  */
 Route::prefix('/gis')->namespace('Gis')->group(function () {
     Route::get('/layer', 'LayerController@getAll');
-    Route::get('/compositions', 'LayerCompositionController@getAll');
-    Route::get('/element/geometries/{id}', 'GeometryController@getByElementId');
-    Route::get('/layer/geometries/{id}', 'GeometryController@getByLayerId');
 });
 
-
-
-Route::post('/constructor/constructor_create', 'Constructor\ConstructorController@createTable');
-Route::post('/constructor/constructor_update', 'Constructor\ConstructorController@updateTable');
-Route::post('/constructor/constructor_drop', 'Constructor\ConstructorController@dropTable');
-Route::post('/constructor/drop_column', 'Constructor\ConstructorController@dropColumn');
-Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
-Route::get('/constructor/get_table_info/{identifier}', 'Constructor\ConstructorController@getTableInfo');
-Route::get('/constructor/is_table_exists/{identifier}', 'Constructor\ConstructorController@isTableExists');
-
-Route::get('/additional_data/get_additional_data/{element_id}/{layer_id}', 'Constructor\AdditionalInfoController@getData');
+/**
+ * Конструктор полей
+ */
+Route::prefix('/constructor')->namespace('Constructor')->group(function () {
+    Route::get('/{layerId}/{elementId}', 'AdditionalInfoController@getData');
+});

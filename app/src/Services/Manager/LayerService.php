@@ -4,6 +4,8 @@ namespace App\src\Services\Manager;
 use App\src\Models\Layer;
 use App\src\Repositories\Manager\LayerRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Image;
 
 /**
  * Class LayerService
@@ -70,6 +72,33 @@ class LayerService
     public function delete(int $id)
     {
         return $this->layerRepository->delete($id);
+    }
+
+    /**
+     * Загрузить иконку
+     * @param $file
+     * @return mixed
+     */
+    public function uploadIcon($file)
+    {
+        $path = $file->hashName('images/layers');
+        list($width, $height) = getimagesize($file);
+        $image = Image::make($file);
+
+        if($width > 48 || $height > 48) {
+            $image->fit(48, 48, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+        }
+
+        Storage::put("public/$path", (string)$image->encode());
+        list($width, $height) = getimagesize("storage/$path");
+
+        return [
+            'filename' => "storage/$path",
+            'width' => $width,
+            'height' => $height
+        ];
     }
 
 }

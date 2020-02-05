@@ -2,7 +2,6 @@
 
 namespace App\src\Repositories\Constructor;
 
-
 use App\src\Models\ConstructorMetadata;
 
 class ConstructorRepository
@@ -19,6 +18,18 @@ class ConstructorRepository
     }
 
     /**
+     * Получить информацию о таблице и её полях
+     * @param string $tableIdentifier
+     * @return mixed
+     */
+    public function getToLayer(string $tableIdentifier)
+    {
+        return $this->constructorMetadata
+            ->where('table_identifier', $tableIdentifier)
+            ->get();
+    }
+
+    /**
      * Сохранить информацию о вновь созданной таблице в constructor_metadata
      * @param array $columnData
      * @return
@@ -26,18 +37,6 @@ class ConstructorRepository
     public function saveTableInfo(array $columnData)
     {
         return $this->constructorMetadata->create($columnData);
-    }
-
-    /**
-     * Получить информацию о таблице и её полях
-     * @param string $tableIdentifier
-     * @return mixed
-     */
-    public function getTableInfo(string $tableIdentifier)
-    {
-        return $this->constructorMetadata
-            ->where('table_identifier', $tableIdentifier)
-            ->get();
     }
     
     /**
@@ -56,6 +55,11 @@ class ConstructorRepository
             ->first();
     }
 
+    /**
+     * Получить метаданные по ИД
+     * @param int $id
+     * @return ConstructorMetadata
+     */
     public function getById(int $id): ConstructorMetadata
     {
         return $this->constructorMetadata->find($id);
@@ -74,6 +78,8 @@ class ConstructorRepository
         $columnModel->type = $column['type'];
         $columnModel->required = $column['required'];
         $columnModel->enums = json_encode($column['enums']);
+        $columnModel->group = $column['group'];
+        $columnModel->is_deleted = $column['is_deleted'];
         $columnModel->save();
 
         return $columnModel;

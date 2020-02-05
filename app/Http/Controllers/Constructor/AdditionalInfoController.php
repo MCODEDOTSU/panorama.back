@@ -15,9 +15,15 @@ class AdditionalInfoController extends Controller
         $this->additionalInfoService = $additionalInfoService;
     }
 
-    public function getData(int $elementId, int $tableIdentifier)
+    /**
+     * Получить данные дополнительных полей для слоя и элемента
+     * @param int $layerId
+     * @param int $elementId
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getData(int $layerId, int $elementId)
     {
-        $additionalInfo = $this->additionalInfoService->getData($elementId, $tableIdentifier);
+        $additionalInfo = $this->additionalInfoService->getData($layerId, $elementId);
         return response($additionalInfo, 200);
     }
 }

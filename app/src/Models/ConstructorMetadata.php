@@ -19,7 +19,9 @@ class ConstructorMetadata extends Model
         'tech_title', // Техническое наименование столбца при таблице
         'required', // Является ли столбец nullable
         'type', // Тип столбца (namespace: src/Services/Constructor/Entities)
-        'enums' // Перечисляемые значения для таблиц типа OneFromMany и ManyFromMany
+        'enums', // Перечисляемые значения для таблиц типа OneFromMany и ManyFromMany
+        'group', // Группа к которой относится поле
+        'is_deleted', // Признак того, что поле было удалено
     ];
     
     public function getEnumsAttribute($value)

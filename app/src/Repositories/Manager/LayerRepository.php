@@ -56,6 +56,7 @@ class LayerRepository
     public function update(int $id, $data)
     {
         $record = $this->getById($id);
+        $record->alias = $data->alias;
         $record->title = $data->title;
         $record->description = $data->description;
         if($data->parent_id != 0) {
@@ -64,6 +65,9 @@ class LayerRepository
             $record->parent_id = null;
         }
         $record->module_id = $data->module_id;
+        $record->visibility = $data->visibility;
+        $record->geometry_type = $data->geometry_type;
+        $record->style = $data->style;
         $record->save();
         return $record;
     }
@@ -76,9 +80,13 @@ class LayerRepository
     public function create($data): Layer
     {
         $recordData = [
+            'alias' => $data->alias,
             'title' => $data->title,
             'description' => $data->description,
-            'module_id' => $data->module_id
+            'module_id' => $data->module_id,
+            'visibility' => $data->visibility,
+            'geometry_type' => $data->geometry_type,
+            'style' => $data->style,
         ];
         if($data->parent_id !== 0) {
             $recordData['parent_id'] = $data->parent_id;

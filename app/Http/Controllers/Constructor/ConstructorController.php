@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Constructor;
 
-
 use App\Http\Controllers\Controller;
 use App\src\Services\Constructor\ConstructorService;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -25,17 +24,68 @@ class ConstructorController extends Controller
         $this->constructorService = $constructorService;
     }
 
+    /**
+     * Получить таблицу для слоя
+     * @param $layerId
+     * @return ResponseFactory|Response
+     */
+    public function getToLayer(int $layerId)
+    {
+        try {
+            return response($this->constructorService->getToLayer($layerId), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
 
     /**
-     * Создание таблицы
+     * Создание метаданных
+     * @param int $layerId
      * @param Request $request :
      * table_title - название таблицы
      * columns - массив столбцов: type, title
      * @return ResponseFactory|Response
      */
-    public function createTable(Request $request)
+    public function create(int $layerId, Request $request)
     {
-        $data = [ 'data' => $request->columns ];
+        $columns = array_filter($request->columns, function ($value) {
+            return !$value['is_deleted'];
+        });
+
+        if(empty($columns)) {
+            return response('', 200);
+        }
+
+        $data = ['data' => $columns];
+        $validator = Validator::make($data, [
+            'data.*.title' => 'required|string',
+            'data.*.tech_title' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response($validator->errors(), 422);
+        }
+
+        try {
+            return response($this->constructorService->create($layerId, $columns), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Обновление метдаданных
+     * @param int $layerId
+     * @param Request $request
+     * @return ResponseFactory|Response
+     */
+    public function update(int $layerId, Request $request)
+    {
+
+        $columns = array_filter($request->columns, function ($value) {
+            return !($value['is_deleted'] && empty($value['id']));
+        });
+
+        $data = ['data' => $columns];
 
         $validator = Validator::make($data, [
             'data.*.title' => 'required|string',
@@ -46,84 +96,11 @@ class ConstructorController extends Controller
             return response($validator->errors(), 422);
         }
 
-        $newTableName = $this->constructorService->createTable($request);
-
-        return response($newTableName . ' table has been created', 200);
-    }
-
-
-    /**
-     * Удаление таблицы
-     * @param Request $request
-     * @return ResponseFactory|Response
-     */
-    public function dropTable(Request $request)
-    {
-        $this->constructorService->dropTable($request);
-
-        return response($request->table_title . ' table has been dropped', 200);
-    }
-
-    /**
-     * Получить информацию о полях таблицы: наименование, тип, required
-     * @param string $tableIdentifier
-     * @return array
-     */
-    public function getTableInfo(string $tableIdentifier)
-    {
-        return response($this->constructorService->getTableInfo($tableIdentifier), 200);
-    }
-
-    /**
-     * Проверить, существует ли таблица
-     * @param string $tableIdentifier
-     * @return ResponseFactory|Response
-     */
-    public function isTableExists(string $tableIdentifier)
-    {
-        return response($this->constructorService->isTableExists($tableIdentifier), 200);
-    }
-
-    public function getSpecificType(string $type)
-    {
-        return $this->constructorService->getSpecificType($type);
-    }
-
-    /**
-     * Обновление данных (некоторые данные могут быть удаены в связи с удалением определенных столбцов)
-     * @param Request $request
-     * @return ResponseFactory|Response
-     */
-    public function updateTable(Request $request)
-    {
-        $data = [ 'data' => $request->columns ];
-
-        $validator = Validator::make($data, [
-            'data.*.title' => 'required|string',
-            'data.*.tech_title' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response($validator->errors(), 422);
+        try {
+            return response($this->constructorService->update($layerId, $columns), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
         }
-
-        $newTableName = $this->constructorService->updateTable($request);
-
-        return response($newTableName . ' table has been updated', 200);
-    }
-
-    /**
-     * Удалить поле из таблицы
-     * @param Request $request :
-     * columnTechTitle - техническое наименование столбца
-     * tableId - ид таблицы
-     * @return ResponseFactory|Response
-     */
-    public function dropColumn(Request $request)
-    {
-        $this->constructorService->dropColumn($request->column_tech_title, $request->table_id);
-
-        return response($request->columnTechTitle . ' has been deleted');
     }
 
     public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
@@ -132,4 +109,38 @@ class ConstructorController extends Controller
             return $columnData;
         }
     }
+
+    public function getSpecificType(string $type)
+    {
+        return $this->constructorService->getSpecificType($type);
+    }
+
+
+//    /**
+//     * Удаление таблицы
+//     * @param Request $request
+//     * @return ResponseFactory|Response
+//     */
+//    public function dropTable(Request $request)
+//    {
+//        $this->constructorService->dropTable($request);
+//
+//        return response($request->table_title . ' table has been dropped', 200);
+//    }
+
+//    /**
+//     * Удалить поле из таблицы
+//     * @param Request $request :
+//     * columnTechTitle - техническое наименование столбца
+//     * tableId - ид таблицы
+//     * @return ResponseFactory|Response
+//     */
+//    public function dropColumn(Request $request)
+//    {
+//        $this->constructorService->dropColumn($request->column_tech_title, $request->table_id);
+//
+//        return response($request->columnTechTitle . ' has been deleted');
+//    }
+
+
 }

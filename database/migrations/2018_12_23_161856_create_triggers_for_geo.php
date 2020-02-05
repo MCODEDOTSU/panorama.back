@@ -14,41 +14,19 @@ class CreateTriggersForGeo extends Migration
     public function up()
     {
         DB::unprepared('
-            CREATE OR REPLACE FUNCTION SetLength()
-              RETURNS trigger AS
-            $$
-                BEGIN   
-                    SELECT ST_Length(NEW.geom)::text INTO NEW.length;
+            CREATE OR REPLACE FUNCTION set_geometry_properties() RETURNS trigger AS $geometry_properties$
+                BEGIN
+                    NEW.length := ST_Length(NEW.geometry);
+                    NEW.area := ST_Area(NEW.geometry);
+                    NEW.perimeter := ST_Perimeter(NEW.geometry);
                     RETURN NEW;
-                END
-            $$
-            LANGUAGE plpgsql
+                END;           
+            $geometry_properties$ LANGUAGE plpgsql;
         ');
         DB::unprepared('
-            CREATE TRIGGER SetLength
-            BEFORE INSERT OR UPDATE
-            ON geo_linestrings
-            FOR EACH ROW
-            EXECUTE PROCEDURE SetLength()
-        ');
-        DB::unprepared('
-            CREATE OR REPLACE FUNCTION SetAreaPerimeter()
-              RETURNS trigger AS
-            $$
-                BEGIN   
-                    SELECT ST_Area(NEW.geom)::text INTO NEW.area;
-                    SELECT ST_Perimeter(NEW.geom)::text INTO NEW.perimeter;
-                    RETURN NEW;
-                END
-            $$
-            LANGUAGE plpgsql
-        ');
-        DB::unprepared('
-            CREATE TRIGGER SetAreaPerimeter
-            BEFORE INSERT OR UPDATE
-            ON geo_polygons
-            FOR EACH ROW
-            EXECUTE PROCEDURE SetAreaPerimeter()
+            CREATE TRIGGER set_geometry_properties
+            BEFORE INSERT OR UPDATE ON geo_elements
+            FOR EACH ROW EXECUTE PROCEDURE set_geometry_properties()
         ');
     }
 
@@ -59,9 +37,7 @@ class CreateTriggersForGeo extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS SetAreaPerimeter on geo_polygons');
-        DB::unprepared('DROP TRIGGER IF EXISTS SetLength on geo_linestrings');
-        DB::unprepared('DROP FUNCTION IF EXISTS SetAreaPerimeter() CASCADE');
-        DB::unprepared('DROP FUNCTION IF EXISTS SetLength() CASCADE');
+        DB::unprepared('DROP TRIGGER IF EXISTS set_geometry_properties on geo_elements');
+        DB::unprepared('DROP FUNCTION IF EXISTS set_geometry_properties() CASCADE');
     }
 }

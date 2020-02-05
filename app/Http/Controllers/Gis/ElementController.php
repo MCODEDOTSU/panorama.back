@@ -52,6 +52,21 @@ class ElementController extends Controller
     }
 
     /**
+     * Сохранить изменения в геометрии элемента.
+     * @param int $id
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function updateGeometry(int $id, Request $request)
+    {
+        try {
+            return response($this->elementService->updateGeometry($id, $request), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 400);
+        }
+    }
+
+    /**
      * Удалить элемент.
      * @param int $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response

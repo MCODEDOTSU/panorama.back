@@ -19,6 +19,12 @@ class CreateGeoElementsTable extends Migration
             $table->foreign('layer_id')->references('id')->on('geo_layers');
             $table->string('title');
             $table->text('description')->nullable();
+            $table->integer('address_id')->unsigned()->nullable();
+            $table->foreign('address_id')->references('id')->on('address');
+            $table->geometry('geometry')->nullable();
+            $table->float('length')->nullable();
+            $table->float('area')->nullable();
+            $table->float('perimeter')->nullable();
             $table->timestamps();
         });
     }

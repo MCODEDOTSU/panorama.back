@@ -5,7 +5,7 @@ namespace App\src\Services\Constructor\Entities;
 
 class ManyFromManyField extends AbstractField implements FieldsChooseableInterface
 {
-    public $type = 'jsonb';
+    public $type = 'json';
     
     public function setDefaultValue()
     {

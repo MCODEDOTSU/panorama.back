@@ -42,6 +42,17 @@ class ElementService
     }
 
     /**
+     * Сохранить изменения в геометрии элемента
+     * @param $id
+     * @param $data
+     * @return \App\src\Models\Element|mixed
+     */
+    public function updateGeometry($id, $data)
+    {
+        return $this->elementRepository->updateGeometry($id, $data);
+    }
+
+    /**
      * Удалить элемент.
      * @param $elementId
      * @return array

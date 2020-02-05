@@ -46,7 +46,6 @@ class LayerService
                 'module_id' => $layer->module_id,
                 'alias' => $layer->alias,
                 'elements' => $elements,
-                'composition' => $layer->composition
             ];
         }
         return $layers;
@@ -78,7 +77,6 @@ class LayerService
                 'module_id' => $layer->module_id,
                 'alias' => $layer->alias,
                 'elements' => $elements,
-                'composition' => $layer->composition
             ];
         }
         return $layers;

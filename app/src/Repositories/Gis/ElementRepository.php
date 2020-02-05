@@ -2,6 +2,7 @@
 
 namespace App\src\Repositories\Gis;
 use App\src\Models\Element;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ElementRepository
@@ -27,7 +28,9 @@ class ElementRepository
      */
     public function getById($id): Element
     {
-        return $this->element->find($id);
+        return $this->element
+            ->select(DB::raw('*, ST_AsText(geometry) as geometry'))
+            ->find($id);
     }
 
     /**
@@ -37,11 +40,14 @@ class ElementRepository
      */
     public function create($data): Element
     {
-        $record = $this->element->create([
+        $value = [
             'layer_id' => $data->layer_id,
             'title' => $data->title,
             'description' => $data->description,
-        ]);
+        ];
+        if(!empty($data->address_id)) $value['address_id'] = $data->address_id;
+        if(!empty($data->element_next_id)) $value['element_next_id'] = $data->element_next_id;
+        $record = $this->element->create($value);
         return $this->getById($record->id);
     }
 
@@ -56,6 +62,22 @@ class ElementRepository
         $record = $this->getById($id);
         $record->title = $data->title;
         $record->description = $data->description;
+        if(!empty($data->address_id)) $record->address_id = $data->address_id;
+        if(!empty($data->element_next_id)) $record->element_next_id = $data->element_next_id;
+        $record->save();
+        return $record;
+    }
+
+    /**
+     * Обновить геометрию элемента.
+     * @param int $id
+     * @param $data
+     * @return Element
+     */
+    public function updateGeometry(int $id, $data): Element
+    {
+        $record = $this->getById($id);
+        if(!empty($data->geometry)) $record->geometry = $data->geometry;
         $record->save();
         return $record;
     }

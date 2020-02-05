@@ -32,30 +32,10 @@ class LayerRepository
         return $this->layer
             ->with([
                 'elements' => function($query) {
-                    $query
-                        ->select(DB::raw(
-                            '*, ( ( SELECT COUNT(*) FROM geo_points WHERE geo_points.element_id = geo_elements.id AND geo_points.geom IS NOT NULL ) + 
-                                ( SELECT COUNT(*) FROM geo_linestrings WHERE geo_linestrings.element_id = geo_elements.id AND geo_linestrings.geom IS NOT NULL ) + 
-                                ( SELECT COUNT(*) FROM geo_polygons WHERE geo_polygons.element_id = geo_elements.id AND geo_polygons.geom IS NOT NULL )
-                            ) as geometries_count'))
-                        ->with([
-                            'points' => function($pointsQuery) {
-                                $pointsQuery->select(DB::raw('*, ST_AsText(geo_points.geom) as geom'))
-                                    ->join('address', 'address.id', '=', 'geo_points.address_id');
-                            },
-                            'linestrings' => function($linestringsQuery) {
-                                $linestringsQuery->select(DB::raw('*, ST_AsText(geo_linestrings.geom) as geom'))
-                                    ->join('address', 'address.id', '=', 'geo_linestrings.address_id');
-                            },
-                            'polygons' => function($polygonsQuery) {
-                                $polygonsQuery->select(DB::raw('*, ST_AsText(geo_polygons.geom) as geom'))
-                                    ->join('address', 'address.id', '=', 'geo_polygons.address_id');
-                            },
-                        ])
-                        ->orderBy('title', 'asc');
-                },
+                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'));
+                }
             ])
-            ->with('composition')
+            ->where('visibility', true)
             ->get();
     }
 
@@ -68,16 +48,9 @@ class LayerRepository
         return $this->layer
             ->with([
                 'elements' => function($query) {
-                    $query
-                        ->select(DB::raw(
-                            '*, ( ( SELECT COUNT(*) FROM geo_points WHERE geo_points.element_id = geo_elements.id AND geo_points.geom IS NOT NULL ) + 
-                                ( SELECT COUNT(*) FROM geo_linestrings WHERE geo_linestrings.element_id = geo_elements.id AND geo_linestrings.geom IS NOT NULL ) + 
-                                ( SELECT COUNT(*) FROM geo_polygons WHERE geo_polygons.element_id = geo_elements.id AND geo_polygons.geom IS NOT NULL )
-                            ) as geometries_count'))
-                        ->orderBy('title', 'asc');
-                },
+                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'));
+                }
             ])
-            ->with('composition')
             ->whereHas('module', function ($query) use ($contractorId) {
                 $query->whereHas('contractors', function ($query) use ($contractorId) {
                     $query->where('contractor_id', '=', $contractorId);

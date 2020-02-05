@@ -39,7 +39,6 @@ class UserController
             $authedUser->modules = $contractor->modules()->get();
         }
 
-
         return $authedUser;
     }
 

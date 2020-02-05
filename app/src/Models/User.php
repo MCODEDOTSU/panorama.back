@@ -32,7 +32,12 @@ class User extends Authenticatable
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      * Пользователь привязан к контрагенту
      */
-    public function contractor() {
+    public function contractor()
+    {
         return $this->belongsTo(Contractor::class, 'contractor_id');
+    }
+
+    public function AauthAcessToken(){
+        return $this->hasMany(OauthAccessToken::class);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateLayersTableAddAliasColumn extends Migration
+class UpdateUsersTableAddRole extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateLayersTableAddAliasColumn extends Migration
      */
     public function up()
     {
-        Schema::table('geo_layers', function (Blueprint $table) {
-            $table->string('alias')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('role', ['admin', 'superadmin'])->default('admin');
         });
     }
 
@@ -25,8 +25,8 @@ class UpdateLayersTableAddAliasColumn extends Migration
      */
     public function down()
     {
-        Schema::table('geo_layers', function (Blueprint $table) {
-            $table->dropColumn('alias');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
         });
     }
 }

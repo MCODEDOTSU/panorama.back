@@ -9,12 +9,7 @@ class Contractor extends Model
     protected $table = 'contractors';
 
     protected $fillable = [
-        'id',
-        'name',
-        'full_name',
-        'inn',
-        'kpp',
-        'address_id',
+        'id', 'name', 'full_name', 'inn', 'kpp', 'address_id',
     ];
 
     /**

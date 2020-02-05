@@ -58,8 +58,8 @@ class ConstructorMetadataService
      */
     public function saveTableInfo($columns, $tableTitle)
     {
-        foreach ($columns as $col) {
-            $this->createColumn($col, $this->tablePrefix . $tableTitle);
+        foreach ($columns as $column) {
+            $this->createColumn($column, $this->tablePrefix . $tableTitle);
         }
     }
     
@@ -73,7 +73,6 @@ class ConstructorMetadataService
         $resolvedField = $this->fieldsResolver->selectFieldType($columnData);
         $fieldsArray = $resolvedField->getFieldsToSaveInMetadataTable($columnData);
         $fieldsArray['table_identifier'] = $tableName;
-
         $this->constructorRepository->saveTableInfo($fieldsArray);
     }
 

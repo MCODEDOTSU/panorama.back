@@ -2,9 +2,9 @@
 
 namespace App\src\Services\Auth;
 
-
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\src\Repositories\Auth\UserRepository;
 
 class LoginService
 {
@@ -39,7 +39,7 @@ class LoginService
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
             )->toDateTimeString(),
-            'role' => $role
+            'role' => $user->role
         ]);
 
     }
@@ -51,6 +51,21 @@ class LoginService
         } else {
             return 'admin';
         }
+    }
+
+    /**
+     * Выход из системы
+     */
+    public function logout()
+    {
+
+        if (Auth::check()) {
+            Auth::user()->AauthAcessToken()->delete();
+        }
+
+        return response()->json([
+            'logout' => true
+        ]);
     }
 
 }

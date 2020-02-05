@@ -9,8 +9,7 @@ class Module extends Model
     protected $table = 'modules';
 
     protected $fillable = [
-        'title',
-        'description'
+        'title', 'description'
     ];
 
     public function layers()

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\src\Services\Constructor;
 
-
 use App\src\Repositories\Constructor\ConstructorRepository;
 use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class ConstructorService
@@ -39,64 +39,76 @@ class ConstructorService
         $this->constructorRepository = $constructorRepository;
         $this->constructorMetadataService = $constructorMetadataService;
     }
-    
-    public function createTable(Request $request): string
+
+    /**
+     * Проверить - существует ли таблица
+     * @param $layerId
+     * @return array
+     */
+    public function getToLayer(int $layerId): array
     {
-        Schema::create($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
-            $this->parseColumns($request, $table);
+        if (!Schema::hasTable($this->tablePrefix . $layerId)) {
+            return [];
+        }
+
+        $result = [];
+        $tableColumns = $this->constructorRepository->getToLayer($this->tablePrefix . $layerId);
+        $grouppedColumns = $tableColumns->groupBy('group');
+        foreach ($grouppedColumns as $key => $tableColumn) {
+            array_push($result, [
+                'group' => $key,
+                'columns' => $tableColumn
+            ]);
+        }
+
+        return $result;
+    }
+
+    /***
+     * Создать новую таблицу с данными
+     * @param int $layerId
+     * @param array $columns
+     * @return string
+     */
+    public function create(int $layerId, array $columns): string
+    {
+        Schema::create($this->tablePrefix . $layerId, function (Blueprint $table) use ($columns) {
+            $this->parseColumns($columns, $table);
             $this->addGeoElementsAsForeignKey($table);
         });
-        
-        $this->constructorMetadataService->saveTableInfo($request->columns, $request->table_title);
-        
-        return $this->tablePrefix . $request->table_title;
+        $this->constructorMetadataService->saveTableInfo($columns, $layerId);
+        return $this->tablePrefix . $layerId;
     }
-    
-    public function updateTable(Request $request)
-    {
-        Schema::table($this->tablePrefix . $request->table_title, function (Blueprint $table) use ($request) {
-            $this->checkChangesInColumns($request->columns, $request->table_title, $table);
-        });
 
-        return $this->tablePrefix . $request->table_title;
-    }
-    
-    /**
-     * Удалить таблицу
-     * @param $request :
-     * Название таблицы
+    /***
+     * Обновить таблицу с данными
+     * @param int $layerId
+     * @param array $columns
+     * @return string
      */
-    public function dropTable(Request $request): void
+    public function update(int $layerId, array $columns):string
     {
-        Schema::dropIfExists($request->table_title);
+        Schema::table($this->tablePrefix . $layerId, function (Blueprint $table) use ($layerId, $columns) {
+            $this->checkChangesInColumns($columns, $layerId, $table);
+        });
+        return $this->tablePrefix . $layerId;
     }
-    
+
     /**
      * Конвертирует json массив в столбцы новой таблицы
-     * @param $request
-     * @param $table
+     * @param $columns
+     * @param Blueprint $table
      */
-    private function parseColumns($request, Blueprint $table): void
+    private function parseColumns($columns, Blueprint $table): void
     {
-        $colArr = $request->columns;
-        
-        foreach ($colArr as $col) {
-            $fieldType = $this->fieldsResolver->selectFieldType($col);
-            
+        foreach ($columns as $column) {
+            $fieldType = $this->fieldsResolver->selectFieldType($column);
             $fieldType->constructField($table);
         }
     }
-    
-    private function parseSingleColumn(array $columnData, Blueprint $updatedTable, $tableNumber)
-    {
-        $fieldType = $this->fieldsResolver->selectFieldType($columnData);
-        $fieldType->constructField($updatedTable);
-        $this->constructorMetadataService->createColumn($columnData, $this->tablePrefix . $tableNumber);
-    }
-    
+
     /**
      * Добавить внещний ключ на таблицу geo_elements
-     * TODO: Нужен ли только на geo_elements или на geo_layers - тоже???
      * @param $table - таблица с готовыми столбцами
      */
     private function addGeoElementsAsForeignKey($table)
@@ -104,90 +116,106 @@ class ConstructorService
         $table->integer('element_id')->unsigned();
         $table->foreign('element_id')->references('id')->on('geo_elements');
     }
-    
+
+    /**
+     * Проверить изменения в колонках (для обновления структуры таблицы)
+     * @param array $columns
+     * @param int $layerId
+     * @param Blueprint $table
+     * @return mixed
+     */
+    private function checkChangesInColumns(array $columns, int $layerId, Blueprint $table)
+    {
+        // Проверить изменения в составе таблицы
+        foreach ($columns as $column) {
+            if(isset($column['id'])) {
+                if($column['is_deleted'] && !$this->hasColumnData($layerId, $column)) {
+                    $this->dropColumn($layerId, $column);
+                } else {
+                    $metadata = $this->constructorRepository->getById($column['id']);
+                    $this->updateColumnInfo($column, $metadata, $table);
+                }
+            } else {
+                // Если добавляются новые столбцы с данными - добавить новые
+                $this->parseSingleColumn($column, $layerId, $table);
+            }
+        }
+    }
+
+    /***
+     * Добавляем новые поля в таблицу
+     * @param array $column
+     * @param Blueprint $updatedTable
+     * @param $layerId
+     */
+    private function parseSingleColumn(array $column, $layerId, Blueprint $table)
+    {
+        $fieldType = $this->fieldsResolver->selectFieldType($column);
+        $fieldType->constructField($table);
+        $this->constructorMetadataService->createColumn($column, $this->tablePrefix . $layerId);
+    }
+
+    /**
+     * Изменить структуру таблицы
+     * @param $column
+     * @param $metadata
+     * @param Blueprint $table
+     */
+    private function updateColumnInfo($column, $metadata, Blueprint $table)
+    {
+        $fieldType = $this->fieldsResolver->selectFieldType($column);
+        $fieldType->setNewTechTitle($column['tech_title']);
+        $fieldType->setTechTitle($metadata->tech_title);
+
+        // Поле не подлежит переименованию, если старое и новое названия совпадают
+        if($fieldType->getTechTitle() != $fieldType->getNewTechTitle()) {
+            $fieldType->renameField($table);
+        }
+        $fieldType->changeFieldType($table);
+
+        $this->constructorRepository->updateColumnInfo($metadata, $column);
+    }
+
+    /**
+     * Проверить, есть ли данные перед удалением
+     * @param int $layerId
+     * @param array $column
+     * @return bool
+     */
+    public function hasColumnData(int $layerId, array $column): bool
+    {
+        $count = DB::table($this->tablePrefix . $layerId)
+            ->whereNotNull($column['tech_title'])
+            ->count();
+        return $count == 0 ? false : true;
+    }
+
+    /**
+     * Удалить столбец
+     * @param int $layerId
+     * @param array $column
+     */
+    public function dropColumn(int $layerId, array $column): void
+    {
+        Schema::table($this->tablePrefix . $layerId, function (Blueprint $table) use ($column) {
+            $table->dropColumn($column['tech_title']);
+        });
+        $this->constructorMetadataService->deleteColumnMetadata($column['tech_title'], $this->tablePrefix . $layerId);
+    }
     
     public function getSpecificType(string $type)
     {
         return $type;
     }
-    
-    /**
-     * Получить сводную информацию о столбцах
-     * @param string $tableIdentifier
-     * @return Collection
-     */
-    public function getTableInfo(string $tableIdentifier): Collection
-    {
-        return $this->constructorRepository->getTableInfo($this->tablePrefix . $tableIdentifier);
-    }
-    
-    /**
-     * Проверить - существует ли таблица
-     * @param string $tableIdentifier
-     * @return string
-     */
-    public function isTableExists(string $tableIdentifier): string
-    {
-        if (!Schema::hasTable($this->tablePrefix . $tableIdentifier)) {
-            return 'false';
-        }
-        
-        return 'true';
-    }
-    
-    /**
-     * Проверить изменения в колонках (для обновления структуры таблицы)
-     * @param array $columns
-     * @param $tableNumber
-     * @param $updatedTable - Обновляемая таблица по Schema
-     * @return mixed
-     */
-    private function checkChangesInColumns(array $columns, $tableNumber, Blueprint $updatedTable)
-    {
-        // Проверить изменения в составе таблицы
-        foreach ($columns as $columnData) {
-            if(isset($columnData['id'])) {
-                $savedColumnInfo = $this->constructorRepository->getById($columnData['id']);
-                $this->updateColumnInfo($columnData, $savedColumnInfo, $updatedTable);
-            } else {
-                // Если добавляются новые столбцы с данными - добавить новые
-                $this->parseSingleColumn($columnData, $updatedTable, $tableNumber);
-            }
-        }
-    }
 
-    /**
-     * Изменить структуру таблицы
-     * @param $columnData
-     * @param $savedColumnInfo
-     * @param Blueprint $updatedTable
-     */
-    private function updateColumnInfo($columnData, $savedColumnInfo, Blueprint $updatedTable)
-    {
-        $fieldType = $this->fieldsResolver->selectFieldType($columnData);
-        $fieldType->setNewTechTitle($columnData['tech_title']);
-        $fieldType->setTechTitle($savedColumnInfo->tech_title);
+//    /**
+//     * Удалить таблицу
+//     * @param $request :
+//     * Название таблицы
+//     */
+//    public function dropTable(Request $request): void
+//    {
+//        Schema::dropIfExists($request->table_title);
+//    }
 
-        // Поле не подлежит переименованию, если старое и новое названия совпадают
-        if($fieldType->getTechTitle() != $fieldType->getNewTechTitle()) {
-            $fieldType->renameField($updatedTable);
-        }
-        $fieldType->changeFieldType($updatedTable);
-
-        $this->constructorRepository->updateColumnInfo($savedColumnInfo, $columnData);
-    }
-
-    /**
-     * Удалить столбец
-     * @param $columnTechTitle
-     * @param $tableId
-     */
-    public function dropColumn($columnTechTitle, $tableId): void
-    {
-        Schema::table($this->tablePrefix . $tableId, function (Blueprint $table) use ($columnTechTitle) {
-            $table->dropColumn($columnTechTitle);
-        });
-
-        $this->constructorMetadataService->deleteColumnMetadata($columnTechTitle, $this->tablePrefix . $tableId);
-    }
 }

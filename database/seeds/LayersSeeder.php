@@ -15,83 +15,44 @@ class LayersSeeder extends Seeder
         $data = [
             '0' => [
                 'id' => 1,
-                'title' => 'Аварийно-диспетчерские службы',
+                'title' => 'ТОСы',
                 'module_id' => 1,
-                'alias' => 'safety_emergency'
+                'alias' => 'tos',
+                'geometry_type' => 'polygon',
+                'style' => '{"font":{"font":"16px Calibri, sans-serif","fill":{"color":"#000000"},"stroke":{"color":"#ffffff","width":3},"textBaseline":"bottom","offsetY":-6},"fill":{"color":"#ff7845","opacity":50},"stroke":{"color":"#e4352b","width":1}}'
             ],
             '1' => [
                 'id' => 2,
-                'title' => 'Опорные пункты полиции',
-                'module_id' => 1,
-                'alias' => 'safety_police_stations'
+                'title' => 'Опоры',
+                'module_id' => 2,
+                'alias' => 'opory',
+                'geometry_type' => 'point',
+                'style' => '{"shape":{"points":66,"fill":{"color":"#4FBBC5"},"stroke":{"color":"#6EBDC5","width":1},"radius":5},"font":{"font":"16px Calibri, sans-serif","fill":{"color":"#000000"},"stroke":{"color":"#ffffff","width":3},"textBaseline":"bottom","offsetY":-6}}'
             ],
             '2' => [
                 'id' => 3,
-                'title' => 'Участковые',
-                'module_id' => 1,
-                'alias' => 'safety_police_men'
+                'title' => 'Освещение',
+                'module_id' => 2,
+                'alias' => 'osveshhenie',
+                'geometry_type' => 'point',
+                'style' => '{"shape":{"points":66,"fill":{"color":"#F2665F"},"stroke":{"color":"#F28B86","width":1},"radius":5},"font":{"font":"16px Calibri, sans-serif","fill":{"color":"#000000"},"stroke":{"color":"#ffffff","width":3},"textBaseline":"bottom","offsetY":-6}}'
             ],
             '3' => [
                 'id' => 4,
-                'title' => 'Маршруты следования',
-                'module_id' => 2,
-                'alias' => 'transport_routes'
+                'title' => 'Кладбища',
+                'module_id' => 3,
+                'alias' => 'kladbishha',
+                'geometry_type' => 'polygon',
+                'style' => '{"font":{"font":"16px Calibri, sans-serif","fill":{"color":"#000000"},"stroke":{"color":"#ffffff","width":3},"textBaseline":"bottom","offsetY":-6},"fill":{"color":"#7a9700","opacity":50},"stroke":{"color":"#011c00","width":1}}'
             ],
             '4' => [
                 'id' => 5,
-                'title' => 'Остановки',
-                'module_id' => 2,
-                'alias' => 'transport_stops'
-            ],
-            '5' => [
-                'id' => 6,
-                'title' => 'Объекты торговли',
+                'title' => 'Захоронения',
                 'module_id' => 3,
-                'alias' => 'trading_objects'
+                'alias' => 'zahoronenija',
+                'geometry_type' => 'polygon',
+                'style' => '{"font":{"font":"16px Calibri, sans-serif","fill":{"color":"#000000"},"stroke":{"color":"#ffffff","width":3},"textBaseline":"bottom","offsetY":-6},"fill":{"color":"#009fe3","opacity":50},"stroke":{"color":"#164194","width":1}}'
             ],
-            '6' => [
-                'id' => 7,
-                'title' => 'Управляющие компании',
-                'module_id' => 4,
-                'alias' => 'utilities_companies'
-            ],
-            '7' => [
-                'id' => 8,
-                'title' => 'Программа капитального ремонта',
-                'module_id' => 4,
-                'alias' => 'utilities_prog_repair'
-            ],
-            '8' => [
-                'id' => 9,
-                'title' => 'Программа благоустройства дворов',
-                'module_id' => 4,
-                'alias' => 'utilities_prog_development'
-            ],
-            '9' => [
-                'id' => 10,
-                'title' => 'Плановые',
-                'module_id' => 5,
-                'alias' => 'disconnections_planned'
-            ],
-            '10' => [
-                'id' => 11,
-                'title' => 'Аварийные',
-                'module_id' => 5,
-                'alias' => 'disconnections_emergency'
-            ],
-            '11' => [
-                'id' => 12,
-                'title' => 'ТОСы',
-                'module_id' => 6,
-                'alias' => 'tos_area'
-            ],
-            '12' => [
-                'id' => 13,
-                'title' => 'Избирательные участки',
-                'module_id' => 7,
-                'alias' => 'elections_points'
-            ]
-
         ];
 
         foreach ($data as $value) {

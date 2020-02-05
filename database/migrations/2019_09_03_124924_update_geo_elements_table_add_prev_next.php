@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateElementsTableAddVisibilityAttribute extends Migration
+class UpdateGeoElementsTableAddPrevNext extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class UpdateElementsTableAddVisibilityAttribute extends Migration
     public function up()
     {
         Schema::table('geo_elements', function (Blueprint $table) {
-            $table->enum('visibility', ['shown', 'hidden'])->default('shown');
+            $table->integer('element_next_id')->unsigned()->nullable();
+            $table->foreign('element_next_id')->references('id')->on('geo_elements');
         });
     }
 
@@ -26,7 +27,7 @@ class UpdateElementsTableAddVisibilityAttribute extends Migration
     public function down()
     {
         Schema::table('geo_elements', function (Blueprint $table) {
-            $table->dropColumn('visibility');
+            $table->dropColumn('element_next_id');
         });
     }
 }

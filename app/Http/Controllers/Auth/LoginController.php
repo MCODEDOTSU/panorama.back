@@ -51,4 +51,12 @@ class LoginController extends Controller
     {
         return $this->loginService->login($request);
     }
+
+    /**
+     * @return bool
+     */
+    public function logout()
+    {
+        return $this->loginService->logout();
+    }
 }

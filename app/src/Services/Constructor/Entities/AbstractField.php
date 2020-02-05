@@ -113,6 +113,7 @@ class AbstractField
             'tech_title' => $columnData['tech_title'],
             'required' => $columnData['required'],
             'type' => $columnData['type'],
+            'group' => $columnData['group']
         ];
     }
 

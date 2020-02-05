@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdatePointsTableGeometryColumnNullable extends Migration
+class UpdateConstructorMetadataTableAddState extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdatePointsTableGeometryColumnNullable extends Migration
      */
     public function up()
     {
-        Schema::table('geo_points', function (Blueprint $table) {
-//            $table->point('geom')->nullable()->change();
+        Schema::table('constructor_metadata', function (Blueprint $table) {
+            $table->boolean('is_deleted')->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class UpdatePointsTableGeometryColumnNullable extends Migration
      */
     public function down()
     {
-        Schema::table('geo_points', function (Blueprint $table) {
-//            $table->point('geom')->change();
+        Schema::table('constructor_metadata', function (Blueprint $table) {
+            $table->dropColumn('is_deleted');
         });
     }
 }

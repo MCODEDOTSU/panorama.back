@@ -51,6 +51,20 @@ class ElementController extends Controller
     }
 
     /**
+     * Создать элемент.
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        try {
+            return response($this->elementService->create($request), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
      * Обновить элемент.
      * @param int $id
      * @param Request $request
@@ -60,20 +74,6 @@ class ElementController extends Controller
     {
         try {
             return response($this->elementService->update($id, $request), 200);
-        } catch (\Exception $ex) {
-            return response(['error' => $ex->getMessage()], 500);
-        }
-    }
-
-    /**
-     * Создать элемент.
-     * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        try {
-            return response($this->elementService->create($request), 200);
         } catch (\Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
@@ -92,4 +92,5 @@ class ElementController extends Controller
             return response(['error' => $ex->getMessage()], 500);
         }
     }
+
 }

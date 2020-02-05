@@ -9,10 +9,7 @@ class Layer extends Model
     protected $table = 'geo_layers';
 
     protected $fillable = [
-        'title',
-        'description',
-        'parent_id',
-        'module_id'
+        'alias', 'title', 'description', 'parent_id', 'module_id', 'visibility', 'geometry_type', 'style'
     ];
 
     /**
@@ -42,12 +39,4 @@ class Layer extends Model
         return $this->hasMany(Element::class);
     }
 
-    /**
-     * Композиция слоя
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function composition()
-    {
-        return $this->hasMany(LayerComposition::class, 'layer_id');
-    }
 }

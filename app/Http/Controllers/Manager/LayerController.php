@@ -104,4 +104,19 @@ class LayerController extends Controller
             return response(['error' => $ex->getMessage()], 500);
         }
     }
+
+    /**
+     * Загрузка икноки на сервер
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function uploadIcon(Request $request)
+    {
+
+        try {
+            return response($this->layerService->uploadIcon($request->file('file')), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
 }
