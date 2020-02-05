@@ -20,13 +20,13 @@ class ConstructorService
      * @var string
      */
     private $tablePrefix = 'constructed_';
-    
+
     private $fieldsResolver;
     private $constructorRepository;
     private $constructorMetadataService;
-    
+
     private $fieldType;
-    
+
     /**
      * ConstructorService constructor.
      * @param FieldsResolver $fieldsResolver
@@ -202,20 +202,9 @@ class ConstructorService
         });
         $this->constructorMetadataService->deleteColumnMetadata($column['tech_title'], $this->tablePrefix . $layerId);
     }
-    
+
     public function getSpecificType(string $type)
     {
         return $type;
     }
-
-//    /**
-//     * Удалить таблицу
-//     * @param $request :
-//     * Название таблицы
-//     */
-//    public function dropTable(Request $request): void
-//    {
-//        Schema::dropIfExists($request->table_title);
-//    }
-
 }

@@ -93,7 +93,9 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::post('/{layerId}', 'ConstructorController@create');
         Route::put('/{layerId}', 'ConstructorController@update');
     });
-    //Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
+
+    // TODO: check if route and cooresponding method are used
+    Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
 
 
 });

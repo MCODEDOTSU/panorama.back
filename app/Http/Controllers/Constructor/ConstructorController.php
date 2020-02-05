@@ -114,33 +114,4 @@ class ConstructorController extends Controller
     {
         return $this->constructorService->getSpecificType($type);
     }
-
-
-//    /**
-//     * Удаление таблицы
-//     * @param Request $request
-//     * @return ResponseFactory|Response
-//     */
-//    public function dropTable(Request $request)
-//    {
-//        $this->constructorService->dropTable($request);
-//
-//        return response($request->table_title . ' table has been dropped', 200);
-//    }
-
-//    /**
-//     * Удалить поле из таблицы
-//     * @param Request $request :
-//     * columnTechTitle - техническое наименование столбца
-//     * tableId - ид таблицы
-//     * @return ResponseFactory|Response
-//     */
-//    public function dropColumn(Request $request)
-//    {
-//        $this->constructorService->dropColumn($request->column_tech_title, $request->table_id);
-//
-//        return response($request->columnTechTitle . ' has been deleted');
-//    }
-
-
 }
