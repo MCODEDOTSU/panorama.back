@@ -2,9 +2,9 @@
 
 namespace App\src\Services\Constructor\Entities;
 
-
 use Exception;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Log;
 
 class FieldsResolver
 {
@@ -24,6 +24,7 @@ class FieldsResolver
     public function selectFieldType(array $columnInfo)
     {
         $class = $this->path . $this->snakeToCamel($columnInfo['type']);
+        Log::info("CLASS: $class");
 
         if (class_exists($class)) {
             /** @var AbstractField $readyBakedClass */
