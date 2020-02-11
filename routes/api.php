@@ -97,6 +97,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     // TODO: check if route and cooresponding method are used
     Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
     Route::post('/util/upload', 'Constructor\UploadController@uploadFile');
+    Route::post('/util/download', 'Constructor\UploadController@downloadFile');
 
 
 });
