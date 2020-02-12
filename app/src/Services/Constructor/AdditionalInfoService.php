@@ -96,9 +96,13 @@ class AdditionalInfoService
     {
         foreach ($tableInfoByGroups as $infoByGroups) {
             foreach ($infoByGroups['columns'] as $infoItem) {
-                $infoItem->value = $decodedAdditionalInfo[$infoItem->tech_title];
-                // Если в значении - json данные - превратить их в простые
-                $infoItem->value = json_decode($infoItem->value);
+                if (!isset($decodedAdditionalInfo[$infoItem->tech_title])) {
+                    $infoItem->value = null;
+                } else {
+                    $infoItem->value = $decodedAdditionalInfo[$infoItem->tech_title];
+                    // Если в значении - json данные - превратить их в простые
+                    $infoItem->value = json_decode($infoItem->value);
+                }
             }
         }
 

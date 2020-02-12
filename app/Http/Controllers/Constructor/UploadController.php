@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Constructor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,5 +24,11 @@ class UploadController extends Controller
         );
 
         return Response::download($path, $request->filepath['name'], $headers);
+    }
+
+    public function deleteFile(Request $request)
+    {
+        File::delete($request->filepath);
+        return $request->filepath;
     }
 }
