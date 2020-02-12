@@ -86,4 +86,14 @@ class ConstructorMetadataService
         $metadataInfo = $this->constructorRepository->getColumnMetadataInfo($columnTechTitle, $tableName);
         $this->constructorRepository->delete($metadataInfo);
     }
+
+    /**
+     * Получить метаданные по id
+     * @param int $id
+     * @return ConstructorMetadata|null
+     */
+    public function getById(int $id): ?ConstructorMetadata
+    {
+        return $this->constructorRepository->getById($id);
+    }
 }

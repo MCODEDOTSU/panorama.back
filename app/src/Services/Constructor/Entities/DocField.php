@@ -3,7 +3,7 @@
 namespace App\src\Services\Constructor\Entities;
 
 
-class DocField extends AbstractField implements FieldInterface
+class DocField extends AbstractField implements FieldsChooseableInterface
 {
     public $type = 'text';
 
@@ -25,5 +25,13 @@ class DocField extends AbstractField implements FieldInterface
     public function assignValue($value)
     {
         return json_encode($value);
+    }
+
+    public function getFieldsToSaveInMetadataTable(array $columnData): array
+    {
+        $fieldsArray = parent::getFieldsToSaveInMetadataTable($columnData);
+        $fieldsArray['enums'] = json_encode($columnData['enums']);
+
+        return $fieldsArray;
     }
 }
