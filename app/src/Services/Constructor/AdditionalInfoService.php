@@ -127,4 +127,18 @@ class AdditionalInfoService
 
         return false;
     }
+
+    /**
+     * @param string $tableIdentifier - name of dynamic table
+     * @param string $columnName - column name
+     * @param int $elementId - id of element for where clause
+     */
+    public function cleanDocField(string $tableIdentifier, string $columnName, int $elementId)
+    {
+        DB::table($tableIdentifier)
+            ->where('element_id', $elementId)
+            ->update([
+                $columnName => null
+            ]);
+    }
 }

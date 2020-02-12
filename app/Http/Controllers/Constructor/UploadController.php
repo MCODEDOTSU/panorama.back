@@ -3,16 +3,24 @@
 namespace App\Http\Controllers\Constructor;
 
 use App\Http\Controllers\Controller;
+use App\src\Services\Constructor\AdditionalInfoService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
+    private $additionalInfoService;
+
+    public function __construct(AdditionalInfoService $additionalInfoService)
+    {
+        $this->additionalInfoService = $additionalInfoService;
+    }
+
     public function uploadFile(Request $request)
     {
-        $path = $request->fileres->store('storage/uploads','public');
+        // TODO: Дополнительно сохранить информацию в БД
+        $path = $request->fileres->store('storage/uploads', 'public');
         return response($path, 200);
     }
 
@@ -26,9 +34,26 @@ class UploadController extends Controller
         return Response::download($path, $request->filepath['name'], $headers);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     * request params:
+     * filepath - path of the file
+     * tableIdentifier - value of table to delete
+     * columnName - column to make it null
+     * elementId - for where clause while deleting
+     */
     public function deleteFile(Request $request)
     {
-        File::delete($request->filepath);
-        return $request->filepath;
+        try {
+            Storage::disk('public')->delete($request->filepath);
+            $this->additionalInfoService->cleanDocField(
+                $request->tableIdentifier,
+                $request->columnName,
+                $request->elementId);
+            return response('File has been deleted', 200);
+        } catch (\Exception $e) {
+            return response('Unable to delete file', 400);
+        }
     }
 }
