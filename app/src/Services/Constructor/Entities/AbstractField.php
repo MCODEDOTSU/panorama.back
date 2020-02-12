@@ -118,6 +118,16 @@ class AbstractField
     }
 
     /**
+     * Присваивает значение при работе с дополнительными данными
+     * @param $value
+     * @return mixed
+     */
+    public function assignValue($value)
+    {
+        return $value;
+    }
+
+    /**
      * @return mixed
      */
     public function getType()

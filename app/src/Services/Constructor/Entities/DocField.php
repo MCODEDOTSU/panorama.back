@@ -16,4 +16,14 @@ class DocField extends AbstractField implements FieldInterface
     {
         return $this->type;
     }
+
+    /**
+     * Присваивает значение и превращает в json поле
+     * @param $value
+     * @return mixed|void
+     */
+    public function assignValue($value)
+    {
+        return json_encode($value);
+    }
 }

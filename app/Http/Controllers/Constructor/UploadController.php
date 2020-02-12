@@ -17,11 +17,11 @@ class UploadController extends Controller
 
     public function downloadFile(Request $request)
     {
-        $path = Storage::disk('public')->path($request->filepath);
+        $path = Storage::disk('public')->path($request->filepath['path']);
         $headers = array(
             'Content-Type: application/pdf',
         );
 
-        return Response::download($path, 'filename.pdf', $headers);
+        return Response::download($path, $request->filepath['name'], $headers);
     }
 }

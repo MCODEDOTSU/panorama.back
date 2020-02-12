@@ -2,6 +2,7 @@
 
 namespace App\src\Services\Constructor;
 
+use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -14,10 +15,12 @@ class AdditionalInfoService
     private $tablePrefix = 'constructed_';
 
     private $constructorService;
+    private $fieldsResolver;
 
-    public function __construct(ConstructorService $constructorService)
+    public function __construct(ConstructorService $constructorService, FieldsResolver $fieldsResolver)
     {
         $this->constructorService = $constructorService;
+        $this->fieldsResolver = $fieldsResolver;
     }
 
     /**
@@ -33,7 +36,8 @@ class AdditionalInfoService
             $fieldsArray = [];
 
             foreach ($additionalData as $additionalField) {
-                $fieldsArray[$additionalField['tech_title']] = $additionalField['value'];
+                $fieldByType = $this->fieldsResolver->selectFieldType($additionalField);
+                $fieldsArray[$additionalField['tech_title']] = $fieldByType->assignValue($additionalField['value']);
             }
 
             DB::table($this->tablePrefix . $layerId)
@@ -57,7 +61,8 @@ class AdditionalInfoService
     {
         $fieldsArray = [];
         foreach ($additionalData as $additionalField) {
-            $fieldsArray[$additionalField['tech_title']] = $additionalField['value'];
+            $fieldByType = $this->fieldsResolver->selectFieldType($additionalField);
+            $fieldsArray[$additionalField['tech_title']] = $fieldByType->assignValue($additionalField['value']);
         }
 
         $fieldsArray['element_id'] = $elementId;
@@ -82,11 +87,18 @@ class AdditionalInfoService
             ->where('element_id', $elementId)
             ->first();
 
-        $decodedAdditionalInfo = json_decode(json_encode($additionalInfo), true);
+        $decodedAdditionalInfo = (array)$additionalInfo;
 
+        return $this->distributeAdditionalInfoByGroups($tableInfoByGroups, $decodedAdditionalInfo);
+    }
+
+    private function distributeAdditionalInfoByGroups($tableInfoByGroups, $decodedAdditionalInfo)
+    {
         foreach ($tableInfoByGroups as $infoByGroups) {
             foreach ($infoByGroups['columns'] as $infoItem) {
                 $infoItem->value = $decodedAdditionalInfo[$infoItem->tech_title];
+                // Если в значении - json данные - превратить их в простые
+                $infoItem->value = json_decode($infoItem->value);
             }
         }
 
