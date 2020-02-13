@@ -132,13 +132,25 @@ class AdditionalInfoService
      * @param string $tableIdentifier - name of dynamic table
      * @param string $columnName - column name
      * @param int $elementId - id of element for where clause
+     * @param int $index - index of deletable element
+     * @return mixed
      */
-    public function cleanDocField(string $tableIdentifier, string $columnName, int $elementId)
+    public function cleanDocField(string $tableIdentifier, string $columnName, int $elementId, int $index)
     {
+        $filesInfoRaw = DB::table($tableIdentifier)
+            ->select($columnName)
+            ->where('element_id', $elementId)
+            ->first();
+
+        $filesInfo = json_decode($filesInfoRaw->$columnName);
+        unset($filesInfo[$index]);
+
         DB::table($tableIdentifier)
             ->where('element_id', $elementId)
             ->update([
-                $columnName => null
+                $columnName =>  json_encode($filesInfo, true)
             ]);
+
+        return $filesInfo;
     }
 }

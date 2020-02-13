@@ -68,18 +68,20 @@ class UploadController extends Controller
      * tableIdentifier - value of table to delete
      * columnName - column to make it null
      * elementId - for where clause while deleting
+     * index - index of deletable information concerning file
      */
     public function deleteFile(Request $request)
     {
         try {
             Storage::disk('public')->delete($request->filepath);
-            $this->additionalInfoService->cleanDocField(
+            $filesInfo = $this->additionalInfoService->cleanDocField(
                 $request->tableIdentifier,
                 $request->columnName,
-                $request->elementId);
-            return response('File has been deleted', 200);
+                $request->elementId,
+                $request->index);
+            return response($filesInfo, 200);
         } catch (\Exception $e) {
-            return response('Unable to delete file', 400);
+            return response($e->getMessage(), 400);
         }
     }
 }
