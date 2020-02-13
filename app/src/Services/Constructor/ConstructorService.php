@@ -76,6 +76,7 @@ class ConstructorService
             $this->parseColumns($columns, $table);
             $this->addGeoElementsAsForeignKey($table);
         });
+        // Сохранить данные о столюцах таблицы в ConstructorMetadata
         $this->constructorMetadataService->saveTableInfo($columns, $layerId);
         return $this->tablePrefix . $layerId;
     }

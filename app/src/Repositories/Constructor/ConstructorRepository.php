@@ -38,7 +38,7 @@ class ConstructorRepository
     {
         return $this->constructorMetadata->create($columnData);
     }
-    
+
     /**
      * Получить метаданные об отдельном столбце
      * @param string $columnIdentifier - tech_title
@@ -80,6 +80,7 @@ class ConstructorRepository
         $columnModel->enums = json_encode($column['enums']);
         $columnModel->group = $column['group'];
         $columnModel->is_deleted = $column['is_deleted'];
+        $columnModel->options = json_encode($column['options']);
         $columnModel->save();
 
         return $columnModel;

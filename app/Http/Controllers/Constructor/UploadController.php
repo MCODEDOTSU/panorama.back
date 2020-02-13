@@ -45,6 +45,8 @@ class UploadController extends Controller
             return response('Неверный формат данных', 400);
         }
 
+        //  TODO: Добавить проверку на кол-во прикрепляемых файлов
+
         // TODO: Дополнительно сохранить информацию в БД
         $path = $request->fileres->store('storage/uploads', 'public');
         return response($path, 200);

@@ -78,7 +78,7 @@ class AbstractField
     {
         $table->renameColumn($this->getTechTitle(), $this->getNewTechTitle());
     }
-    
+
     /**
      * Изменить тип поля
      * Проверить, является ли поле nullable
@@ -113,7 +113,8 @@ class AbstractField
             'tech_title' => $columnData['tech_title'],
             'required' => $columnData['required'],
             'type' => $columnData['type'],
-            'group' => $columnData['group']
+            'group' => $columnData['group'],
+            'options' => json_encode($columnData['options'])
         ];
     }
 
