@@ -7,6 +7,7 @@ use App\src\Models\ConstructorMetadata;
 use App\src\Services\Constructor\AdditionalInfoService;
 use App\src\Services\Constructor\ConstructorMetadataService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,6 +31,7 @@ class UploadController extends Controller
      * request:
      * fileres: blob file,
      * identifier: ConstructorMetadata->id
+     * elementId: ID of specified element in layer
      */
     public function uploadFile(Request $request)
     {
@@ -45,9 +47,24 @@ class UploadController extends Controller
             return response('Неверный формат данных', 400);
         }
 
-        //  TODO: Добавить проверку на кол-во прикрепляемых файлов
+        // Check only if additional data is not new
+        if ($request->elementId != 0) {
+            $attachedFiles = DB::table($constructorMetadata->table_identifier)
+                ->select($constructorMetadata->tech_title)
+                ->where('element_id', $request->elementId)
+                ->first();
 
-        // TODO: Дополнительно сохранить информацию в БД
+            $techTitle = $constructorMetadata->tech_title;
+            $metadata = $attachedFiles->$techTitle;
+            $countAttachedFiles = count(json_decode($metadata));
+
+            if ($countAttachedFiles >= $constructorMetadata->options->quantity) {
+                return response('Limit of attached files have been exceeded', 400);
+            }
+
+            return response(count(json_decode($metadata)), 200);
+        }
+
         $path = $request->fileres->store('storage/uploads', 'public');
         return response($path, 200);
     }
