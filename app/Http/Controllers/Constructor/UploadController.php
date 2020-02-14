@@ -54,6 +54,11 @@ class UploadController extends Controller
                 ->where('element_id', $request->elementId)
                 ->first();
 
+            if (!$attachedFiles) {
+                $path = $request->fileres->store('storage/uploads', 'public');
+                return response($path, 200);
+            }
+
             $techTitle = $constructorMetadata->tech_title;
             $metadata = $attachedFiles->$techTitle;
             $countAttachedFiles = count(json_decode($metadata));
@@ -62,7 +67,8 @@ class UploadController extends Controller
                 return response('Limit of attached files have been exceeded', 400);
             }
 
-            return response(count(json_decode($metadata)), 200);
+            $path = $request->fileres->store('storage/uploads', 'public');
+            return response($path, 200);
         }
 
         $path = $request->fileres->store('storage/uploads', 'public');
