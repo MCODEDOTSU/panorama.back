@@ -54,6 +54,7 @@ class UploadController extends Controller
                 ->where('element_id', $request->elementId)
                 ->first();
 
+            // If there is no attached files yet
             if (!$attachedFiles) {
                 $path = $request->fileres->store('storage/uploads', 'public');
                 return response($path, 200);
