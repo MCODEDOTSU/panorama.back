@@ -18,13 +18,19 @@ class DocField extends AbstractField implements FieldsChooseableInterface
     }
 
     /**
-     * Присваивает значение и превращает в json поле
-     * @param $value
-     * @return mixed|void
+     * @inheritDoc
      */
     public function assignValue($value)
     {
         return json_encode($value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function extractValue($value)
+    {
+        return json_decode($value);
     }
 
     public function getFieldsToSaveInMetadataTable(array $columnData): array

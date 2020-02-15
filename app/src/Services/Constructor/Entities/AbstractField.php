@@ -129,6 +129,16 @@ class AbstractField
     }
 
     /**
+     * Получает значение при отображении
+     * @param $value
+     * @return mixed
+     */
+    public function extractValue($value)
+    {
+        return $value;
+    }
+
+    /**
      * @return mixed
      */
     public function getType()

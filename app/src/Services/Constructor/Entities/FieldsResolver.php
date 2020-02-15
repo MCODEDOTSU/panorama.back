@@ -39,6 +39,19 @@ class FieldsResolver
         return new Exception('There is no such field type. Add which is necessary');
     }
 
+    public function selectFieldBasedOnlyOnType(string $type)
+    {
+        $class = $this->path . $this->snakeToCamel($type);
+        Log::info("CLASS: $class");
+
+        if (class_exists($class)) {
+            /** @var AbstractField $readyBakedClass */
+            return $this->container->make($class);
+        }
+
+        return new Exception('There is no such field type. Add which is necessary');
+    }
+
     /**
      * @param $str
      * @return string

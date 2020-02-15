@@ -94,18 +94,15 @@ class AdditionalInfoService
 
     private function distributeAdditionalInfoByGroups($tableInfoByGroups, $decodedAdditionalInfo)
     {
-//        $fieldByType = $this->fieldsResolver->selectFieldType($decodedAdditionalInfo);
-
         foreach ($tableInfoByGroups as $infoByGroups) {
             foreach ($infoByGroups['columns'] as $infoItem) {
                 if (!isset($decodedAdditionalInfo[$infoItem->tech_title])) {
                     $infoItem->value = null;
                 } else {
                     $infoItem->value = $decodedAdditionalInfo[$infoItem->tech_title];
-                    // Если в значении - json данные - превратить их в простые (Должно быть только для doc_field)
-                    if ($infoItem->type == 'doc_field') {
-                        $infoItem->value = json_decode($infoItem->value);
-                    }
+
+                    $fieldByType = $this->fieldsResolver->selectFieldBasedOnlyOnType($infoItem->type);
+                    $infoItem->value = $fieldByType->extractValue($decodedAdditionalInfo[$infoItem->tech_title]);
                 }
             }
         }
