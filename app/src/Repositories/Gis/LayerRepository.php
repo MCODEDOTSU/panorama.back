@@ -32,7 +32,7 @@ class LayerRepository
         return $this->layer
             ->with([
                 'elements' => function($query) {
-                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'));
+                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'))->orderBy('title', 'asc');
                 }
             ])
             ->where('visibility', true)
@@ -49,7 +49,7 @@ class LayerRepository
         return $this->layer
             ->with([
                 'elements' => function($query) {
-                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'));
+                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'))->orderBy('title', 'asc');
                 }
             ])
             ->whereIn('id', $layerIds)
@@ -65,7 +65,7 @@ class LayerRepository
         return $this->layer
             ->with([
                 'elements' => function($query) {
-                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'));
+                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'))->orderBy('title', 'asc');
                 }
             ])
             ->whereHas('module', function ($query) use ($contractorId) {
