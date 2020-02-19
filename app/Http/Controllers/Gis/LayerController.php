@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Gis;
 use App\Http\Controllers\Controller;
 use App\src\Services\Gis\LayerService;
+use Illuminate\Http\Request;
 
 /**
  * Class LayerController
@@ -28,6 +29,20 @@ class LayerController extends Controller
     {
         try {
             return response($this->layerService->getAll(), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Получить несколько слоёв
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getFewById(Request $request)
+    {
+        try {
+            return response($this->layerService->getFewById($request->layers), 200);
         } catch (\Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }

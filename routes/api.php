@@ -108,6 +108,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
  */
 Route::prefix('/gis')->namespace('Gis')->group(function () {
     Route::get('/layer', 'LayerController@getAll');
+    Route::post('/layer/few', 'LayerController@getFewById');
 });
 
 /**

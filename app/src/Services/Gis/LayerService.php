@@ -31,6 +31,16 @@ class LayerService
     }
 
     /**
+     * Получить несколько слоёв
+     * @param $layerIds
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFewById($layerIds)
+    {
+        return $this->layerRepository->getFewById($layerIds);
+    }
+
+    /**
      * Получить все слои для контрагента.
      * @return \Illuminate\Support\Collection
      */

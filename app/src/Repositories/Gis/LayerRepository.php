@@ -40,6 +40,23 @@ class LayerRepository
     }
 
     /**
+     * Получить несколько слоёв
+     * @param $layerIds
+     * @return Collection
+     */
+    public function getFewById($layerIds): Collection
+    {
+        return $this->layer
+            ->with([
+                'elements' => function($query) {
+                    $query->select(DB::raw('*, ST_AsText(geometry) as geometry'));
+                }
+            ])
+            ->whereIn('id', $layerIds)
+            ->get();
+    }
+
+    /**
      * Список слоёв для контрагента.
      * @return Collection
      */
