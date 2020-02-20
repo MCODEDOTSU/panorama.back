@@ -4,7 +4,7 @@
 - php 7.2 and above
 
 ##### Installation
-- composer install
+- composer update
 - php artisan migrate
 - php artisan db:seed
 - php artisan key:generate
