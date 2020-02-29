@@ -72,13 +72,17 @@ class ConstructorService
      */
     public function create(int $layerId, array $columns): string
     {
-        Schema::create($this->tablePrefix . $layerId, function (Blueprint $table) use ($columns) {
-            $this->parseColumns($columns, $table);
-            $this->addGeoElementsAsForeignKey($table);
-        });
-        // Сохранить данные о столюцах таблицы в ConstructorMetadata
-        $this->constructorMetadataService->saveTableInfo($columns, $layerId);
-        return $this->tablePrefix . $layerId;
+        if (!Schema::hasTable($this->tablePrefix . $layerId)) {
+            Schema::create($this->tablePrefix . $layerId, function (Blueprint $table) use ($columns) {
+                $this->parseColumns($columns, $table);
+                $this->addGeoElementsAsForeignKey($table);
+            });
+            // Сохранить данные о столюцах таблицы в ConstructorMetadata
+            $this->constructorMetadataService->saveTableInfo($columns, $layerId);
+            return $this->tablePrefix . $layerId;
+        } else {
+            return $this->update($layerId, $columns);
+        }
     }
 
     /***
@@ -87,7 +91,7 @@ class ConstructorService
      * @param array $columns
      * @return string
      */
-    public function update(int $layerId, array $columns):string
+    public function update(int $layerId, array $columns): string
     {
         Schema::table($this->tablePrefix . $layerId, function (Blueprint $table) use ($layerId, $columns) {
             $this->checkChangesInColumns($columns, $layerId, $table);
@@ -129,8 +133,8 @@ class ConstructorService
     {
         // Проверить изменения в составе таблицы
         foreach ($columns as $column) {
-            if(isset($column['id'])) {
-                if($column['is_deleted'] && !$this->hasColumnData($layerId, $column)) {
+            if (isset($column['id'])) {
+                if ($column['is_deleted'] && !$this->hasColumnData($layerId, $column)) {
                     $this->dropColumn($layerId, $column);
                 } else {
                     $metadata = $this->constructorRepository->getById($column['id']);
@@ -169,7 +173,7 @@ class ConstructorService
         $fieldType->setTechTitle($metadata->tech_title);
 
         // Поле не подлежит переименованию, если старое и новое названия совпадают
-        if($fieldType->getTechTitle() != $fieldType->getNewTechTitle()) {
+        if ($fieldType->getTechTitle() != $fieldType->getNewTechTitle()) {
             $fieldType->renameField($table);
         }
         $fieldType->changeFieldType($table);
