@@ -134,7 +134,7 @@ class ConstructorService
         // Проверить изменения в составе таблицы
         foreach ($columns as $column) {
             if (isset($column['id'])) {
-                if ($column['is_deleted'] && !$this->hasColumnData($layerId, $column)) {
+                if ($column['is_deleted'] && Schema::hasColumn($this->tablePrefix . $layerId, $column['tech_title']) && !$this->hasColumnData($layerId, $column)) {
                     $this->dropColumn($layerId, $column);
                 } else {
                     $metadata = $this->constructorRepository->getById($column['id']);
@@ -189,9 +189,6 @@ class ConstructorService
      */
     public function hasColumnData(int $layerId, array $column): bool
     {
-        if (!Schema::hasColumn($this->tablePrefix . $layerId, $column['tech_title'])) {
-            return false;
-        }
         $count = DB::table($this->tablePrefix . $layerId)
             ->whereNotNull($column['tech_title'])
             ->count();
