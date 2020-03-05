@@ -189,6 +189,9 @@ class ConstructorService
      */
     public function hasColumnData(int $layerId, array $column): bool
     {
+        if (!Schema::hasColumn($this->tablePrefix . $layerId, $column['tech_title'])) {
+            return false;
+        }
         $count = DB::table($this->tablePrefix . $layerId)
             ->whereNotNull($column['tech_title'])
             ->count();
@@ -202,9 +205,9 @@ class ConstructorService
      */
     public function dropColumn(int $layerId, array $column): void
     {
-//        Schema::table($this->tablePrefix . $layerId, function (Blueprint $table) use ($column) {
-//            $table->dropColumn($column['tech_title']);
-//        });
+        Schema::table($this->tablePrefix . $layerId, function (Blueprint $table) use ($column) {
+            $table->dropColumn($column['tech_title']);
+        });
         $this->constructorMetadataService->deleteColumnMetadata($column['tech_title'], $this->tablePrefix . $layerId);
     }
 
