@@ -26,6 +26,7 @@ class ConstructorRepository
     {
         return $this->constructorMetadata
             ->where('table_identifier', $tableIdentifier)
+            ->where('is_deleted', false)
             ->orderBy('id', 'asc')
             ->get();
     }

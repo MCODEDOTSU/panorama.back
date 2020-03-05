@@ -41,7 +41,7 @@ class ConstructorService
     }
 
     /**
-     * Проверить - существует ли таблица
+     * Получить таблицу для слоя
      * @param $layerId
      * @return array
      */
