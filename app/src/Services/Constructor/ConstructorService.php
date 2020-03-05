@@ -202,9 +202,9 @@ class ConstructorService
      */
     public function dropColumn(int $layerId, array $column): void
     {
-        Schema::table($this->tablePrefix . $layerId, function (Blueprint $table) use ($column) {
-            $table->dropColumn($column['tech_title']);
-        });
+//        Schema::table($this->tablePrefix . $layerId, function (Blueprint $table) use ($column) {
+//            $table->dropColumn($column['tech_title']);
+//        });
         $this->constructorMetadataService->deleteColumnMetadata($column['tech_title'], $this->tablePrefix . $layerId);
     }
 
