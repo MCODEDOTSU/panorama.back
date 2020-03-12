@@ -41,7 +41,7 @@ class ElementRepository
      * @param $id
      * @return Element
      */
-    public function getById(int $id): Element
+    public function getById(int $id)
     {
         return $this->element
             ->select(DB::raw('*, ST_AsText(geometry) as geometry'))

@@ -79,5 +79,19 @@ class ElementController extends Controller
             return response(['error' => $ex->getMessage()], 400);
         }
     }
+
+    /**
+     * Получить все связанные элементы.
+     * @param int $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function links(int $id)
+    {
+        try {
+            return response($this->elementService->links($id), 200);
+        } catch (\Exception $ex) {
+            return response(['error' => $ex->getMessage()], 400);
+        }
+    }
 }
 

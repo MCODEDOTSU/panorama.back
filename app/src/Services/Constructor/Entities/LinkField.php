@@ -16,7 +16,7 @@ class LinkField extends AbstractField implements FieldInterface
     
     public function setDefaultValue()
     {
-        return null;
+        return 0;
     }
     
     public function getType(): string

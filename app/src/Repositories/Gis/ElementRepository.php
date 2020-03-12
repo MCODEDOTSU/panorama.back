@@ -4,6 +4,8 @@ namespace App\src\Repositories\Gis;
 use App\src\Models\Element;
 use Illuminate\Support\Facades\DB;
 
+use App\src\Models\ConstructorMetadata;
+
 /**
  * Class ElementRepository
  * @package App\src\Repositories\Geo
@@ -93,6 +95,53 @@ class ElementRepository
         $record = $this->getById($id);
         $record->delete();
         return ['id' => $id];
+    }
+
+    /**
+     * Получить все связанные элементы.
+     * @param int $id
+     * @return array
+     * @throws \Exception
+     */
+    public function links(int $id)
+    {
+        // В таблице constructor_metadata ищем всем записи где type = link_field
+        $metadata = ConstructorMetadata::select('table_identifier', 'tech_title')
+            ->where('type', 'link_field')
+            ->where('is_deleted', 'false')
+            ->get();
+
+        // Для каждой пары table_identifier - tech_title получаем element_id
+        $result = [];
+        foreach ($metadata as $meta) {
+            $rows = DB::table($meta['table_identifier'])
+                ->select('element_id', $meta['tech_title'] . ' as parent')
+                ->where($meta['tech_title'], $id)
+                ->get();
+
+            // Получаем данные для каждого элемента: слой, геометрию, стиль, заголовок
+            foreach ($rows as &$row) {
+                $row->data = $this->element
+                    ->join('geo_layers', 'geo_layers.id', '=', 'geo_elements.layer_id')
+                    ->select(DB::raw('geo_layers.id as layer_id, geo_elements.title, ST_AsText(geometry) as geometry, style'))
+                    ->find($row->element_id);
+                $row->parent = $this->element
+                    ->select(DB::raw('id, ST_AsText(geometry) as geometry'))
+                    ->find($row->parent);
+            }
+
+            $result = array_merge($result, $rows->toArray());
+        }
+
+        // Если массив не пустой, повторяем рекурсивно для каждого элемента
+        if (count($result) != 0) {
+            foreach ($result as $row) {
+                $child = $this->links($row->element_id);
+                $result = array_merge($result, $child);
+            }
+        }
+
+        return $result;
     }
 
 }

@@ -54,13 +54,24 @@ class ElementService
 
     /**
      * Удалить элемент.
-     * @param $elementId
+     * @param $id
      * @return array
      * @throws \Exception
      */
     public function delete($id)
     {
         return $this->elementRepository->delete($id);
+    }
+
+    /**
+     * Получить все связанные элементы.
+     * @param $id
+     * @return array
+     * @throws \Exception
+     */
+    public function links($id)
+    {
+        return $this->elementRepository->links($id);
     }
 
 }
