@@ -114,6 +114,7 @@ class ElementRepository
         // Для каждой пары table_identifier - tech_title получаем element_id
         $result = [];
         foreach ($metadata as $meta) {
+
             $rows = DB::table($meta['table_identifier'])
                 ->select('element_id', $meta['tech_title'] . ' as parent')
                 ->where($meta['tech_title'], $id)
