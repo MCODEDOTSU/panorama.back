@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Parser;
 use App\src\Services\Parser\ParserService;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ParserController
 {
@@ -20,7 +18,7 @@ class ParserController
     public function parse(Request $request)
     {
         try {
-
+            // TODO: Необходимо предусмотреть механизм первоначальной загрузки файла через $request в temp папку, а потом чтения из неё
             $inputFileName = 'C:\My\Work\OSPanel\domains\panorama.back\parser_example.xlsx';
 
             $this->parserService->parse($inputFileName);

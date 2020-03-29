@@ -4,6 +4,8 @@ namespace App\src\Services\Parser\Grids;
 
 class ExampleParserGrid
 {
+    private $tableName = 'example_table_name';
+
     private $grid = [
         'pp_number' => 'B2',
         'district' => 'E2',
@@ -17,4 +19,15 @@ class ExampleParserGrid
     public function getGrid() {
         return $this->grid;
     }
+
+    /**
+     * Наименование таблицы для хранения распарсенных данных
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        return $this->tableName;
+    }
+
+
 }
