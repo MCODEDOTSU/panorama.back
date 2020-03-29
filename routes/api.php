@@ -118,3 +118,11 @@ Route::prefix('/gis')->namespace('Gis')->group(function () {
 Route::prefix('/constructor')->namespace('Constructor')->group(function () {
     Route::get('/{layerId}/{elementId}', 'AdditionalInfoController@getData');
 });
+
+
+/**
+ * Парсер
+ */
+Route::prefix('/parser')->namespace('Parser')->group(function () {
+    Route::post('/parse', 'ParserController@parse');
+});
