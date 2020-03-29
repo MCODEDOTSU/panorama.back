@@ -6,6 +6,10 @@ class ExampleParserGrid
 {
     private $tableName = 'example_table_name';
 
+    /**
+     * TODO: нужно предусмотреть механизм не просто определения по отдельной ячейке, а к примеру по смежным
+     * @var array
+     */
     private $grid = [
         'pp_number' => 'B2',
         'district' => 'E2',

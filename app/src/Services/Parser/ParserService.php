@@ -13,6 +13,12 @@ class ParserService
     private $parserGrid;
     private $parserRepository;
 
+    /**
+     * ParserService constructor.
+     * TODO: Вмемсто ExampleParserGrid - будет механизм рехолвера Сетки (Grid) для выбора нужной
+     * @param ExampleParserGrid $parserGrid
+     * @param ParserRepository $parserRepository
+     */
     public function __construct(ExampleParserGrid $parserGrid, ParserRepository $parserRepository)
     {
         $this->parserGrid = $parserGrid;

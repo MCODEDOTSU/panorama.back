@@ -11,6 +11,7 @@ class ParserRepository
 
     /**
      * ParserRepository constructor.
+     * TODO: Вмемсто ExampleParserGrid - будет механизм рехолвера Сетки (Grid) для выбора нужной
      * @param ExampleParserGrid $parserGrid
      */
     public function __construct(ExampleParserGrid $parserGrid)
