@@ -18,7 +18,9 @@
         "laravel/passport": "^7.0",
         "laravel/tinker": "^1.0",
         "phaza/laravel-postgis": "^3.5",
-      "ext-zip": "*"
+      "ext-zip": "*",
+        "ext-http": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
