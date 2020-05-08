@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Utilities;
 
 use App\Http\Controllers\Controller;
-use App\src\Utilities\KMZParserService;
+use App\src\Utilities\KMZParser\KMZParserService;
 use Chumper\Zipper\Zipper;
 use Exception;
 use Illuminate\Http\Request;
