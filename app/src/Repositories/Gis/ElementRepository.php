@@ -145,4 +145,16 @@ class ElementRepository
         return $result;
     }
 
+    /**
+     * Получить элемент по наименованию
+     * @param $name
+     * @return mixed
+     */
+    public function getByName($name)
+    {
+        return $this->element
+            ->where('title', '=', $name)
+            ->first();
+    }
+
 }

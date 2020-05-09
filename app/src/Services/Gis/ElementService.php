@@ -76,4 +76,13 @@ class ElementService
         return $this->elementRepository->links($id);
     }
 
+    /**
+     * @param string $name => element name
+     * @return Element|null
+     */
+    public function getByName(string $name): ?Element
+    {
+        return $this->elementRepository->getByName($name);
+    }
+
 }

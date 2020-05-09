@@ -43,6 +43,7 @@ class KMZElement
 
     public function parseGeometry()
     {
+        // TODO: Include throw Exception if offset is not working
         $normalizedCoords = explode(',', $this->coordinates);
         return 'POINT('.$normalizedCoords[0].' '.$normalizedCoords[1].')';
     }

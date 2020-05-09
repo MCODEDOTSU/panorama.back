@@ -8,6 +8,7 @@ use App\src\Services\Gis\ElementService;
 use App\src\Services\Gis\LayerService;
 use App\src\Utilities\KMZParser\Entities\KMZElement;
 use Illuminate\Support\Collection;
+use stdClass;
 
 class KMZParserService
 {
@@ -77,15 +78,10 @@ class KMZParserService
 
         /** @var KMZElement $kml */
         foreach ($kmlCollection as $kml) {
+
             /** @var Element $element */
-
             $elementToObject = $kml->convertToLayerElement($this->kmzLayer->id);
-            $element = $this->elementService->create($elementToObject);
-
-            $this->elementService->updateGeometry(
-                $element->id,
-                $elementToObject
-            );
+            $this->resolveKml($elementToObject);
         }
     }
 
@@ -95,5 +91,25 @@ class KMZParserService
     private function defineKmzLayer()
     {
         return $this->layerService->getByAlias(self::KMZ_LAYER_ALIAS);
+    }
+
+    /**
+     * Strategy
+     * 1. if there is kml with the same name => update it
+     * 2. if there is no kml with the same name => create it
+     * @param stdClass $elementToObject
+     */
+    private function resolveKml(stdClass $elementToObject)
+    {
+        $element = $this->elementService->getByName($elementToObject->title);
+
+        if (!$element) {
+            $element = $this->elementService->create($elementToObject);
+        }
+
+        $this->elementService->updateGeometry(
+            $element->id,
+            $elementToObject
+        );
     }
 }
