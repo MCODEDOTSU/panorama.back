@@ -27,7 +27,7 @@ class ElementRepository
     public function getElementsByLayer($layerId): Collection
     {
         return $this->element
-            ->where('layer_id', $layerId)
+            ->where('layer_id', '=', $layerId)
             ->with('points')
             ->with('linestrings')
             ->with('polygons')

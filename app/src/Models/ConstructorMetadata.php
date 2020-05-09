@@ -7,7 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Метаданные конструктора - информация о таблице и хранимых столбцах
  * Class ConstructorMetadata
+ * @property mixed tech_title
+ * @property mixed title
+ * @property mixed type
+ * @property mixed required
+ * @property false|mixed|string enums
+ * @property mixed group
+ * @property mixed is_deleted
+ * @property false|mixed|string options
  * @package App\src\Models
+ * @method static select(string $string, string $string1)
+ * @method where(string $string, string $tableIdentifier)
+ * @method create(array $columnData)
+ * @method find(int $id)
  */
 class ConstructorMetadata extends Model
 {

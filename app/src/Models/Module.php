@@ -4,6 +4,11 @@ namespace App\src\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method get()
+ * @method find($id)
+ * @method create(array $array)
+ */
 class Module extends Model
 {
     protected $table = 'modules';

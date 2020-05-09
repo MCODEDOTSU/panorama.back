@@ -92,7 +92,7 @@ class UserRepository
      */
     public function delete(int $id)
     {
-        $record = $this->user::find($id);
+        $record = $this->user->find($id);
         $record->delete();
         return ['id' => $id];
     }

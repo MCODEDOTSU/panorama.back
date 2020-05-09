@@ -6,6 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method where(string $string, string $string1, string $alias)
+ * @method create(array $recordData)
+ * @method static find(int $id)
+ * @property mixed alias
+ * @property mixed title
+ * @property mixed description
+ * @property mixed parent_id
+ * @property mixed module_id
+ * @property mixed visibility
+ * @property mixed geometry_type
+ * @property mixed style
+ */
 class Layer extends Model
 {
     protected $table = 'geo_layers';

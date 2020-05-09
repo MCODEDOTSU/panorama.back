@@ -48,7 +48,7 @@ class ModuleRepository
      */
     public function update(int $id, $data)
     {
-        $record = $this->module::find($id);
+        $record = $this->module->find($id);
         $record->title = $data->title;
         $record->description = $data->description;
         $record->save();
@@ -75,7 +75,7 @@ class ModuleRepository
      */
     public function delete(int $id)
     {
-        $record = $this->module::find($id);
+        $record = $this->module->find($id);
         $record->delete();
         return ['id' => $id];
     }
