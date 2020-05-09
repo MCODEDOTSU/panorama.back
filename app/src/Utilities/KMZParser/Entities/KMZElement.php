@@ -19,11 +19,11 @@ class KMZElement
 
     /**
      * KMZElement constructor.
-     * @param $name
-     * @param $coordinates
-     * @param Linestring|Point $type
+     * @param $name: string
+     * @param $coordinates: array
+     * @param $type: string
      */
-    public function __construct($name, $coordinates, $type)
+    public function __construct(string $name, array $coordinates, string $type)
     {
         $this->name = $name;
         $this->coordinates = $coordinates;
