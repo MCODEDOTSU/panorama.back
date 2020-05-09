@@ -15,10 +15,10 @@ class KMZElement
     /**
      * KMZElement constructor.
      * @param $name: string
-     * @param $coordinates: array
+     * @param $coordinates: string
      * @param $type: string
      */
-    public function __construct(string $name, string $coordinates, string $type)
+    public function __construct(string $name, $coordinates, string $type)
     {
         $this->name = $name;
         $this->coordinates = $coordinates;
@@ -36,8 +36,15 @@ class KMZElement
         $layerObj->layer_id = $layerId;
         $layerObj->title = $this->name;
         $layerObj->description = $this->name;
+        $layerObj->geometry = $this->parseGeometry();
 
         return $layerObj;
+    }
+
+    public function parseGeometry()
+    {
+        $normalizedCoords = explode(',', $this->coordinates);
+        return 'POINT('.$normalizedCoords[0].' '.$normalizedCoords[1].')';
     }
 
 }

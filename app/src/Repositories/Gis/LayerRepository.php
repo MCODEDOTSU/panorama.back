@@ -58,6 +58,7 @@ class LayerRepository
 
     /**
      * Список слоёв для контрагента.
+     * @param $contractorId
      * @return Collection
      */
     public function getAllToContractor($contractorId): Collection

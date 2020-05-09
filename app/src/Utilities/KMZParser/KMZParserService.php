@@ -2,6 +2,7 @@
 
 namespace App\src\Utilities\KMZParser;
 
+use App\src\Models\Element;
 use App\src\Models\Layer;
 use App\src\Services\Gis\ElementService;
 use App\src\Services\Gis\LayerService;
@@ -49,7 +50,7 @@ class KMZParserService
 
             if (array_has($childToArray, 'name')) {
                 $kmzElement = $this->parseSingleElement($childToArray);
-                $kmzCollection->push($kmzElement);
+                isset($kmzElement->coordinates) ? $kmzCollection->push($kmzElement) : null;
             }
         }
 
@@ -60,7 +61,7 @@ class KMZParserService
     {
         $name = $childElement['name'];
 
-        $coordinates = '';
+        $coordinates = null;
 
         $issetPoint = isset($childElement['Point']);
 
@@ -76,8 +77,14 @@ class KMZParserService
 
         /** @var KMZElement $kml */
         foreach ($kmlCollection as $kml) {
-            $this->elementService->create(
-                $kml->convertToLayerElement($this->kmzLayer->id)
+            /** @var Element $element */
+
+            $elementToObject = $kml->convertToLayerElement($this->kmzLayer->id);
+            $element = $this->elementService->create($elementToObject);
+
+            $this->elementService->updateGeometry(
+                $element->id,
+                $elementToObject
             );
         }
     }
