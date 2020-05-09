@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Constructor;
 
 use App\Http\Controllers\Controller;
 use App\src\Services\Constructor\AdditionalInfoService;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class AdditionalInfoController extends Controller
 {
@@ -19,7 +21,7 @@ class AdditionalInfoController extends Controller
      * Получить данные дополнительных полей для слоя и элемента
      * @param int $layerId
      * @param int $elementId
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getData(int $layerId, int $elementId)
     {

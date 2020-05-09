@@ -1,10 +1,13 @@
 <?php
 
 namespace App\src\Services\Manager;
+use App\src\Models\Element;
 use App\src\Services\Info\AddressService;
 use App\src\Repositories\Manager\ElementRepository;
 use App\src\Services\Constructor\AdditionalInfoService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 /**
  * Class ElementService
@@ -33,7 +36,7 @@ class ElementService
     /**
      * Список элементов слоя.
      * @param $layerId
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAll($layerId)
     {
@@ -43,7 +46,7 @@ class ElementService
     /**
      * Получить элемент по ИД.
      * @param int $id
-     * @return \App\src\Models\Element
+     * @return Element
      */
     public function getById(int $id)
     {
@@ -54,7 +57,7 @@ class ElementService
      * Обновить элемент.
      * @param int $id - elementId
      * @param Request $data
-     * @return \App\src\Models\Element
+     * @return Element
      */
     public function update(int $id, Request $data)
     {
@@ -72,7 +75,7 @@ class ElementService
     /**
      * Создать элемент.
      * @param Request $data
-     * @return \App\src\Models\Element
+     * @return Element
      */
     public function create(Request $data)
     {
@@ -93,7 +96,7 @@ class ElementService
      * Удалить элемент.
      * @param int $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete(int $id)
     {

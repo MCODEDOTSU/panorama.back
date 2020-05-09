@@ -2,9 +2,11 @@
 
 namespace App\src\Services\Manager;
 
+use App\src\Models\Contractor;
 use App\src\Repositories\Manager\ContractorRepository;
 use App\src\Services\Info\AddressService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ContractorService
 {
@@ -24,7 +26,7 @@ class ContractorService
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      * Получить всех контрагентов
      */
     public function getAll()
@@ -35,7 +37,7 @@ class ContractorService
     /**
      * Получить контрагента по ИД.
      * @param $id
-     * @return \App\src\Models\Contractor Получить всех контрагентов
+     * @return Contractor Получить всех контрагентов
      */
     public function getById($id)
     {
@@ -45,7 +47,7 @@ class ContractorService
     /**
      * Обновить котрагента.
      * @param Request $data
-     * @return \App\src\Models\Contractor
+     * @return Contractor
      */
     public function update(Request $data)
     {
@@ -62,7 +64,7 @@ class ContractorService
 
     /**
      * @param Request $data
-     * @return \App\src\Models\Contractor
+     * @return Contractor
      * Создать контрагента
      */
     public function create(Request $data)

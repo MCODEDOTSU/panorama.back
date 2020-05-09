@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Constructor;
 
 use App\Http\Controllers\Controller;
 use App\src\Services\Constructor\ConstructorService;
+use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -33,7 +34,7 @@ class ConstructorController extends Controller
     {
         try {
             return response($this->constructorService->getToLayer($layerId), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -67,7 +68,7 @@ class ConstructorController extends Controller
 
         try {
             return response($this->constructorService->create($layerId, $columns), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -98,7 +99,7 @@ class ConstructorController extends Controller
 
         try {
             return response($this->constructorService->update($layerId, $columns), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }

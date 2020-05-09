@@ -4,6 +4,7 @@ namespace App\src\Services\Manager;
 use App\src\Models\Layer;
 use App\src\Repositories\Manager\LayerRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Image;
 
@@ -26,7 +27,7 @@ class LayerService
 
     /**
      * Получить все слои.
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAll()
     {

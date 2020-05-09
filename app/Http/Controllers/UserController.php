@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\src\Models\Contractor;
 use App\src\Services\Info\UserService;
+use Exception;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class UserController
@@ -22,7 +26,7 @@ class UserController
 
 
     /**
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
      * Получить пользователя с контрагентом и модулями
      */
     public function getUser()
@@ -45,27 +49,27 @@ class UserController
     /**
      * Получить пользователей для контрагента
      * @param $contractorId
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getAllByContractor($contractorId)
     {
         try {
             return response($this->userService->getAllByContractor($contractorId), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      * Обновить пользователя
      */
     public function update(Request $request)
     {
         try {
             return response($this->userService->update($request), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -73,13 +77,13 @@ class UserController
     /**
      * Создать нового пользователя
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function create(Request $request)
     {
         try {
             return response($this->userService->create($request), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -87,7 +91,7 @@ class UserController
     /**
      * Удалить пользователя
      * @param $id
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function delete($id)
     {
@@ -96,7 +100,7 @@ class UserController
         }
         try {
             return response($this->userService->delete($id), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -104,13 +108,13 @@ class UserController
     /**
      * Запрос на регистрацию пользователя
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function register(Request $request)
     {
         try {
             return response($this->userService->register($request), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
