@@ -4,6 +4,8 @@ namespace App\src\Repositories\Info;
 
 
 use App\src\Models\User;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class UserRepository
 {
@@ -31,7 +33,7 @@ class UserRepository
     /**
      * Получить пользователей для контрагента
      * @param $contractorId
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getAllByContractor($contractorId)
     {

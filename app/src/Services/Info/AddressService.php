@@ -3,6 +3,7 @@
 namespace App\src\Services\Info;
 
 
+use App\src\Models\Address;
 use App\src\Repositories\Info\AddressRepository;
 
 class AddressService
@@ -20,7 +21,7 @@ class AddressService
 
     /**
      * @param $data
-     * @return \App\src\Models\Address
+     * @return Address
      * Создать адрес
      */
     public function create($data)

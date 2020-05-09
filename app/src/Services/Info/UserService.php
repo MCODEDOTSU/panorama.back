@@ -2,8 +2,11 @@
 
 namespace App\src\Services\Info;
 
+use App\src\Models\User;
 use App\src\Services\MailServices\UserMailService;
 use App\src\Repositories\Info\UserRepository;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class UserService
 {
@@ -12,7 +15,8 @@ class UserService
 
     /**
      * UserService constructor.
-     * @param $userRepository
+     * @param UserRepository $userRepository
+     * @param UserMailService $mailService
      */
     public function __construct(UserRepository $userRepository, UserMailService $mailService)
     {
@@ -23,7 +27,7 @@ class UserService
     /**
      * Получить пользователей для контрагента
      * @param $contractorId
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getAllByContractor($contractorId)
     {
@@ -32,7 +36,7 @@ class UserService
 
     /**
      * @param $data
-     * @return \App\src\Models\User
+     * @return User
      * Обновить пользователя
      */
     public function update($data)
@@ -45,7 +49,7 @@ class UserService
 
     /**
      * @param $data
-     * @return \App\src\Models\User
+     * @return User
      * Создать пользователя
      */
     public function create($data)
@@ -65,12 +69,14 @@ class UserService
     }
 
     /**
+     * TODO: Method for the future
      * Запрос на регистрацию пользователя
      * @param $data
-     * @return \App\src\Models\User
+     * @return bool
      */
     public function register($data)
     {
+        $message = "";
         $this->mailService->send($message);
         return true;
     }

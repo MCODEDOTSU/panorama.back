@@ -5,7 +5,6 @@ namespace App\src\Repositories\Info;
 
 use App\src\Models\Element;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ElementRepository
 {
