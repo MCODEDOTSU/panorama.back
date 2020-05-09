@@ -3,18 +3,11 @@
 
 namespace App\src\Utilities\KMZParser\Entities;
 
-
-use App\src\Services\Geo\GeometryService\Linestring;
-use App\src\Services\Geo\GeometryService\Point;
-
 class KMZElement
 {
     public $name;
     public $coordinates;
 
-    /**
-     * @var Point | Linestring
-     */
     public $type;
 
     /**
