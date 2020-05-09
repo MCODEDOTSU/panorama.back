@@ -3,6 +3,8 @@
 namespace App\src\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Layer extends Model
 {
@@ -14,7 +16,7 @@ class Layer extends Model
 
     /**
      * Модуль слоя
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function module()
     {
@@ -23,7 +25,7 @@ class Layer extends Model
 
     /**
      * Родительский слой
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function parent()
     {
@@ -32,7 +34,7 @@ class Layer extends Model
 
     /**
      * Элементы слоя
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function elements()
     {

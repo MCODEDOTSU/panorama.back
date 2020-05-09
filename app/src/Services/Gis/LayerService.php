@@ -1,7 +1,9 @@
 <?php
 
 namespace App\src\Services\Gis;
+use App\src\Models\Layer;
 use App\src\Repositories\Gis\LayerRepository;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -23,7 +25,7 @@ class LayerService
 
     /**
      * Список всех слоёв
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAll()
     {
@@ -33,7 +35,7 @@ class LayerService
     /**
      * Получить несколько слоёв
      * @param $layerIds
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getFewById($layerIds)
     {
@@ -42,12 +44,22 @@ class LayerService
 
     /**
      * Получить все слои для контрагента.
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAllToContractor()
     {
         $user = Auth::user();
         return $this->layerRepository->getAllToContractor($user->contractor_id);
+    }
+
+    /**
+     * Получить слой по алиасу
+     * @param string $alias
+     * @return Layer
+     */
+    public function getByAlias(string $alias)
+    {
+        return $this->layerRepository->getByAlias($alias);
     }
 
 }

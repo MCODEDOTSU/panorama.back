@@ -1,7 +1,9 @@
 <?php
 
 namespace App\src\Services\Gis;
+use App\src\Models\Element;
 use App\src\Repositories\Gis\ElementRepository;
+use Exception;
 
 /**
  * Class ElementService
@@ -23,7 +25,7 @@ class ElementService
     /**
      * Создать новый элемент слоя.
      * @param $data
-     * @return \App\src\Models\Element
+     * @return Element
      */
     public function create($data)
     {
@@ -34,7 +36,7 @@ class ElementService
      * Сохранить изменения в элементе
      * @param $id
      * @param $data
-     * @return \App\src\Models\Element|mixed
+     * @return Element|mixed
      */
     public function update($id, $data)
     {
@@ -45,7 +47,7 @@ class ElementService
      * Сохранить изменения в геометрии элемента
      * @param $id
      * @param $data
-     * @return \App\src\Models\Element|mixed
+     * @return Element|mixed
      */
     public function updateGeometry($id, $data)
     {
@@ -56,7 +58,7 @@ class ElementService
      * Удалить элемент.
      * @param $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete($id)
     {
@@ -67,7 +69,7 @@ class ElementService
      * Получить все связанные элементы.
      * @param $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function links($id)
     {

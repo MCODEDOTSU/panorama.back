@@ -2,7 +2,9 @@
 
 namespace App\src\Utilities\KMZParser;
 
+use App\src\Models\Layer;
 use App\src\Services\Gis\ElementService;
+use App\src\Services\Gis\LayerService;
 use App\src\Utilities\KMZParser\Entities\KMZElement;
 use Illuminate\Support\Collection;
 
@@ -11,17 +13,26 @@ class KMZParserService
     /** @var ElementService */
     private $elementService;
 
-    private $layerId;
+    /** @var LayerService */
+    private $layerService;
+
+    /** @var string */
+    private const KMZ_LAYER_ALIAS = 'pitayushchiye-punkty';
+
+    /** @var Layer */
+    private $kmzLayer;
 
     /**
      * KMZParserService constructor.
      * @param ElementService $elementService
+     * @param LayerService $layerService
      */
-    public function __construct(ElementService $elementService)
+    public function __construct(ElementService $elementService, LayerService $layerService)
     {
         $this->elementService = $elementService;
+        $this->layerService = $layerService;
 
-        $layerId = $this->defineKmzLayer();
+        $this->kmzLayer = $this->defineKmzLayer();
     }
 
     public function parse($xmlPath)
@@ -49,7 +60,7 @@ class KMZParserService
     {
         $name = $childElement['name'];
 
-        $coordinates = null;
+        $coordinates = '';
 
         $issetPoint = isset($childElement['Point']);
 
@@ -65,11 +76,9 @@ class KMZParserService
 
         /** @var KMZElement $kml */
         foreach ($kmlCollection as $kml) {
-            $this->elementService->create([
-                'layer_id' => 1,
-                'title' => $kml->name,
-                'description' => $kml->name,
-            ]);
+            $this->elementService->create(
+                $kml->convertToLayerElement($this->kmzLayer->id)
+            );
         }
     }
 
@@ -78,6 +87,6 @@ class KMZParserService
      */
     private function defineKmzLayer()
     {
-        // Get layer based on repository
+        return $this->layerService->getByAlias(self::KMZ_LAYER_ALIAS);
     }
 }
