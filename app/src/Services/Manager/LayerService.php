@@ -37,7 +37,7 @@ class LayerService
     /**
      * Получить слой по ИД
      * @param int $id
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function getById(int $id): Layer
     {
@@ -48,7 +48,7 @@ class LayerService
      * Изменить слой.
      * @param int $id
      * @param Request $data
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function update(int $id, Request $data)
     {
@@ -58,7 +58,7 @@ class LayerService
     /**
      * Создать слой.
      * @param Request $data
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function create(Request $data)
     {
