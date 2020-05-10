@@ -29,6 +29,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::delete('/{id}', 'ContractorController@delete');
         Route::get('/{id}/attach/module/{module_id}', 'ContractorController@attachModule');
         Route::get('/{id}/detach/module/{module_id}', 'ContractorController@detachModule');
+        Route::post('/upload', 'ContractorController@uploadLogo');
     });
 
     /**
