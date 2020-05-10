@@ -100,6 +100,7 @@ class ParserService
     }
 
     /**
+     * TODO: Just make it simpler and improve logic
      * @param $rowData
      */
     private function storeParsedInfo(array $rowData)
