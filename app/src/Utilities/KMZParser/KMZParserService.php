@@ -3,7 +3,6 @@
 namespace App\src\Utilities\KMZParser;
 
 use App\src\Models\Element;
-use App\src\Models\Layer;
 use App\src\Services\Gis\ElementService;
 use App\src\Services\Gis\LayerService;
 use App\src\Utilities\KMZParser\Entities\KMZElement;
@@ -18,12 +17,6 @@ class KMZParserService
     /** @var LayerService */
     private $layerService;
 
-    /** @var string */
-    private const KMZ_LAYER_ALIAS = 'pitayushchiye-punkty';
-
-    /** @var Layer */
-    private $kmzLayer;
-
     /**
      * KMZParserService constructor.
      * @param ElementService $elementService
@@ -33,8 +26,6 @@ class KMZParserService
     {
         $this->elementService = $elementService;
         $this->layerService = $layerService;
-
-        $this->kmzLayer = $this->defineKmzLayer();
     }
 
     public function parse($xmlPath)
@@ -55,7 +46,8 @@ class KMZParserService
             }
         }
 
-        $this->storeKmls($kmzCollection);
+        return $kmzCollection;
+
     }
 
     private function parseSingleElement(array $childElement): KMZElement
@@ -74,23 +66,19 @@ class KMZParserService
         return new KMZElement($name, $coordinates, 'POINT');
     }
 
-    private function storeKmls(Collection $kmlCollection) {
+    /**
+     * @param Collection $kmlCollection - Collection of KML parsed objects
+     * @param int $layerId - layer to store kmls
+     */
+    public function storeKmls(Collection $kmlCollection, int $layerId) {
 
         /** @var KMZElement $kml */
         foreach ($kmlCollection as $kml) {
 
             /** @var Element $element */
-            $elementToObject = $kml->convertToLayerElement($this->kmzLayer->id);
+            $elementToObject = $kml->convertToLayerElement($layerId);
             $this->resolveKml($elementToObject);
         }
-    }
-
-    /**
-     * KMZLayer now has alias 'pitayushchiye-punkty'
-     */
-    private function defineKmzLayer()
-    {
-        return $this->layerService->getByAlias(self::KMZ_LAYER_ALIAS);
     }
 
     /**
