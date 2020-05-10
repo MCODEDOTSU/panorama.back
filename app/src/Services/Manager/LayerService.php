@@ -4,6 +4,7 @@ namespace App\src\Services\Manager;
 use App\src\Models\Layer;
 use App\src\Repositories\Manager\LayerRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Image;
 
@@ -26,7 +27,7 @@ class LayerService
 
     /**
      * Получить все слои.
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAll()
     {
@@ -36,7 +37,7 @@ class LayerService
     /**
      * Получить слой по ИД
      * @param int $id
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function getById(int $id): Layer
     {
@@ -47,7 +48,7 @@ class LayerService
      * Изменить слой.
      * @param int $id
      * @param Request $data
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function update(int $id, Request $data)
     {
@@ -57,7 +58,7 @@ class LayerService
     /**
      * Создать слой.
      * @param Request $data
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function create(Request $data)
     {

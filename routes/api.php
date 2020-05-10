@@ -39,6 +39,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::put('/', 'UserController@update');
         Route::post('/', 'UserController@create');
         Route::delete('/{id}', 'UserController@delete');
+        Route::post('/upload', 'UserController@uploadPhoto');
     });
 
     /**
@@ -117,6 +118,11 @@ Route::prefix('/gis')->namespace('Gis')->group(function () {
  */
 Route::prefix('/constructor')->namespace('Constructor')->group(function () {
     Route::get('/{layerId}/{elementId}', 'AdditionalInfoController@getData');
+});
+
+
+Route::prefix('/kmz')->namespace('Utilities')->group(function () {
+   Route::post('/parse', 'KMZParseController@parse');
 });
 
 

@@ -24,44 +24,6 @@ class ElementService
         $this->addressRepository = $addressRepository;
     }
 
-    /**
-     * Получить элементы слоя
-     * @param $layerId
-     * @return Collection
-     */
-    public function getElementsByLayer($layerId): Collection
-    {
-        $elements = $this->elementRepository->getElementsByLayer($layerId);
-
-        foreach ($elements as $element) {
-            if($element->points) {
-                foreach ($element->points as $point) {
-                    if (!empty($point->address_id)) {
-                        $point->address = $this->addressRepository->getById($point->address_id);
-                    }
-                }
-            }
-
-            if($element->polygons) {
-                foreach ($element->polygons as $polygon) {
-                    if (!empty($polygon->address_id)) {
-                        $polygon->address = $this->addressRepository->getById($polygon->address_id);
-                    }
-                }
-            }
-
-            if($element->linestrings) {
-                foreach ($element->linestrings as $linestring) {
-                    if (!empty($linestring->address_id)) {
-                        $linestring->address = $this->addressRepository->getById($linestring->address_id);
-                    }
-                }
-            }
-        }
-
-        return $elements;
-    }
-
     public function update(Request $data)
     {
         $element = $this->elementRepository->getById($data->id);
@@ -73,7 +35,7 @@ class ElementService
 
     public function create(Request $data)
     {
-        $data->visibility = 'hidden'; // TODO: 
+        $data->visibility = 'hidden';
         $element = $this->elementRepository->create($data);
 
         return $element;
@@ -81,9 +43,7 @@ class ElementService
 
     public function delete($id)
     {
-        $result = $this->elementRepository->delete($id);
-
-        return $result;
+        return $this->elementRepository->delete($id);
     }
 
 }

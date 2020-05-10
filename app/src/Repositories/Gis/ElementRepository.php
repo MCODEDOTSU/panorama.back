@@ -2,6 +2,7 @@
 
 namespace App\src\Repositories\Gis;
 use App\src\Models\Element;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 use App\src\Models\ConstructorMetadata;
@@ -88,7 +89,7 @@ class ElementRepository
      * Удалить элемент.
      * @param int $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete(int $id)
     {
@@ -101,7 +102,7 @@ class ElementRepository
      * Получить все связанные элементы.
      * @param int $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function links(int $id)
     {
@@ -143,6 +144,18 @@ class ElementRepository
         }
 
         return $result;
+    }
+
+    /**
+     * Получить элемент по наименованию
+     * @param $name
+     * @return mixed
+     */
+    public function getByName($name)
+    {
+        return $this->element
+            ->where('title', '=', $name)
+            ->first();
     }
 
 }

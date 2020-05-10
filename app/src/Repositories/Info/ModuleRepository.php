@@ -4,6 +4,7 @@ namespace App\src\Repositories\Info;
 
 
 use App\src\Models\Module;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class ModuleRepository
@@ -21,7 +22,7 @@ class ModuleRepository
 
     /**
      * @param $contractorId
-     * @return Module[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Module[]|Builder[]|\Illuminate\Database\Eloquent\Collection
      * Получить модули, привязанные к определенному контрагенту
      */
     public function getModules($contractorId)

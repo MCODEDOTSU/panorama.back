@@ -2,8 +2,10 @@
 
 namespace App\src\Services\Manager;
 
+use App\src\Models\Module;
 use App\src\Repositories\Manager\ModuleRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ModuleService
 {
@@ -20,7 +22,7 @@ class ModuleService
 
     /**
      * Получить все модули.
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAll()
     {
@@ -31,7 +33,7 @@ class ModuleService
      * Изменить модуль.
      * @param int $id
      * @param Request $data
-     * @return \App\src\Models\Module
+     * @return Module
      */
     public function update(int $id, Request $data)
     {
@@ -41,7 +43,7 @@ class ModuleService
     /**
      * Создать модуль.
      * @param Request $data
-     * @return \App\src\Models\Module
+     * @return Module
      */
     public function create(Request $data)
     {
