@@ -2,7 +2,7 @@
 
 namespace App\src\Repositories\Parser;
 
-use App\src\Services\Parser\Grids\ExampleParserGrid;
+use App\src\Services\Parser\Grids\SupportsGrid;
 use Illuminate\Support\Facades\DB;
 
 class ParserRepository
@@ -11,10 +11,10 @@ class ParserRepository
 
     /**
      * ParserRepository constructor.
-     * TODO: Вмемсто ExampleParserGrid - будет механизм рехолвера Сетки (Grid) для выбора нужной
-     * @param ExampleParserGrid $parserGrid
+     * TODO: Вмемсто SupportsGrid - будет механизм рехолвера Сетки (Grid) для выбора нужной
+     * @param SupportsGrid $parserGrid
      */
-    public function __construct(ExampleParserGrid $parserGrid)
+    public function __construct(SupportsGrid $parserGrid)
     {
         $this->parserGrid = $parserGrid;
     }

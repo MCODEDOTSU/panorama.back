@@ -3,10 +3,11 @@
 namespace App\src\Services\Parser;
 
 use App\src\Repositories\Parser\ParserRepository;
-use App\src\Services\Parser\Grids\ExampleParserGrid;
+use App\src\Services\Parser\Grids\SupportsGrid;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ParserService
 {
@@ -15,11 +16,11 @@ class ParserService
 
     /**
      * ParserService constructor.
-     * TODO: Вмемсто ExampleParserGrid - будет механизм рехолвера Сетки (Grid) для выбора нужной
-     * @param ExampleParserGrid $parserGrid
+     * TODO: Вмемсто SupportsGrid - будет механизм рехолвера Сетки (Grid) для выбора нужной
+     * @param SupportsGrid $parserGrid
      * @param ParserRepository $parserRepository
      */
-    public function __construct(ExampleParserGrid $parserGrid, ParserRepository $parserRepository)
+    public function __construct(SupportsGrid $parserGrid, ParserRepository $parserRepository)
     {
         $this->parserGrid = $parserGrid;
         $this->parserRepository = $parserRepository;
@@ -36,12 +37,12 @@ class ParserService
 
             $reader = new Xlsx();
             $spreadsheet = $reader->load($file);
+
             $this->readCells($spreadsheet);
 
         } catch (Exception $e) {
             return 'Something went wrong with file while processing';
         }
-
     }
 
     /**
@@ -51,25 +52,41 @@ class ParserService
      */
     private function readCells(SpreadSheet $spreadSheet)
     {
-
         try {
             $sheets = $spreadSheet->getAllSheets();
-
             $firstSheet = $sheets[0];
 
-            $sheetData = [];
+            do {
+                $rowData = $this->readRow($firstSheet);
+                $this->parserGrid->contentStartingRowPosition++;
 
-            foreach ($this->parserGrid->getGrid() as $cellKey => $singleCell) {
+                // Store parsed data in DB
+                $this->parserRepository->persist($rowData);
 
-                $cellVal = $firstSheet->getCell($singleCell)->getValue();
-                $sheetData[$cellKey] = $cellVal;
-            }
+            } while ($rowData[$this->parserGrid->mainColumn] != null);
 
-            $this->parserRepository->persist($sheetData);
 
         } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
             return 'Something went wrong with file while processing';
         }
+    }
 
+
+    /**
+     * Parse single row from sheet
+     * @param $sheet
+     * @return array
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    private function readRow(Worksheet $sheet)
+    {
+        $rowData = [];
+
+        foreach ($this->parserGrid->getGrid() as $cellKey => $singleCell) {
+            $cellVal = $sheet->getCell($singleCell.$this->parserGrid->contentStartingRowPosition)->getCalculatedValue();
+            $rowData[$cellKey] = $cellVal;
+        }
+
+        return $rowData;
     }
 }

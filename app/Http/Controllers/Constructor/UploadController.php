@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\src\Models\ConstructorMetadata;
 use App\src\Services\Constructor\AdditionalInfoService;
 use App\src\Services\Constructor\ConstructorMetadataService;
+use Exception;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -27,7 +29,7 @@ class UploadController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|\Illuminate\Http\Response
      * request:
      * fileres: blob file,
      * identifier: ConstructorMetadata->id
@@ -106,7 +108,7 @@ class UploadController extends Controller
                 $request->elementId,
                 $request->index);
             return response($filesInfo, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response($e->getMessage(), 400);
         }
     }
