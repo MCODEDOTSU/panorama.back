@@ -1,6 +1,7 @@
 <?php
 
 namespace App\src\Repositories\Manager;
+
 use App\src\Models\Element;
 use Exception;
 use Illuminate\Support\Collection;

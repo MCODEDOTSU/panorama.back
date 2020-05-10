@@ -16,13 +16,14 @@ class SupportsGrid
      * Basic column. Parsing will stop if this column will be empty
      * @var string
      */
-    public $mainColumn = 'organization_name';
+    public $mainColumn = 'title';
 
     /**
      * TODO: нужно предусмотреть механизм не просто определения по отдельной ячейке, а к примеру по смежным
      * @var array
      */
     private $grid = [
+        'title' => 'C', // main title which is stored in geo_elements table
         'address' => 'E',
         'organization_name' => 'A',
         'allocation_type' => 'F',
