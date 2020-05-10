@@ -4,41 +4,40 @@ namespace App\Http\Controllers\Utilities;
 
 use App\Http\Controllers\Controller;
 use App\src\Utilities\KMZParser\KMZParserService;
-use Chumper\Zipper\Zipper;
+use App\src\Utilities\ZIPRenderer\ZipRendererService;
 use Exception;
 use Illuminate\Http\Request;
 
 class KMZParseController extends Controller
 {
-    private const KMZ_FILE_NAME = 'kmz.zip';
-    private const STORAGE_FOLDER = 'kmzs';
     private const KML_EXTRACTION_FOLDER = 'extracted/kmz';
+    private const KML_FILE_NAME = '/doc.kml';
 
     private $kmzParserService;
+    private $zipRendererService;
 
     /**
      * KMZParseController constructor.
      * @param KMZParserService $KMZParserService
+     * @param ZipRendererService $zipRendererService
      */
-    public function __construct(KMZParserService $KMZParserService)
+    public function __construct(KMZParserService $KMZParserService, ZipRendererService $zipRendererService)
     {
         $this->kmzParserService = $KMZParserService;
+        $this->zipRendererService = $zipRendererService;
     }
 
     public function parse(Request $request)
     {
-        // Upload file
-        $kmzPath = $request->kmz->storeAs(self::STORAGE_FOLDER, self::KMZ_FILE_NAME);
-
-        // unpack it
+        // unzip kml
         try {
-            (new Zipper)->make('../storage/app/' . $kmzPath)->extractTo(self::KML_EXTRACTION_FOLDER);
+            $this->zipRendererService->unzipFile($request->kmz);
         } catch (Exception $e) {
-            return response("KMZ file has not been found");
+            return response($e->getMessage());
         }
 
         // parse KML
-        $kmlsCollection = $this->kmzParserService->parse(public_path() . '/extracted/kmz/doc.kml');
+        $kmlsCollection = $this->kmzParserService->parse(public_path() . '/' . self::KML_EXTRACTION_FOLDER . self::KML_FILE_NAME);
 
         $this->kmzParserService->storeKmls($kmlsCollection, (int)$request->layerId);
 
