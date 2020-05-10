@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Manager;
 use App\Http\Controllers\Controller;
 use App\src\Services\Manager\ContractorService;
-use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Exception;
 
 /**
  * Class ContractorController
@@ -119,6 +119,20 @@ class ContractorController extends Controller
     {
         try {
             return response($this->contractorService->detachModule($contractorId, $moduleId), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Загрузка логотип контрагента
+     * @param Request $request
+     * @return ResponseFactory|Response
+     */
+    public function uploadLogo(Request $request)
+    {
+        try {
+            return response($this->contractorService->uploadLogo($request->file('file')), 200);
         } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }

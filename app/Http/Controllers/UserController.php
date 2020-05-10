@@ -126,7 +126,6 @@ class UserController
      */
     public function uploadPhoto(Request $request)
     {
-
         try {
             return response($this->userService->uploadPhoto($request->file('file')), 200);
         } catch (Exception $ex) {

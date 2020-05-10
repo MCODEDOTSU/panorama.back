@@ -42,6 +42,7 @@ class ContractorRepository
             ->with('modules')
             ->with('users')
             ->with('address')
+            ->orderBy('id', 'asc')
             ->get();
     }
 
@@ -58,6 +59,8 @@ class ContractorRepository
         $contractor->full_name = $data->full_name;
         $contractor->inn = $data->inn;
         $contractor->kpp = $data->kpp;
+        $contractor->address_id = $data->address_id;
+        $contractor->logo = $data->logo;
         $contractor->save();
         return $contractor;
     }
