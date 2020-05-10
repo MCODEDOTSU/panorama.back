@@ -37,6 +37,9 @@ class UserController
         // Контрагент
         $authedUser->contractor = $authedUser->contractor()->first();
 
+        // Адрес организации
+        $authedUser->contractor_address = $authedUser->contractor->address()->first();
+
         // Модули
         $contractor = Contractor::find($authedUser->contractor_id);
         if($contractor) {

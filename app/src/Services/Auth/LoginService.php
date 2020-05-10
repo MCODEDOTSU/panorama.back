@@ -58,14 +58,10 @@ class LoginService
      */
     public function logout()
     {
-
         if (Auth::check()) {
             Auth::user()->AauthAcessToken()->delete();
         }
-
-        return response()->json([
-            'logout' => true
-        ]);
+        return response()->json([ 'logout' ]);
     }
 
 }
