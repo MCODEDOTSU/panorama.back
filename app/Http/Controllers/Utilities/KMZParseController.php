@@ -38,7 +38,9 @@ class KMZParseController extends Controller
         }
 
         // parse KML
-        $this->kmzParserService->parse(public_path() . '/extracted/kmz/doc.kml');
+        $kmlsCollection = $this->kmzParserService->parse(public_path() . '/extracted/kmz/doc.kml');
+
+        $this->kmzParserService->storeKmls($kmlsCollection, (int)$request->layerId);
 
         return response("kmz has been processed");
     }
