@@ -78,7 +78,7 @@ class ParserService
 
 
         } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
-            throw new \Exception('Something went wrong with file while processing');
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -94,10 +94,18 @@ class ParserService
         $rowData = [];
 
         foreach ($this->parserGrid->getGrid() as $singleCell) {
+            // Coordinate of the cell
+            $coordinate = $singleCell->column.$this->parserGrid->contentStartingRowPosition;
 
-            $cellVal = $sheet->getCell(
+            $mergeRange = $sheet->getCell(
                 $singleCell->column.$this->parserGrid->contentStartingRowPosition
-            )->getCalculatedValue();
+            )->getMergeRange();
+
+            if ($mergeRange) {
+                $coordinate = explode(':', $mergeRange)[0];
+            }
+
+            $cellVal = $sheet->getCell($coordinate)->getCalculatedValue();
 
             $rowData[$singleCell->name] = $cellVal;
         }

@@ -28,7 +28,7 @@ class XLSParseController
             $this->parserService->parse($xlsFilePath);
 
         } catch (Exception $e) {
-            return response('Something went wrong with file processing', 400);
+            return response($e->getMessage(), 400);
         }
     }
 }
