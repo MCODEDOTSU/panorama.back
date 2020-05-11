@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Utilities;
 
 use App\src\Services\Parser\ParserService;
+use Exception;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class XLSParseController
 {
@@ -17,6 +21,13 @@ class XLSParseController
         $this->parserService = $parserService;
     }
 
+    /**
+     * @param Request $request:
+     * xls - file for parsing
+     * layerId - place for storing geo_elements
+     * @return ResponseFactory|Application|Response
+     * @throws Exception
+     */
     public function parse(Request $request)
     {
         // Upload file
@@ -25,6 +36,10 @@ class XLSParseController
         try {
             $xlsFilePath = '../storage/app/' . $xlsPath;
 
+            // define layer for parsing
+            $this->parserService->getParserGrid()->setLayerForGeoElements($request->layerId);
+
+            // parse
             $this->parserService->parse($xlsFilePath);
 
         } catch (Exception $e) {

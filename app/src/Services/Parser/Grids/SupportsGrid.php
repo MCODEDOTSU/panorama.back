@@ -7,7 +7,8 @@ use App\src\Services\Parser\Entities\Cell;
 
 class SupportsGrid
 {
-    private $tableName = 'constructed_2';
+    private $tableName = 'constructed_0';
+    public $layerId;
 
     /**
      * Starting of data after excel header
@@ -31,6 +32,8 @@ class SupportsGrid
      */
     public function __construct()
     {
+
+
         $this->grid = new BasicGrid([
            new Cell('title', 'C', false),
            new Cell('address', 'E', true),
@@ -62,6 +65,16 @@ class SupportsGrid
     public function getTableName(): string
     {
         return $this->tableName;
+    }
+
+    /**
+     * Define layer for further inserting into geo_elements
+     * @param $layerId
+     */
+    public function setLayerForGeoElements($layerId)
+    {
+        $this->tableName = 'constructed_'.$layerId;
+        $this->layerId = $layerId;
     }
 
 

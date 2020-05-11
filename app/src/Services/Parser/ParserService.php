@@ -120,7 +120,7 @@ class ParserService
     private function storeParsedInfo(array $rowData)
     {
         $elementData = new \stdClass();
-        $elementData->layer_id = 2;
+        $elementData->layer_id = $this->parserGrid->layerId;
         $elementData->title = $rowData['title'];
         $elementData->description = $rowData['title'];
         $element = $this->elementRepository->create($elementData);
@@ -129,6 +129,15 @@ class ParserService
 
         $rowData['element_id'] = $element->id;
 
-        $this->parserRepository->persist($rowData);
+        $this->parserRepository->persist($rowData, $this->parserGrid->getTableName());
+    }
+
+    /**
+     * Returns instance for grid template
+     * @return SupportsGrid
+     */
+    public function getParserGrid(): SupportsGrid
+    {
+        return $this->parserGrid;
     }
 }

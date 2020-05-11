@@ -7,26 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class ParserRepository
 {
-    private $parserGrid;
-
-    /**
-     * ParserRepository constructor.
-     * TODO: Вмемсто SupportsGrid - будет механизм рехолвера Сетки (GridStructure) для выбора нужной
-     * @param SupportsGrid $parserGrid
-     */
-    public function __construct(SupportsGrid $parserGrid)
-    {
-        $this->parserGrid = $parserGrid;
-    }
-
-
     /**
      * Сохранить данные парсинга в таблицы
      * @param array $data
+     * @param string $tableName
      */
-    public function persist(array $data)
+    public function persist(array $data, string $tableName)
     {
-        DB::table($this->parserGrid->getTableName())
+        DB::table($tableName)
             ->insert($data);
     }
 }
