@@ -18,7 +18,7 @@ class ParserService
 
     /**
      * ParserService constructor.
-     * TODO: Вмемсто SupportsGrid - будет механизм резолвера Сетки (Grid) для выбора нужной
+     * TODO: Вмемсто SupportsGrid - будет механизм резолвера Сетки (GridStructure) для выбора нужной
      * @param SupportsGrid $parserGrid
      * @param ParserRepository $parserRepository
      * @param ElementRepository $elementRepository
@@ -70,7 +70,9 @@ class ParserService
                 $this->parserGrid->contentStartingRowPosition++;
 
                 // Store parsed data in DB
-                $this->storeParsedInfo($rowData);
+                if ($rowData[$this->parserGrid->mainColumn] != null) {
+                    $this->storeParsedInfo($rowData);
+                }
 
             } while ($rowData[$this->parserGrid->mainColumn] != null);
 
@@ -91,9 +93,13 @@ class ParserService
     {
         $rowData = [];
 
-        foreach ($this->parserGrid->getGrid() as $cellKey => $singleCell) {
-            $cellVal = $sheet->getCell($singleCell.$this->parserGrid->contentStartingRowPosition)->getCalculatedValue();
-            $rowData[$cellKey] = $cellVal;
+        foreach ($this->parserGrid->getGrid() as $singleCell) {
+
+            $cellVal = $sheet->getCell(
+                $singleCell->column.$this->parserGrid->contentStartingRowPosition
+            )->getCalculatedValue();
+
+            $rowData[$singleCell->name] = $cellVal;
         }
 
         return $rowData;

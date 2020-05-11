@@ -2,6 +2,9 @@
 
 namespace App\src\Services\Parser\Grids;
 
+use App\src\Services\Parser\Entities\BasicGrid;
+use App\src\Services\Parser\Entities\Cell;
+
 class SupportsGrid
 {
     private $tableName = 'constructed_2';
@@ -19,25 +22,37 @@ class SupportsGrid
     public $mainColumn = 'title';
 
     /**
-     * TODO: нужно предусмотреть механизм не просто определения по отдельной ячейке, а к примеру по смежным
-     * @var array
+     * @var BasicGrid
      */
-    private $grid = [
-        'title' => 'C', // main title which is stored in geo_elements table
-        'address' => 'E',
-        'organization_name' => 'A',
-        'allocation_type' => 'F',
-        'places_for_nodes_quantity' => 'G',
-        'allocations_quantity' => 'H',
-        'transfered_places_quantity' => 'I',
-        'transfered_places_quantity_before_2018' => 'J',
-        'transfered_places_quantity_after_2019' => 'K',
-        'status' => 'L',
-        'changes_impl_month' => 'M',
-    ];
+    private $grid;
 
-    public function getGrid() {
-        return $this->grid;
+    /**
+     * SupportsGrid constructor.
+     */
+    public function __construct()
+    {
+        $this->grid = new BasicGrid([
+           new Cell('title', 'C', false),
+           new Cell('address', 'E', true),
+           new Cell('organization_name', 'A', false),
+           new Cell('allocation_type', 'F', false),
+           new Cell('places_for_nodes_quantity', 'G', false),
+           new Cell('allocations_quantity', 'H', false),
+           new Cell('transfered_places_quantity', 'I', false),
+           new Cell('transfered_places_quantity_before_2018', 'J', false),
+           new Cell('transfered_places_quantity_after_2019', 'K', false),
+           new Cell('status', 'L', false),
+           new Cell('changes_impl_month', 'M', false),
+        ]);
+    }
+
+
+    /**
+     * @return Cell[]
+     */
+    public function getGrid(): array
+    {
+        return $this->grid->cells;
     }
 
     /**
