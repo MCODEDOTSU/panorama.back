@@ -16,6 +16,8 @@ class ParserService
     private $parserRepository;
     private $elementRepository;
 
+    private $currentWorkSheet;
+
     /**
      * ParserService constructor.
      * TODO: Вмемсто SupportsGrid - будет механизм резолвера Сетки (GridStructure) для выбора нужной
@@ -63,10 +65,10 @@ class ParserService
                 throw new \Exception('At least one spreadsheet has to be available');
             }
 
-            $firstSheet = $sheets[0];
+            $this->currentWorkSheet = $sheets[0];
 
             do {
-                $rowData = $this->readRow($firstSheet);
+                $rowData = $this->readRow($this->currentWorkSheet);
                 $this->parserGrid->contentStartingRowPosition++;
 
                 // Store parsed data in DB
@@ -114,22 +116,25 @@ class ParserService
     }
 
     /**
-     * TODO: Just make it simpler and improve logic
-     * @param $rowData
+     * 1. Check if geo_element for insertion exists
+     * 2. Insert data into corresponding auxiliary table
+     * @param array $rowData
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     private function storeParsedInfo(array $rowData)
     {
-        $elementData = new \stdClass();
-        $elementData->layer_id = $this->parserGrid->layerId;
-        $elementData->title = $rowData['title'];
-        $elementData->description = $rowData['title'];
-        $element = $this->elementRepository->create($elementData);
-
+        // unset title and combined_title
         unset($rowData['title']);
+        unset($rowData['combined_title']);
 
-        $rowData['element_id'] = $element->id;
+        $additionalInfoRow = $this->parserGrid->getUniqueTitle($this->currentWorkSheet);
 
-        $this->parserRepository->persist($rowData, $this->parserGrid->getTableName());
+        // Update only if such title combination has been found
+        if ($additionalInfoRow) {
+            $this->parserRepository->update(
+                $rowData, $this->parserGrid->getTableName(), $additionalInfoRow->element_id
+            );
+        }
     }
 
     /**
