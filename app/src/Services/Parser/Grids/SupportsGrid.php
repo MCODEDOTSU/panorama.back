@@ -17,7 +17,7 @@ class SupportsGrid
     public $contentStartingRowPosition = 3;
 
     /**
-     * Basic column. Parsing will stop if this column will be empty
+     * Basic column. Parsing will use this column to compare title of Excel file and Parser mail column
      * @var string
      */
     public $mainColumn = 'title';
