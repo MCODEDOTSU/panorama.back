@@ -100,4 +100,14 @@ class ElementRepository
         return ['id' => $id];
     }
 
+    /**
+     * @param string $title
+     * @return Collection|null
+     */
+    public function getByTitle(string $title): ?Collection
+    {
+        return $this->element
+            ->where('title', '=', $title)
+            ->get();
+    }
 }

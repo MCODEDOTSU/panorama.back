@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class ParserRepository
 {
     /**
-     * Сохранить данные парсинга в таблицы
+     * Save parser data into table
      * @param array $data
      * @param string $tableName
      */
@@ -17,4 +17,18 @@ class ParserRepository
         DB::table($tableName)
             ->insert($data);
     }
+
+    /**
+     * Update additional info for specific element
+     * @param array $data
+     * @param string $tableName
+     * @param int $elementId
+     */
+    public function update(array $data, string $tableName, int $elementId)
+    {
+        DB::table($tableName)
+            ->where('element_id', '=', $elementId)
+            ->update($data);
+    }
+
 }
