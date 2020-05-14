@@ -45,5 +45,7 @@ class XLSParseController
         } catch (Exception $e) {
             return response($e->getMessage(), 400);
         }
+
+        return response("xls has been processed");
     }
 }
