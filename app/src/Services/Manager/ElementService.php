@@ -61,11 +61,6 @@ class ElementService
      */
     public function update(int $id, Request $data)
     {
-//        $this->addressService->update($data->address_id, [
-//            'city' => $data->city,
-//            'street' => $data->street,
-//            'build' => $data->build,
-//        ]);
         if(!empty($data->additionalData)) {
             $this->additionalInfoService->update($id, $data->additionalData, $data->layer_id);
         }
@@ -79,12 +74,6 @@ class ElementService
      */
     public function create(Request $data)
     {
-//        $address = $this->addressService->create([
-//            'city' => $data->city,
-//            'street' => $data->street,
-//            'build' => $data->build,
-//        ]);
-//        $data->address_id = $address->id;
         $element = $this->elementRepository->create($data);
         if(!empty($data->additionalData)) {
             $this->additionalInfoService->create($element->id, $data->additionalData);

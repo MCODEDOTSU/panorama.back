@@ -96,9 +96,16 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::put('/{layerId}', 'ConstructorController@update');
     });
 
+    /**
+     * Additional
+     */
+    Route::prefix('/files')->namespace('Constructor')->group(function () {
+        Route::post('/upload', 'UploadController@uploadFiles');
+    });
+
     // TODO: check if route and cooresponding method are used
     Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
-    Route::post('/util/file/upload', 'Constructor\UploadController@uploadFile');
+    // Route::post('/util/file/upload', 'Constructor\UploadController@uploadFile');
     Route::post('/util/file/download', 'Constructor\UploadController@downloadFile');
     Route::post('/util/file/delete', 'Constructor\UploadController@deleteFile');
 

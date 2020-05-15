@@ -112,33 +112,33 @@ class ElementRepository
             ->where('is_deleted', 'false')
             ->get();
 
-        // Для каждой пары table_identifier - tech_title получаем element_id
+        // Для каждой пары table_identifier - tech_title получаем id
         $result = [];
         foreach ($metadata as $meta) {
 
             $rows = DB::table($meta['table_identifier'])
-                ->select('element_id', $meta['tech_title'] . ' as parent')
+                ->select('element_id as id', $meta['tech_title'] . ' as parent')
                 ->where($meta['tech_title'], $id)
                 ->get();
 
             // Получаем данные для каждого элемента: слой, геометрию, стиль, заголовок
+
             foreach ($rows as &$row) {
-                $row->data = $this->element
+                $rowData = $this->element
                     ->join('geo_layers', 'geo_layers.id', '=', 'geo_elements.layer_id')
-                    ->select(DB::raw('geo_layers.id as layer_id, geo_elements.title, ST_AsText(geometry) as geometry, style'))
-                    ->find($row->element_id);
-                $row->parent = $this->element
+                    ->select(DB::raw('geo_layers.id as layer_id, geo_elements.title, geo_elements.description, geo_elements.length, geo_elements.area, geo_elements.perimeter, ST_AsText(geometry) as geometry, style'))
+                    ->find($row->id);
+                $rowParent = $this->element
                     ->select(DB::raw('id, ST_AsText(geometry) as geometry'))
                     ->find($row->parent);
+                $result[] = array_merge($rowData->toArray(), ['id' => $row->id, 'parent' => $rowParent]);
             }
-
-            $result = array_merge($result, $rows->toArray());
         }
 
         // Если массив не пустой, повторяем рекурсивно для каждого элемента
         if (count($result) != 0) {
             foreach ($result as $row) {
-                $child = $this->links($row->element_id);
+                $child = $this->links($row['id']);
                 $result = array_merge($result, $child);
             }
         }

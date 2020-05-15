@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Constructor;
 
-
 use App\Http\Controllers\Controller;
 use App\src\Services\Constructor\AdditionalInfoService;
 use Illuminate\Contracts\Routing\ResponseFactory;

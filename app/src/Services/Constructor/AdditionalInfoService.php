@@ -4,6 +4,10 @@ namespace App\src\Services\Constructor;
 
 use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use App\src\Services\Constructor\ConstructorMetadataService;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Сервис для обработки информации в дополнительных столбцах, дополнительной таблицы
@@ -16,11 +20,16 @@ class AdditionalInfoService
 
     private $constructorService;
     private $fieldsResolver;
+    private $constructorMetadataService;
 
-    public function __construct(ConstructorService $constructorService, FieldsResolver $fieldsResolver)
+    public function __construct(
+        ConstructorService $constructorService,
+        FieldsResolver $fieldsResolver,
+        ConstructorMetadataService $constructorMetadataService)
     {
         $this->constructorService = $constructorService;
         $this->fieldsResolver = $fieldsResolver;
+        $this->constructorMetadataService = $constructorMetadataService;
     }
 
     /**
@@ -33,10 +42,14 @@ class AdditionalInfoService
     public function update(int $elementId, array $additionalData, $layerId)
     {
         if ($this->checkIfAdditionalDataAlreadyExists($elementId, $layerId)) {
+
             $fieldsArray = [];
 
             foreach ($additionalData as $additionalField) {
                 $fieldByType = $this->fieldsResolver->selectFieldType($additionalField);
+                if ($additionalField['type'] == 'doc_field') {
+                    $additionalField['value'] = $this->getDocField($additionalField['value']);
+                }
                 $fieldsArray[$additionalField['tech_title']] = $fieldByType->assignValue($additionalField['value']);
             }
 
@@ -79,7 +92,7 @@ class AdditionalInfoService
     public function getData(int $layerId, int $elementId): array
     {
         $tableInfoByGroups = $this->constructorService->getToLayer($layerId);
-        if(count($tableInfoByGroups) == 0) {
+        if (count($tableInfoByGroups) == 0) {
             return [];
         }
 
@@ -130,28 +143,78 @@ class AdditionalInfoService
     }
 
     /**
-     * @param string $tableIdentifier - name of dynamic table
-     * @param string $columnName - column name
-     * @param int $elementId - id of element for where clause
-     * @param int $index - index of deletable element
+     * @param array $files
      * @return mixed
      */
-    public function cleanDocField(string $tableIdentifier, string $columnName, int $elementId, int $index)
+    public function getDocField($files = [])
     {
-        $filesInfoRaw = DB::table($tableIdentifier)
-            ->select($columnName)
-            ->where('element_id', $elementId)
-            ->first();
+        $result = [];
+        foreach ($files as $file) {
+            if ($file['isDeleted'] == true) {
+                Storage::delete("public{$file['path']}");
+            } else {
+                $result[] = $file;
+            }
+        }
+        return $result;
+    }
 
-        $filesInfo = json_decode($filesInfoRaw->$columnName);
-        unset($filesInfo[$index]);
+    /**
+     * Загрузить
+     * @param $data
+     * @return mixed
+     * @throws \App\Exceptions\CustomException
+     */
+    public function uploadFiles($data)
+    {
 
-        DB::table($tableIdentifier)
-            ->where('element_id', $elementId)
-            ->update([
-                $columnName =>  json_encode($filesInfo, true)
-            ]);
+        $constructorMetadata = $this->constructorMetadataService->getById($data->metadata_id);
+        $maxCount = (int)$constructorMetadata->options->quantity;
+        $currentCount = (int)$data->current_count;
 
-        return $filesInfo;
+        if ($constructorMetadata->type != 'doc_field') {
+            throw new \App\Exceptions\CustomException('Something Went Wrong.');
+        }
+
+        $errors = [];
+        $result = [];
+
+        foreach ($data['files'] as $file) {
+
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+
+            if ($maxCount != 0 && (count($result) + $currentCount) >= $maxCount) {
+                $errors[] = [
+                    'title' => "$originalName",
+                    'error' => "превышено максимально-допустимое число файлов"
+                ];
+                continue;
+            }
+
+            if (!in_array($extension, $constructorMetadata->enums)) {
+                $errors[] = [
+                    'title' => "$originalName",
+                    'error' => "расширение .$extension не является допустимым"
+                ];
+                continue;
+            }
+
+            $file = $file->store('public/documents');
+            // $filename = str_replace('/storage', '', Storage::url($file));
+            $filename = url('/') . Storage::url($file);
+
+            $size = round(Storage::size($file) / 1000, 2);
+            $size = $size >= 1000 ? round($size / 1000, 2) . 'MB' : $size . 'KB';
+
+            $result[] = [
+                'isDeleted' => false,
+                'title' => "$originalName ({$size})",
+                'path' => $filename,
+                'extension' => $extension
+            ];
+        }
+
+        return ['result' => $result, 'errors' => $errors];
     }
 }
