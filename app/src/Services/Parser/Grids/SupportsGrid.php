@@ -6,6 +6,8 @@ use App\src\Repositories\Constructor\AdditionalInfoRepository;
 use App\src\Repositories\Manager\ElementRepository;
 use App\src\Services\Parser\Entities\BasicGrid;
 use App\src\Services\Parser\Entities\Cell;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use App\src\Models\Element;
@@ -101,13 +103,8 @@ class SupportsGrid
      */
     public function getUniqueTitle(WorkSheet $sheet)
     {
-        $cellNameComparator = function ($title) {
-            return function ($cell) use ($title) { return $cell->name == $title; };
-        };
-
         // 1. Find: try to find 'opory' with such title (There can be several of them)
-        $titleColFilter = array_filter($this->getGrid(), $cellNameComparator('title'));
-        $titleCol = array_pop($titleColFilter)->column;
+        $titleCol = $this->grid->getColumnByTitle('title');
         $titleCellVal = $sheet->getCell($titleCol.$this->contentStartingRowPosition)->getValue();
         if (!$titleCellVal) {
             return false;
@@ -116,23 +113,35 @@ class SupportsGrid
         $elements = $this->elementRepository->getByTitle($titleCellVal);
 
         // 2. Find: 'pitayushchiye-punkty' which are linked based on linking column
-        $baseTitleColFilter = array_filter($this->getGrid(), $cellNameComparator('combined_title'));
-        $baseTitleCol= array_pop($baseTitleColFilter)->column;
+        $baseTitleCol = $this->grid->getColumnByTitle('combined_title');
         $baseTitleCellVal = $sheet->getCell($baseTitleCol.$this->contentStartingRowPosition)->getValue();
 
         foreach ($elements as $element) {
-            $additionalInfoForElement = $this->additionalInfoRepository->getAdditionalInfo(
-                $this->tableName, $element->id);
+            // 3. Find coinciding elements
+            return $this->findCoincidingElement($element, $baseTitleCellVal);
+        }
 
-            if (!$additionalInfoForElement) {
-                return false;
-            }
+        return false;
+    }
 
-            $feedingPoint = $this->elementRepository->getById($additionalInfoForElement->opora);
-            // 3. If they coincide -> return elementId of 'tableName' which will be updated
-            if ($baseTitleCellVal == $feedingPoint->title) {
-                return $additionalInfoForElement;
-            }
+    /**
+     * @param Element $element
+     * @param string $baseTitleCellVal
+     * @return bool|Model|Builder|object
+     */
+    private function findCoincidingElement(Element $element, string $baseTitleCellVal)
+    {
+        $additionalInfoForElement = $this->additionalInfoRepository->getAdditionalInfo(
+            $this->tableName, $element->id);
+
+        if (!$additionalInfoForElement) {
+            return false;
+        }
+
+        $feedingPoint = $this->elementRepository->getById($additionalInfoForElement->opora);
+        // 4. If they coincide -> return elementId of 'tableName' which will be updated
+        if ($baseTitleCellVal == $feedingPoint->title) {
+            return $additionalInfoForElement;
         }
 
         return false;

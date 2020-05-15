@@ -17,4 +17,13 @@ class BasicGrid
     {
         $this->cells = $cells;
     }
+
+    public function getColumnByTitle($cellTitle) {
+        $cellNameComparator = function ($title) {
+            return function ($cell) use ($title) { return $cell->name == $title; };
+        };
+
+        $titleColFilter = array_filter($this->cells, $cellNameComparator($cellTitle));
+        return array_pop($titleColFilter)->column;
+    }
 }
