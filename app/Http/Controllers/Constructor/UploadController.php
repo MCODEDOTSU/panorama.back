@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Constructor;
 
 use App\Http\Controllers\Controller;
-use App\src\Models\ConstructorMetadata;
 use App\src\Services\Constructor\AdditionalInfoService;
 use App\src\Services\Constructor\ConstructorMetadataService;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class UploadController extends Controller

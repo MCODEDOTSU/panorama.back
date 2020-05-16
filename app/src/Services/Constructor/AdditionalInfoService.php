@@ -2,6 +2,7 @@
 
 namespace App\src\Services\Constructor;
 
+use App\src\Repositories\Constructor\AdditionalInfoRepository;
 use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -21,15 +22,18 @@ class AdditionalInfoService
     private $constructorService;
     private $fieldsResolver;
     private $constructorMetadataService;
+    private $additionalInfoRepository;
 
     public function __construct(
         ConstructorService $constructorService,
         FieldsResolver $fieldsResolver,
-        ConstructorMetadataService $constructorMetadataService)
+        ConstructorMetadataService $constructorMetadataService,
+        AdditionalInfoRepository $additionalInfoRepository)
     {
         $this->constructorService = $constructorService;
         $this->fieldsResolver = $fieldsResolver;
         $this->constructorMetadataService = $constructorMetadataService;
+        $this->additionalInfoRepository = $additionalInfoRepository;
     }
 
     /**
@@ -96,9 +100,8 @@ class AdditionalInfoService
             return [];
         }
 
-        $additionalInfo = DB::table($this->tablePrefix . $layerId)
-            ->where('element_id', $elementId)
-            ->first();
+        $additionalInfo = $this->additionalInfoRepository->getAdditionalInfo(
+            $this->tablePrefix . $layerId, $elementId);
 
         $decodedAdditionalInfo = (array)$additionalInfo;
 
@@ -131,9 +134,8 @@ class AdditionalInfoService
      */
     public function checkIfAdditionalDataAlreadyExists(int $elementId, $tableIdentifier): bool
     {
-        $additionalInfo = DB::table($this->tablePrefix . $tableIdentifier)
-            ->where('element_id', $elementId)
-            ->first();
+        $additionalInfo = $this->additionalInfoRepository->getAdditionalInfo(
+            $this->tablePrefix . $tableIdentifier, $elementId);
 
         if ($additionalInfo) {
             return true;

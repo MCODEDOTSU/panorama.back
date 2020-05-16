@@ -19,6 +19,7 @@ use Illuminate\Database\Query\Expression;
  * @property mixed element_next_id
  * @property mixed layer_id
  * @property mixed visibility
+ * @property mixed id
  */
 class Element extends Model
 {

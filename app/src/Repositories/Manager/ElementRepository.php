@@ -1,6 +1,7 @@
 <?php
 
 namespace App\src\Repositories\Manager;
+
 use App\src\Models\Element;
 use Exception;
 use Illuminate\Support\Collection;
@@ -99,4 +100,14 @@ class ElementRepository
         return ['id' => $id];
     }
 
+    /**
+     * @param string $title
+     * @return Collection|null
+     */
+    public function getByTitle(string $title): ?Collection
+    {
+        return $this->element
+            ->where('title', '=', $title)
+            ->get();
+    }
 }

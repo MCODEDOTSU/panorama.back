@@ -129,6 +129,13 @@ Route::prefix('/constructor')->namespace('Constructor')->group(function () {
 });
 
 
+/**
+ * Парсер
+ */
 Route::prefix('/kmz')->namespace('Utilities')->group(function () {
    Route::post('/parse', 'KMZParseController@parse');
+});
+
+Route::prefix('/xls')->namespace('Utilities')->group(function () {
+    Route::post('/parse', 'XLSParseController@parse');
 });
