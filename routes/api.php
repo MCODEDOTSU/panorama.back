@@ -58,6 +58,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
      */
     Route::prefix('/manager/layer')->namespace('Manager')->group(function () {
         Route::get('/', 'LayerController@getAll');
+        Route::get('/contractor/get', 'LayerController@getAllToContractor');
         Route::get('/{id}', 'LayerController@getById');
         Route::put('/{id}', 'LayerController@update');
         Route::post('/', 'LayerController@create');

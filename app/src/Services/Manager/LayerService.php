@@ -6,6 +6,7 @@ use App\src\Repositories\Manager\LayerRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Image;
 
 /**
@@ -32,6 +33,16 @@ class LayerService
     public function getAll()
     {
         return $this->layerRepository->getAll();
+    }
+
+    /**
+     * Получить все слои для контрагента.
+     * @return Collection
+     */
+    public function getAllToContractor()
+    {
+        $user = Auth::user();
+        return $this->layerRepository->getAllToContractor($user->contractor_id);
     }
 
     /**

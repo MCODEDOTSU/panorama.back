@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\src\Services\Info\ModuleService;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;

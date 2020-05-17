@@ -48,6 +48,24 @@ class LayerRepository
     }
 
     /**
+     * Список слоёв для контрагента.
+     * @param $contractorId
+     * @return Collection
+     */
+    public function getAllToContractor($contractorId): Collection
+    {
+        return $this->layer
+            ->with('module')
+            ->with('elements')
+            ->whereHas('module', function ($query) use ($contractorId) {
+                $query->whereHas('contractors', function ($query) use ($contractorId) {
+                    $query->where('contractor_id', '=', $contractorId);
+                });
+            })
+            ->get();
+    }
+
+    /**
      * Обновить слой.
      * @param int $id
      * @param $data
