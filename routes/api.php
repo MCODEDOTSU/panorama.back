@@ -141,3 +141,4 @@ Route::prefix('/constructor')->namespace('Constructor')->group(function () {
     Route::get('/{layerId}/{elementId}', 'AdditionalInfoController@getData');
 });
 
+
