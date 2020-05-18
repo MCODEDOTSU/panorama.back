@@ -1,7 +1,9 @@
 <?php
 
 namespace App\src\Repositories\Manager;
+
 use App\src\Models\Element;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -89,7 +91,7 @@ class ElementRepository
      * Удалить элемент.
      * @param $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete(int $id)
     {
@@ -98,4 +100,14 @@ class ElementRepository
         return ['id' => $id];
     }
 
+    /**
+     * @param string $title
+     * @return Collection|null
+     */
+    public function getByTitle(string $title): ?Collection
+    {
+        return $this->element
+            ->where('title', '=', $title)
+            ->get();
+    }
 }

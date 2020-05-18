@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Manager;
 use App\Http\Controllers\Controller;
 use App\src\Services\Manager\LayerService;
+use Exception;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class LayerController
@@ -24,26 +27,40 @@ class LayerController extends Controller
 
     /**
      * Получить все слои.
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getAll()
     {
         try {
             return response($this->layerService->getAll(), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
 
     /**
      * Получить все доступные для контрагента слои
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getAllToContractor()
     {
         try {
             return response($this->layerService->getAllToContractor(), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Получить все слои указанного типа
+     * @param string $type
+     * @return ResponseFactory|Response
+     */
+    public function getByType(string $type)
+    {
+        try {
+            return response($this->layerService->getByType($type), 200);
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -51,13 +68,13 @@ class LayerController extends Controller
     /**
      * Получить слой по ИД
      * @param int $id
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getById(int $id)
     {
         try {
             return response($this->layerService->getById($id), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -66,13 +83,13 @@ class LayerController extends Controller
      * Обновить слой.
      * @param int $id
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function update(int $id, Request $request)
     {
         try {
             return response($this->layerService->update($id, $request), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -80,13 +97,13 @@ class LayerController extends Controller
     /**
      * Создать слой.
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function create(Request $request)
     {
         try {
             return response($this->layerService->create($request), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -94,13 +111,13 @@ class LayerController extends Controller
     /**
      * Удалить слой.
      * @param int $id
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function delete(int $id)
     {
         try {
             return response($this->layerService->delete($id), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -108,14 +125,14 @@ class LayerController extends Controller
     /**
      * Загрузка икноки на сервер
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function uploadIcon(Request $request)
     {
 
         try {
             return response($this->layerService->uploadIcon($request->file('file')), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }

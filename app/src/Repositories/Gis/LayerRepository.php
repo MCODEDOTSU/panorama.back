@@ -58,6 +58,7 @@ class LayerRepository
 
     /**
      * Список слоёв для контрагента.
+     * @param $contractorId
      * @return Collection
      */
     public function getAllToContractor($contractorId): Collection
@@ -74,6 +75,18 @@ class LayerRepository
                 });
             })
             ->get();
+    }
+
+    /**
+     * Получить слой по алиасу
+     * @param string $alias
+     * @return Layer
+     */
+    public function getByAlias(string $alias): Layer
+    {
+        return $this->layer
+            ->where('alias', '=', $alias)
+            ->first();
     }
 
 }

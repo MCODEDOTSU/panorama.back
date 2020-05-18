@@ -4,6 +4,8 @@ namespace App\src\Repositories\Info;
 
 
 use App\src\Models\User;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class UserRepository
 {
@@ -31,7 +33,7 @@ class UserRepository
     /**
      * Получить пользователей для контрагента
      * @param $contractorId
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getAllByContractor($contractorId)
     {
@@ -48,6 +50,12 @@ class UserRepository
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'middlename' => $request->middlename,
+            'post' => $request->post,
+            'photo' => $request->photo,
+            'role' => $request->role,
             'password' => bcrypt($request->password),
             'contractor_id' => $request->contractor_id,
         ]);
@@ -67,7 +75,15 @@ class UserRepository
     {
         $user->name = $data['email'];
         $user->email = $data['email'];
-        $user->password = bcrypt($data['password']);
+        $user->firstname = $data['firstname'];
+        $user->lastname = $data['lastname'];
+        $user->middlename = $data['middlename'];
+        $user->post = $data['post'];
+        $user->photo = $data['photo'];
+        $user->role = $data['role'];
+        if (!empty($data['password'])) {
+            $user->password = bcrypt($data['password']);
+        }
         $user->save();
 
         return $user;
@@ -90,7 +106,7 @@ class UserRepository
      */
     public function delete(int $id)
     {
-        $record = $this->user::find($id);
+        $record = $this->user->find($id);
         $record->delete();
         return ['id' => $id];
     }

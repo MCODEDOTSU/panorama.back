@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
 use App\src\Services\Info\ModuleService;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class ModuleController
 {
@@ -19,7 +20,7 @@ class ModuleController
     }
 
     /**
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      * Получить модули пользователя
      */
     public function getModules()
@@ -28,7 +29,7 @@ class ModuleController
     }
 
     /**
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      * Получить весь список модулей
      */
     public function getAllModules()

@@ -29,6 +29,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::delete('/{id}', 'ContractorController@delete');
         Route::get('/{id}/attach/module/{module_id}', 'ContractorController@attachModule');
         Route::get('/{id}/detach/module/{module_id}', 'ContractorController@detachModule');
+        Route::post('/upload', 'ContractorController@uploadLogo');
     });
 
     /**
@@ -39,6 +40,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::put('/', 'UserController@update');
         Route::post('/', 'UserController@create');
         Route::delete('/{id}', 'UserController@delete');
+        Route::post('/upload', 'UserController@uploadPhoto');
     });
 
     /**
@@ -56,6 +58,8 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
      */
     Route::prefix('/manager/layer')->namespace('Manager')->group(function () {
         Route::get('/', 'LayerController@getAll');
+        Route::get('/contractor/get', 'LayerController@getAllToContractor');
+        Route::get('/type/{type}', 'LayerController@getByType');
         Route::get('/{id}', 'LayerController@getById');
         Route::put('/{id}', 'LayerController@update');
         Route::post('/', 'LayerController@create');
@@ -94,11 +98,29 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::put('/{layerId}', 'ConstructorController@update');
     });
 
+    /**
+     * Additional
+     */
+    Route::prefix('/files')->namespace('Constructor')->group(function () {
+        Route::post('/upload', 'UploadController@uploadFiles');
+    });
+
     // TODO: check if route and cooresponding method are used
     Route::get('/constructor/get_specific_type/{type}', 'Constructor\ConstructorController@getSpecificType');
-    Route::post('/util/file/upload', 'Constructor\UploadController@uploadFile');
+    // Route::post('/util/file/upload', 'Constructor\UploadController@uploadFile');
     Route::post('/util/file/download', 'Constructor\UploadController@downloadFile');
     Route::post('/util/file/delete', 'Constructor\UploadController@deleteFile');
+
+    /**
+     * Парсер
+     */
+    Route::prefix('/kmz')->namespace('Utilities')->group(function () {
+        Route::post('/parse', 'KMZParseController@parse');
+    });
+
+    Route::prefix('/xls')->namespace('Utilities')->group(function () {
+        Route::post('/parse', 'XLSParseController@parse');
+    });
 
 
 });
@@ -118,3 +140,4 @@ Route::prefix('/gis')->namespace('Gis')->group(function () {
 Route::prefix('/constructor')->namespace('Constructor')->group(function () {
     Route::get('/{layerId}/{elementId}', 'AdditionalInfoController@getData');
 });
+

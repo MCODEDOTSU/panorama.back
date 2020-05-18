@@ -22,6 +22,48 @@ class LayerRepository
     }
 
     /**
+     * Список всех слоёв.
+     * @return Collection
+     */
+    public function getAll(): Collection
+    {
+        return $this->layer
+            ->with('module')
+            ->with('parent')
+            ->get();
+    }
+
+    /**
+     * Список слоёв для контрагента.
+     * @param $contractorId
+     * @return Collection
+     */
+    public function getAllToContractor($contractorId): Collection
+    {
+        return $this->layer
+            ->with('module')
+            ->with('elements')
+            ->whereHas('module', function ($query) use ($contractorId) {
+                $query->whereHas('contractors', function ($query) use ($contractorId) {
+                    $query->where('contractor_id', '=', $contractorId);
+                });
+            })
+            ->get();
+    }
+
+    /**
+     * Получить все слои указанного типа
+     * @param string $type
+     * @return ResponseFactory|Response
+     */
+    public function getByType(string $type)
+    {
+        return $this->layer
+            ->where('geometry_type', $type)
+            ->get();
+    }
+
+    /**
      * Получить слой по ИД.
      * @param $id
      * @return Layer
@@ -33,18 +75,6 @@ class LayerRepository
             ->with('parent')
             ->where('id', $id)
             ->first();
-    }
-
-    /**
-     * Список всех слоёв.
-     * @return Collection
-     */
-    public function getAll(): Collection
-    {
-        return $this->layer
-            ->with('module')
-            ->with('parent')
-            ->get();
     }
 
     /**

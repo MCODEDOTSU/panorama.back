@@ -29,7 +29,7 @@ class LinkField extends AbstractField implements FieldInterface
      */
     public function assignValue($value)
     {
-        return $value['id'];
+        return !empty($value) ? $value['id'] : 0;
     }
 
     /**

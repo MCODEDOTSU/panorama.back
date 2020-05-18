@@ -24,7 +24,6 @@ class FieldsResolver
     public function selectFieldType(array $columnInfo)
     {
         $class = $this->path . $this->snakeToCamel($columnInfo['type']);
-        Log::info("CLASS: $class");
 
         if (class_exists($class)) {
             /** @var AbstractField $readyBakedClass */
@@ -42,7 +41,6 @@ class FieldsResolver
     public function selectFieldBasedOnlyOnType(string $type)
     {
         $class = $this->path . $this->snakeToCamel($type);
-        Log::info("CLASS: $class");
 
         if (class_exists($class)) {
             /** @var AbstractField $readyBakedClass */

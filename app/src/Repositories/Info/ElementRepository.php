@@ -5,7 +5,6 @@ namespace App\src\Repositories\Info;
 
 use App\src\Models\Element;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ElementRepository
 {
@@ -28,7 +27,7 @@ class ElementRepository
     public function getElementsByLayer($layerId): Collection
     {
         return $this->element
-            ->where('layer_id', $layerId)
+            ->where('layer_id', '=', $layerId)
             ->with('points')
             ->with('linestrings')
             ->with('polygons')

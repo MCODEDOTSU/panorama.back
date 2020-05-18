@@ -4,7 +4,9 @@ namespace App\src\Services\Manager;
 use App\src\Models\Layer;
 use App\src\Repositories\Manager\LayerRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Image;
 
 /**
@@ -26,7 +28,7 @@ class LayerService
 
     /**
      * Получить все слои.
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAll()
     {
@@ -34,9 +36,29 @@ class LayerService
     }
 
     /**
+     * Получить все слои для контрагента.
+     * @return Collection
+     */
+    public function getAllToContractor()
+    {
+        $user = Auth::user();
+        return $this->layerRepository->getAllToContractor($user->contractor_id);
+    }
+
+    /**
+     * Получить все слои указанного типа
+     * @param string $type
+     * @return \App\src\Repositories\Manager\Response|\App\src\Repositories\Manager\ResponseFactory
+     */
+    public function getByType(string $type)
+    {
+        return $this->layerRepository->getByType($type);
+    }
+
+    /**
      * Получить слой по ИД
      * @param int $id
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function getById(int $id): Layer
     {
@@ -47,7 +69,7 @@ class LayerService
      * Изменить слой.
      * @param int $id
      * @param Request $data
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function update(int $id, Request $data)
     {
@@ -57,7 +79,7 @@ class LayerService
     /**
      * Создать слой.
      * @param Request $data
-     * @return \App\src\Models\Layer
+     * @return Layer
      */
     public function create(Request $data)
     {

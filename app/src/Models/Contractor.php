@@ -3,17 +3,28 @@
 namespace App\src\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property mixed name
+ * @property mixed full_name
+ * @property mixed inn
+ * @property mixed kpp
+ * @method create($data)
+ * @method static find(int $id)
+ */
 class Contractor extends Model
 {
     protected $table = 'contractors';
 
     protected $fillable = [
-        'id', 'name', 'full_name', 'inn', 'kpp', 'address_id',
+        'id', 'name', 'full_name', 'inn', 'kpp', 'address_id', 'logo'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      * Получить привилегии / модули контрагента
      */
     public function modules()
@@ -22,7 +33,7 @@ class Contractor extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      * К контрагенту могут быть привязаны несколько пользователей
      */
     public function users()
@@ -31,7 +42,7 @@ class Contractor extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      * Адрес контрагента
      */
     public function address()

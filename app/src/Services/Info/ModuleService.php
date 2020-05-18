@@ -2,8 +2,11 @@
 
 namespace App\src\Services\Info;
 
+use App\src\Models\Module;
 use App\src\Repositories\Manager\ContractorRepository;
 use App\src\Repositories\Info\ModuleRepository;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ModuleService
@@ -23,7 +26,7 @@ class ModuleService
     }
 
     /**
-     * @return \App\src\Models\Module[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Module[]|Builder[]|Collection
      * Получить модули пользователя
      */
     public function getModules()

@@ -1,10 +1,14 @@
 <?php
 
 namespace App\src\Services\Manager;
+use App\src\Models\Element;
 use App\src\Services\Info\AddressService;
 use App\src\Repositories\Manager\ElementRepository;
 use App\src\Services\Constructor\AdditionalInfoService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ElementService
@@ -33,7 +37,7 @@ class ElementService
     /**
      * Список элементов слоя.
      * @param $layerId
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getAll($layerId)
     {
@@ -43,7 +47,7 @@ class ElementService
     /**
      * Получить элемент по ИД.
      * @param int $id
-     * @return \App\src\Models\Element
+     * @return Element
      */
     public function getById(int $id)
     {
@@ -54,15 +58,10 @@ class ElementService
      * Обновить элемент.
      * @param int $id - elementId
      * @param Request $data
-     * @return \App\src\Models\Element
+     * @return Element
      */
     public function update(int $id, Request $data)
     {
-//        $this->addressService->update($data->address_id, [
-//            'city' => $data->city,
-//            'street' => $data->street,
-//            'build' => $data->build,
-//        ]);
         if(!empty($data->additionalData)) {
             $this->additionalInfoService->update($id, $data->additionalData, $data->layer_id);
         }
@@ -72,16 +71,10 @@ class ElementService
     /**
      * Создать элемент.
      * @param Request $data
-     * @return \App\src\Models\Element
+     * @return Element
      */
     public function create(Request $data)
     {
-//        $address = $this->addressService->create([
-//            'city' => $data->city,
-//            'street' => $data->street,
-//            'build' => $data->build,
-//        ]);
-//        $data->address_id = $address->id;
         $element = $this->elementRepository->create($data);
         if(!empty($data->additionalData)) {
             $this->additionalInfoService->create($element->id, $data->additionalData);
@@ -93,10 +86,12 @@ class ElementService
      * Удалить элемент.
      * @param int $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete(int $id)
     {
+        $element = $this->getById($id);
+        $this->additionalInfoService->delete($id, $element->layer_id);
         return $this->elementRepository->delete($id);
     }
 

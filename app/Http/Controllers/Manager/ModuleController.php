@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Manager;
 use App\Http\Controllers\Controller;
 use App\src\Services\Manager\ModuleService;
+use Exception;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class ModuleController
@@ -24,13 +27,13 @@ class ModuleController extends Controller
 
     /**
      * Получить все модули.
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function getAll()
     {
         try {
             return response($this->moduleService->getAll(), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -39,13 +42,13 @@ class ModuleController extends Controller
      * Обновить модуль.
      * @param int $id
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function update(int $id, Request $request)
     {
         try {
             return response($this->moduleService->update($id, $request), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -53,13 +56,13 @@ class ModuleController extends Controller
     /**
      * Создать модуль.
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function create(Request $request)
     {
         try {
             return response($this->moduleService->create($request), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
@@ -67,13 +70,13 @@ class ModuleController extends Controller
     /**
      * Удалить модуль.
      * @param int $id
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function delete(int $id)
     {
         try {
             return response($this->moduleService->delete($id), 200);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
     }
