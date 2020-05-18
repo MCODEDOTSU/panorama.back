@@ -52,6 +52,20 @@ class LayerController extends Controller
     }
 
     /**
+     * Получить все слои указанного типа
+     * @param string $type
+     * @return ResponseFactory|Response
+     */
+    public function getByType(string $type)
+    {
+        try {
+            return response($this->layerService->getByType($type), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
      * Получить слой по ИД
      * @param int $id
      * @return ResponseFactory|Response

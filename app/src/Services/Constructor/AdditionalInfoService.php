@@ -51,7 +51,7 @@ class AdditionalInfoService
 
             foreach ($additionalData as $additionalField) {
                 $fieldByType = $this->fieldsResolver->selectFieldType($additionalField);
-                if ($additionalField['type'] == 'doc_field') {
+                if ($additionalField['type'] == 'doc_field' && !empty($additionalField['value'])) {
                     $additionalField['value'] = $this->getDocField($additionalField['value']);
                 }
                 $fieldsArray[$additionalField['tech_title']] = $fieldByType->assignValue($additionalField['value']);
@@ -85,6 +85,18 @@ class AdditionalInfoService
         $fieldsArray['element_id'] = $elementId;
 
         DB::table($additionalField['table_identifier'])->insert($fieldsArray);
+    }
+
+    /**
+     * Удалить дополнительные поля Элемента
+     * @param int $elementId
+     * @param array $layerId
+     */
+    public function delete(int $elementId, int $layerId)
+    {
+        DB::table($this->tablePrefix . $layerId)
+            ->where('element_id', $elementId)
+            ->delete();
     }
 
     /**

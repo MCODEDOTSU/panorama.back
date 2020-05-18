@@ -8,6 +8,7 @@ use App\src\Services\Constructor\AdditionalInfoService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ElementService
@@ -89,6 +90,8 @@ class ElementService
      */
     public function delete(int $id)
     {
+        $element = $this->getById($id);
+        $this->additionalInfoService->delete($id, $element->layer_id);
         return $this->elementRepository->delete($id);
     }
 

@@ -46,6 +46,16 @@ class LayerService
     }
 
     /**
+     * Получить все слои указанного типа
+     * @param string $type
+     * @return \App\src\Repositories\Manager\Response|\App\src\Repositories\Manager\ResponseFactory
+     */
+    public function getByType(string $type)
+    {
+        return $this->layerRepository->getByType($type);
+    }
+
+    /**
      * Получить слой по ИД
      * @param int $id
      * @return Layer

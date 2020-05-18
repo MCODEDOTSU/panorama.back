@@ -22,20 +22,6 @@ class LayerRepository
     }
 
     /**
-     * Получить слой по ИД.
-     * @param $id
-     * @return Layer
-     */
-    public function getById(int $id): Layer
-    {
-        return $this->layer
-            ->with('module')
-            ->with('parent')
-            ->where('id', $id)
-            ->first();
-    }
-
-    /**
      * Список всех слоёв.
      * @return Collection
      */
@@ -63,6 +49,32 @@ class LayerRepository
                 });
             })
             ->get();
+    }
+
+    /**
+     * Получить все слои указанного типа
+     * @param string $type
+     * @return ResponseFactory|Response
+     */
+    public function getByType(string $type)
+    {
+        return $this->layer
+            ->where('geometry_type', $type)
+            ->get();
+    }
+
+    /**
+     * Получить слой по ИД.
+     * @param $id
+     * @return Layer
+     */
+    public function getById(int $id): Layer
+    {
+        return $this->layer
+            ->with('module')
+            ->with('parent')
+            ->where('id', $id)
+            ->first();
     }
 
     /**

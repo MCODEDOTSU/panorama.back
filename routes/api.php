@@ -59,6 +59,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     Route::prefix('/manager/layer')->namespace('Manager')->group(function () {
         Route::get('/', 'LayerController@getAll');
         Route::get('/contractor/get', 'LayerController@getAllToContractor');
+        Route::get('/type/{type}', 'LayerController@getByType');
         Route::get('/{id}', 'LayerController@getById');
         Route::put('/{id}', 'LayerController@update');
         Route::post('/', 'LayerController@create');
@@ -110,6 +111,17 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     Route::post('/util/file/download', 'Constructor\UploadController@downloadFile');
     Route::post('/util/file/delete', 'Constructor\UploadController@deleteFile');
 
+    /**
+     * Парсер
+     */
+    Route::prefix('/kmz')->namespace('Utilities')->group(function () {
+        Route::post('/parse', 'KMZParseController@parse');
+    });
+
+    Route::prefix('/xls')->namespace('Utilities')->group(function () {
+        Route::post('/parse', 'XLSParseController@parse');
+    });
+
 
 });
 
@@ -129,14 +141,3 @@ Route::prefix('/constructor')->namespace('Constructor')->group(function () {
     Route::get('/{layerId}/{elementId}', 'AdditionalInfoController@getData');
 });
 
-
-/**
- * Парсер
- */
-Route::prefix('/kmz')->namespace('Utilities')->group(function () {
-   Route::post('/parse', 'KMZParseController@parse');
-});
-
-Route::prefix('/xls')->namespace('Utilities')->group(function () {
-    Route::post('/parse', 'XLSParseController@parse');
-});
