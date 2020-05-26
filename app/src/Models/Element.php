@@ -2,7 +2,6 @@
 
 namespace App\src\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
 
@@ -16,7 +15,6 @@ use Illuminate\Database\Query\Expression;
  * @property mixed title
  * @property mixed description
  * @property mixed address_id
- * @property mixed element_next_id
  * @property mixed layer_id
  * @property mixed visibility
  * @property mixed id
@@ -26,7 +24,16 @@ class Element extends Model
     protected $table = 'geo_elements';
 
     protected $fillable = [
-        'layer_id', 'title', 'description', 'address_id', 'geometry', 'length', 'area', 'perimeter', 'element_next_id'
+        'layer_id', 'title', 'description', 'address_id', 'geometry', 'length', 'area', 'perimeter'
     ];
+
+    /**
+     * Следующие элементы
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function next()
+    {
+        return $this->hasMany(ElementGraph::class);
+    }
 
 }

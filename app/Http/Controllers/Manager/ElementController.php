@@ -96,4 +96,18 @@ class ElementController extends Controller
         }
     }
 
+    /**
+     * Получить граф элемента
+     * @param int $id
+     * @return ResponseFactory|Response
+     */
+    public function getNext(int $id)
+    {
+        try {
+            return response($this->elementService->getNext($id), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
 }
