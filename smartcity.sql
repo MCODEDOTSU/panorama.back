@@ -419,7 +419,6 @@ CREATE TABLE public.geo_elements (
     perimeter double precision,
     created_at timestamp(0) without time zone,
     updated_at timestamp(0) without time zone,
-    element_next_id integer
 );
 
 
@@ -1633,15 +1632,6 @@ ALTER TABLE ONLY public.contractors
 
 ALTER TABLE ONLY public.geo_elements
     ADD CONSTRAINT geo_elements_address_id_foreign FOREIGN KEY (address_id) REFERENCES public.address(id);
-
-
---
--- Name: geo_elements geo_elements_element_next_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: smartcity
---
-
-ALTER TABLE ONLY public.geo_elements
-    ADD CONSTRAINT geo_elements_element_next_id_foreign FOREIGN KEY (element_next_id) REFERENCES public.geo_elements(id);
-
 
 --
 -- Name: geo_elements geo_elements_layer_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: smartcity

@@ -96,4 +96,32 @@ class ElementController extends Controller
         }
     }
 
+    /**
+     * Удалить несколько элементов.
+     * @param Request $request
+     * @return ResponseFactory|Response
+     */
+    public function deleteSome(Request $request)
+    {
+        try {
+            return response($this->elementService->deleteSome($request->elements, $request->layer_id), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Получить граф элемента
+     * @param int $id
+     * @return ResponseFactory|Response
+     */
+    public function getNext(int $id)
+    {
+        try {
+            return response($this->elementService->getNext($id), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
 }

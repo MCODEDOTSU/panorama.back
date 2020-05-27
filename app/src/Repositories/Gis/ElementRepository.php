@@ -49,7 +49,6 @@ class ElementRepository
             'description' => $data->description,
         ];
         if(!empty($data->address_id)) $value['address_id'] = $data->address_id;
-        if(!empty($data->element_next_id)) $value['element_next_id'] = $data->element_next_id;
         $record = $this->element->create($value);
         return $this->getById($record->id);
     }
@@ -66,7 +65,6 @@ class ElementRepository
         $record->title = $data->title;
         $record->description = $data->description;
         if(!empty($data->address_id)) $record->address_id = $data->address_id;
-        if(!empty($data->element_next_id)) $record->element_next_id = $data->element_next_id;
         $record->save();
         return $record;
     }
