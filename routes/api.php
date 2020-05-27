@@ -76,6 +76,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::put('/{id}', 'ElementController@update');
         Route::post('/', 'ElementController@create');
         Route::delete('/{id}', 'ElementController@delete');
+        Route::post('/delete/some', 'ElementController@deleteSome');
         Route::get('/graph/{id}', 'ElementController@getNext');
     });
 

@@ -106,5 +106,16 @@ class ElementGraphRepository
         $this->elementGrap->where('next_element_id', $element_id)->delete();
     }
 
+    /**
+     * Удалить все связи для элементов
+     * @param $elements
+     * @return void
+     */
+    public function deleteSomeAll($elements)
+    {
+        $this->elementGrap->whereIn('element_id', $elements)->delete();
+        $this->elementGrap->whereIn('next_element_id', $elements)->delete();
+    }
+
 
 }

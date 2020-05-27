@@ -56,6 +56,7 @@ class ElementGraphService
             return $this->elementGraphRepository->delete($data['id']);
         }
 
+        // TODO вставить метод проверки зацикленности графа
         if ($data['element_id'] == $data['next_element_id']) {
             return null;
         }
@@ -75,6 +76,16 @@ class ElementGraphService
     public function deleteAll($element_id)
     {
         $this->elementGraphRepository->deleteAll($element_id);
+    }
+
+    /**
+     * Удалить все связи для элементов
+     * @param $elements
+     * @return void
+     */
+    public function deleteSomeAll($elements)
+    {
+        $this->elementGraphRepository->deleteSomeAll($elements);
     }
 
 }

@@ -61,6 +61,25 @@ class ElementService
     }
 
     /**
+     * Создать элемент.
+     * @param Request $data
+     * @return Element
+     */
+    public function create(Request $data)
+    {
+        $element = $this->elementRepository->create($data);
+        if(!empty($data->additionalData)) {
+            $this->additionalInfoService->create($element->id, $data->additionalData);
+        }
+        $previous = $data->previous;
+        if($previous['next_element_id'] == 0) {
+            $previous['next_element_id'] = $element->id;
+        }
+        $this->elementGraphService->update($previous);
+        return $element;
+    }
+
+    /**
      * Обновить элемент.
      * @param int $id - elementId
      * @param Request $data
@@ -76,21 +95,6 @@ class ElementService
     }
 
     /**
-     * Создать элемент.
-     * @param Request $data
-     * @return Element
-     */
-    public function create(Request $data)
-    {
-        $element = $this->elementRepository->create($data);
-        if(!empty($data->additionalData)) {
-            $this->additionalInfoService->create($element->id, $data->additionalData);
-        }
-        $this->elementGraphService->update($data->previous);
-        return $element;
-    }
-
-    /**
      * Удалить элемент.
      * @param int $id
      * @return array
@@ -102,6 +106,20 @@ class ElementService
         $this->additionalInfoService->delete($id, $element->layer_id);
         $this->elementGraphService->deleteAll($id);
         return $this->elementRepository->delete($id);
+    }
+
+    /**
+     * Удалить несколько элементов.
+     * @param $elements
+     * @param $layerId
+     * @return array
+     * @throws Exception
+     */
+    public function deleteSome($elements, $layerId)
+    {
+        $this->additionalInfoService->deleteSome($elements, $layerId);
+        $this->elementGraphService->deleteSomeAll($elements);
+        return $this->elementRepository->deleteSome($elements);
     }
 
     /**

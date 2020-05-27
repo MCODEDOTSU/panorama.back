@@ -90,12 +90,24 @@ class AdditionalInfoService
     /**
      * Удалить дополнительные поля Элемента
      * @param int $elementId
-     * @param array $layerId
+     * @param int $layerId
      */
     public function delete(int $elementId, int $layerId)
     {
         DB::table($this->tablePrefix . $layerId)
             ->where('element_id', $elementId)
+            ->delete();
+    }
+
+    /**
+     * Удалить дополнительные поля Элементов
+     * @param $elements
+     * @param int $layerId
+     */
+    public function deleteSome($elements, int $layerId)
+    {
+        DB::table($this->tablePrefix . $layerId)
+            ->whereIn('element_id', $elements)
             ->delete();
     }
 

@@ -65,6 +65,7 @@ class ElementRepository
             'description' => $data->description,
         ];
         if(!empty($data->address_id)) $value['address_id'] = $data->address_id;
+        if(!empty($data->geometry)) $value['geometry'] = $data->geometry;
 
         $record = $this->element->create($value);
         return $this->getById($record->id);
@@ -81,6 +82,7 @@ class ElementRepository
         $record = $this->getById($id);
         $record->title = $data->title;
         $record->description = $data->description;
+        if(!empty($data->geometry)) $record->geometry = $data->geometry;
         if(!empty($data->address_id)) $record->address_id = $data->address_id;
         $record->save();
         return $record;
@@ -97,6 +99,17 @@ class ElementRepository
         $record = $this->getById($id);
         $record->delete();
         return ['id' => $id];
+    }
+
+    /**
+     * Удалить несколько элементов.
+     * @param $elements
+     * @return array
+     */
+    public function deleteSome($elements)
+    {
+        $this->element->whereIn('id', $elements)->delete();
+        return ['ids' => $elements];
     }
 
     /**
