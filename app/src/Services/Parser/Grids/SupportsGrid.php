@@ -138,8 +138,12 @@ class SupportsGrid
             return false;
         }
 
-        $feedingPoint = $this->elementRepository->getById($additionalInfoForElement->opora);
+        $feedingPoint = $this->elementRepository->getById($additionalInfoForElement->feeding_point);
         // 4. If they coincide -> return elementId of 'tableName' which will be updated
+        if($feedingPoint == null) {
+            return false;
+        }
+
         if ($baseTitleCellVal == $feedingPoint->title) {
             return $additionalInfoForElement;
         }
