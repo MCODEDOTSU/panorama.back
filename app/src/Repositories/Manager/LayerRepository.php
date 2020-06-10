@@ -30,6 +30,7 @@ class LayerRepository
         return $this->layer
             ->with('module')
             ->with('parent')
+            ->orderBy('id', 'asc')
             ->get();
     }
 
@@ -48,6 +49,7 @@ class LayerRepository
                     $query->where('contractor_id', '=', $contractorId);
                 });
             })
+            ->orderBy('id', 'asc')
             ->get();
     }
 
@@ -60,6 +62,7 @@ class LayerRepository
     {
         return $this->layer
             ->where('geometry_type', $type)
+            ->orderBy('id', 'asc')
             ->get();
     }
 

@@ -5,6 +5,7 @@ namespace App\src\Services\Constructor;
 use App\src\Repositories\Constructor\AdditionalInfoRepository;
 use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use App\src\Services\Constructor\ConstructorMetadataService;
@@ -94,9 +95,11 @@ class AdditionalInfoService
      */
     public function delete(int $elementId, int $layerId)
     {
-        DB::table($this->tablePrefix . $layerId)
-            ->where('element_id', $elementId)
-            ->delete();
+        if (Schema::hasTable($this->tablePrefix . $layerId)) {
+            DB::table($this->tablePrefix . $layerId)
+                ->where('element_id', $elementId)
+                ->delete();
+        }
     }
 
     /**
@@ -106,9 +109,11 @@ class AdditionalInfoService
      */
     public function deleteSome($elements, int $layerId)
     {
-        DB::table($this->tablePrefix . $layerId)
-            ->whereIn('element_id', $elements)
-            ->delete();
+        if (Schema::hasTable($this->tablePrefix . $layerId)) {
+            DB::table($this->tablePrefix . $layerId)
+                ->whereIn('element_id', $elements)
+                ->delete();
+        }
     }
 
     /**
