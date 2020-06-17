@@ -73,7 +73,9 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     Route::prefix('/manager/element')->namespace('Manager')->group(function () {
         Route::get('/layer/{layerId}', 'ElementController@getAll');
         Route::get('/layer/{layerId}/{limit}/{page}', 'ElementController@getAllLimit');
-        Route::get('/count/{layerId}', 'ElementController@getCount');
+        Route::get('/search/{search}/{limit}/{page}', 'ElementController@getSearchLimit');
+        Route::get('/layer/count/{layerId}', 'ElementController@getCount');
+        Route::get('/search/count/{search}', 'ElementController@getSearchCount');
         Route::get('/{id}', 'ElementController@getById');
         Route::put('/{id}', 'ElementController@update');
         Route::post('/', 'ElementController@create');

@@ -71,6 +71,28 @@ class ElementService
     }
 
     /**
+     * Получить элементы по поиску (с пагинацией).
+     * @param $search
+     * @param $limit
+     * @param $page
+     * @return Collection
+     */
+    public function getSearchLimit($search, $limit, $page)
+    {
+        return $this->elementRepository->getSearchLimit($search, $limit, $limit * $page);
+    }
+
+    /**
+     * Получить количество элементов по поиску.
+     * @param $search
+     * @return int
+     */
+    public function getSearchCount($search)
+    {
+        return $this->elementRepository->getSearchCount($search);
+    }
+
+    /**
      * Получить элемент по ИД.
      * @param int $id
      * @return Element

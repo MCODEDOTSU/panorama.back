@@ -71,6 +71,39 @@ class ElementRepository
     }
 
     /**
+     * Список элементов слоя.
+     * @param string $search
+     * @param int $limit
+     * @param int $page
+     * @return Collection
+     */
+    public function getSearchLimit(string $search, int $limit, int $offset): Collection
+    {
+        return $this->element
+            ->select(DB::raw('*, ST_AsText(geometry) as geometry'))
+            ->where('title', 'ilike', "%$search%")
+            ->orWhere('description', 'ilike', "%$search%")
+            ->with('next')
+            ->skip($offset)
+            ->take($limit)
+            ->orderBy('title', 'asc')
+            ->get();
+    }
+
+    /**
+     * Получить количество элементов по поиску.
+     * @param string $search
+     * @return int
+     */
+    public function getSearchCount(string $search): int
+    {
+        return $this->element
+            ->where('title', 'ilike', "%$search%")
+            ->orWhere('description', 'ilike', "%$search%")
+            ->count();
+    }
+
+    /**
      * Получить элемент по ИД
      * @param $id
      * @return Element

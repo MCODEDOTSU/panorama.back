@@ -70,6 +70,36 @@ class ElementController extends Controller
     }
 
     /**
+     * Получить элементы по поиску (с пагинацией).
+     * @param $search
+     * @param $limit
+     * @param $page
+     * @return ResponseFactory|Response
+     */
+    public function getSearchLimit($search, $limit, $page)
+    {
+        try {
+            return response($this->elementService->getSearchLimit($search, $limit, $page), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Получить количество элементов по поиску.
+     * @param $search
+     * @return ResponseFactory|Response
+     */
+    public function getSearchCount($search)
+    {
+        try {
+            return response($this->elementService->getSearchCount($search), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
      * Получить элемент по ИД.
      * @param int $id
      * @return ResponseFactory|Response
