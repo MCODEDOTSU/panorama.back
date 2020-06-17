@@ -40,6 +40,37 @@ class ElementRepository
     }
 
     /**
+     * Список элементов слоя.
+     * @param int $layerId
+     * @param int $limit
+     * @param int $offset
+     * @return Collection
+     */
+    public function getAllLimit(int $layerId, int $limit, int $offset): Collection
+    {
+        return $this->element
+            ->select(DB::raw('*, ST_AsText(geometry) as geometry'))
+            ->where('layer_id', $layerId)
+            ->with('next')
+            ->skip($offset)
+            ->take($limit)
+            ->orderBy('title', 'asc')
+            ->get();
+    }
+
+    /**
+     * Получить количество элементов слоя.
+     * @param int $layerId
+     * @return int
+     */
+    public function getCount(int $layerId): int
+    {
+        return $this->element
+            ->where('layer_id', $layerId)
+            ->count();
+    }
+
+    /**
      * Получить элемент по ИД
      * @param $id
      * @return Element

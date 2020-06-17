@@ -49,6 +49,28 @@ class ElementService
     }
 
     /**
+     * Список элементов слоя (с пагинацией).
+     * @param $layerId
+     * @param $limit
+     * @param $page
+     * @return Collection
+     */
+    public function getAllLimit($layerId, $limit, $page)
+    {
+        return $this->elementRepository->getAllLimit($layerId, $limit, $limit * $page);
+    }
+
+    /**
+     * Получить количество элементов слоя.
+     * @param $layerId
+     * @return int
+     */
+    public function getCount($layerId)
+    {
+        return $this->elementRepository->getCount($layerId);
+    }
+
+    /**
      * Получить элемент по ИД.
      * @param int $id
      * @return Element

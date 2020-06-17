@@ -40,6 +40,36 @@ class ElementController extends Controller
     }
 
     /**
+     * Получить элементы слоя (с пагинацией).
+     * @param $layerId
+     * @param $limit
+     * @param $page
+     * @return ResponseFactory|Response
+     */
+    public function getAllLimit($layerId, $limit, $page)
+    {
+        try {
+            return response($this->elementService->getAllLimit($layerId, $limit, $page), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Получить количество элементов слоя.
+     * @param $layerId
+     * @return ResponseFactory|Response
+     */
+    public function getCount($layerId)
+    {
+        try {
+            return response($this->elementService->getCount($layerId), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
      * Получить элемент по ИД.
      * @param int $id
      * @return ResponseFactory|Response
