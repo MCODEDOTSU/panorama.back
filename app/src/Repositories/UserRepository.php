@@ -1,6 +1,6 @@
 <?php
 
-namespace App\src\Repositories\Info;
+namespace App\src\Repositories;
 
 use App\src\Models\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -41,13 +41,12 @@ class UserRepository
 
     /**
      * @param $request
-     * @param $person_id
      * @return User
      * Создать пользователя
      */
-    public function create($request, $person_id)
+    public function create($request)
     {
-        $user = new User([
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'post' => $request->post,
@@ -55,9 +54,13 @@ class UserRepository
             'role' => $request->role,
             'password' => bcrypt($request->password),
             'contractor_id' => $request->contractor_id,
-            'person_id' => $person_id,
-        ]);
+        ];
 
+        if (!empty($request->person_id)) {
+            $userData['person_id'] = $request->person_id;
+        }
+
+        $user = new User($userData);
         $user->save();
 
         return $user;
@@ -76,9 +79,15 @@ class UserRepository
         $user->post = $data['post'];
         $user->photo = $data['photo'];
         $user->role = $data['role'];
+
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);
         }
+
+        if (!empty($data['person_id'])) {
+            $user->person_id = $data['person_id'];
+        }
+
         $user->save();
 
         return $user;

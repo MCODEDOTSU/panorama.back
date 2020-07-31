@@ -19,13 +19,13 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     // Route::get('all_modules', 'ModuleController@getAllModules');
 
     /**
-     * Редактор контрагентов
+     * Контрагенты
      */
-    Route::prefix('/contractor')->namespace('Manager')->group(function () {
+    Route::prefix('/contractor')->group(function () {
         Route::get('/', 'ContractorController@getAll');
         Route::get('/{id}', 'ContractorController@getById');
-        Route::put('/{id}', 'ContractorController@update');
         Route::post('/', 'ContractorController@create');
+        Route::put('/', 'ContractorController@update');
         Route::delete('/{id}', 'ContractorController@delete');
         Route::get('/{id}/attach/module/{module_id}', 'ContractorController@attachModule');
         Route::get('/{id}/detach/module/{module_id}', 'ContractorController@detachModule');
@@ -33,12 +33,23 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     });
 
     /**
-     * Редактор пользователей контрагента
+     * Физические лица
      */
-    Route::prefix('/manager/user')->group(function () {
+    Route::prefix('/person')->group(function () {
+        Route::get('/', 'PersonController@getAll');
+        Route::get('/{id}', 'PersonController@getById');
+        Route::post('/', 'PersonController@create');
+        Route::put('/{id}', 'PersonController@update');
+        Route::delete('/{id}', 'PersonController@delete');
+    });
+
+    /**
+     * Пользователи
+     */
+    Route::prefix('/user')->group(function () {
         Route::get('/{contractor_id}', 'UserController@getAllByContractor');
-        Route::put('/', 'UserController@update');
         Route::post('/', 'UserController@create');
+        Route::put('/', 'UserController@update');
         Route::delete('/{id}', 'UserController@delete');
         Route::post('/upload', 'UserController@uploadPhoto');
     });

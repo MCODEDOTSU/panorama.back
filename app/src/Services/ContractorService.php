@@ -1,10 +1,10 @@
 <?php
 
-namespace App\src\Services\Manager;
+namespace App\src\Services;
 
 use App\src\Models\Contractor;
-use App\src\Repositories\Manager\ContractorRepository;
-use App\src\Services\Info\AddressService;
+use App\src\Repositories\ContractorRepository;
+use App\src\Services\AddressService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;

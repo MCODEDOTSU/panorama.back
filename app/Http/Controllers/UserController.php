@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\src\Models\Contractor;
-use App\src\Services\Info\UserService;
+use App\src\Services\UserService;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -64,20 +64,6 @@ class UserController
     }
 
     /**
-     * @param Request $request
-     * @return ResponseFactory|Response
-     * Обновить пользователя
-     */
-    public function update(Request $request)
-    {
-        try {
-            return response($this->userService->update($request), 200);
-        } catch (Exception $ex) {
-            return response(['error' => $ex->getMessage()], 500);
-        }
-    }
-
-    /**
      * Создать нового пользователя
      * @param Request $request
      * @return ResponseFactory|Response
@@ -86,6 +72,20 @@ class UserController
     {
         try {
             return response($this->userService->create($request), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return ResponseFactory|Response
+     * Обновить пользователя
+     */
+    public function update(Request $request)
+    {
+        try {
+            return response($this->userService->update($request), 200);
         } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }

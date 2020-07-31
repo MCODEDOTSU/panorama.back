@@ -1,6 +1,6 @@
 <?php
 
-namespace App\src\Repositories\Manager;
+namespace App\src\Repositories;
 
 use App\src\Models\Contractor;
 use Illuminate\Support\Collection;

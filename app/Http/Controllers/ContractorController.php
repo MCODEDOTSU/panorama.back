@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Manager;
-use App\Http\Controllers\Controller;
-use App\src\Services\Manager\ContractorService;
+namespace App\Http\Controllers;
+use App\src\Services\ContractorService;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -57,10 +56,10 @@ class ContractorController extends Controller
      * @return ResponseFactory|Response
      * Обновить информацию о контрагенте
      */
-    public function update(Request $request)
+    public function create(Request $request)
     {
         try {
-            return response($this->contractorService->update($request), 200);
+            return response($this->contractorService->create($request), 200);
         } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }
@@ -71,10 +70,10 @@ class ContractorController extends Controller
      * @return ResponseFactory|Response
      * Обновить информацию о контрагенте
      */
-    public function create(Request $request)
+    public function update(Request $request)
     {
         try {
-            return response($this->contractorService->create($request), 200);
+            return response($this->contractorService->update($request), 200);
         } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }

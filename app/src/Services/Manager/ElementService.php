@@ -2,7 +2,7 @@
 
 namespace App\src\Services\Manager;
 use App\src\Models\Element;
-use App\src\Services\Info\AddressService;
+use App\src\Services\AddressService;
 use App\src\Repositories\Manager\ElementRepository;
 use App\src\Services\Constructor\AdditionalInfoService;
 use App\src\Services\Manager\ElementGraphService;

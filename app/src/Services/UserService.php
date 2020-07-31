@@ -1,10 +1,10 @@
 <?php
 
-namespace App\src\Services\Info;
+namespace App\src\Services;
 
 use App\src\Models\User;
 use App\src\Services\MailServices\UserMailService;
-use App\src\Repositories\Info\UserRepository;
+use App\src\Repositories\UserRepository;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -39,6 +39,17 @@ class UserService
     /**
      * @param $data
      * @return User
+     * Создать пользователя
+     */
+    public function create($data)
+    {
+        $data->name = $data->email;
+        return $this->userRepository->create($data);
+    }
+
+    /**
+     * @param $data
+     * @return User
      * Обновить пользователя
      */
     public function update($data)
@@ -47,17 +58,6 @@ class UserService
             $this->userRepository->getById($data->id),
             $data
         );
-    }
-
-    /**
-     * @param $data
-     * @return User
-     * Создать пользователя
-     */
-    public function create($data)
-    {
-        $data->name = $data->email;
-        return $this->userRepository->create($data);
     }
 
     /**

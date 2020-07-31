@@ -1,10 +1,9 @@
 <?php
 
-namespace App\src\Services\Info;
-
+namespace App\src\Services;
 
 use App\src\Models\Address;
-use App\src\Repositories\Info\AddressRepository;
+use App\src\Repositories\AddressRepository;
 
 class AddressService
 {

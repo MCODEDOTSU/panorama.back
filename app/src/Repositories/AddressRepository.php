@@ -1,7 +1,6 @@
 <?php
 
-namespace App\src\Repositories\Info;
-
+namespace App\src\Repositories;
 
 use App\src\Models\Address;
 use Illuminate\Support\Collection;

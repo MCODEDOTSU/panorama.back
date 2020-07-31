@@ -3,7 +3,7 @@
 namespace App\src\Services\Info;
 
 use App\src\Models\Module;
-use App\src\Repositories\Manager\ContractorRepository;
+use App\src\Repositories\ContractorRepository;
 use App\src\Repositories\Info\ModuleRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
