@@ -46,6 +46,15 @@ class ContractorRepository
             ->get();
     }
 
+    /**
+     * @param $data
+     * @return Contractor
+     * Создать контрагента
+     */
+    public function create($data): Contractor
+    {
+        return $this->contractor->create($data);
+    }
 
     /**
      * @param Contractor $contractor
@@ -59,20 +68,12 @@ class ContractorRepository
         $contractor->full_name = $data->full_name;
         $contractor->inn = $data->inn;
         $contractor->kpp = $data->kpp;
-        $contractor->address_id = $data->address_id;
+        if (!empty($data->address_id)) {
+            $contractor->address_id = $data->address_id;
+        }
         $contractor->logo = $data->logo;
         $contractor->save();
         return $contractor;
-    }
-
-    /**
-     * @param $data
-     * @return Contractor
-     * Создать контрагента
-     */
-    public function create($data): Contractor
-    {
-        return $this->contractor->create($data);
     }
 
     /**
@@ -97,7 +98,7 @@ class ContractorRepository
     {
         $contractor = $this->getById($contractorId);
         $contractor->modules()->attach($moduleId);
-        return $contractor;
+        return $this->getById($contractorId);
     }
 
     /**
@@ -110,7 +111,7 @@ class ContractorRepository
     {
         $contractor = $this->getById($contractorId);
         $contractor->modules()->detach($moduleId);
-        return $contractor;
+        return $this->getById($contractorId);
     }
 
 }

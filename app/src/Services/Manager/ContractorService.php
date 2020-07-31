@@ -47,58 +47,60 @@ class ContractorService
     }
 
     /**
-     * Обновить котрагента.
-     * @param Request $data
-     * @return Contractor
-     */
-    public function update(Request $data)
-    {
-
-        if ($data->address['id'] == 0) {
-            $address = $this->addressService->create([
-                'city' => $data->address['city'],
-                'street' => $data->address['street'],
-                'build' => $data->address['build'],
-            ]);
-            $data->address_id = $address->id;
-        } else {
-            $address = $this->addressService->update($data->address['id'], [
-                'city' => $data->address['city'],
-                'street' => $data->address['street'],
-                'build' => $data->address['build'],
-            ]);
-        }
-        $contractorToUpdate = $this->contractorRepository->getById($data->id);
-        $updatedContractor = $this->contractorRepository->update($contractorToUpdate, $data);
-        $updatedContractor->address = $address;
-        return $updatedContractor;
-    }
-
-    /**
      * @param Request $data
      * @return Contractor
      * Создать контрагента
      */
     public function create(Request $data)
     {
-        $address = $this->addressService->create([
-            'city' => $data->address['city'],
-            'street' => $data->address['street'],
-            'build' => $data->address['build'],
-        ]);
-        $newContractor = $this->contractorRepository->create([
+        $contractorData = [
             'name' => $data->name,
             'full_name' => $data->full_name,
             'inn' => $data->inn,
             'kpp' => $data->kpp,
-            'address_id' => $address->id,
             'logo' => $data->logo,
-        ]);
+        ];
 
-        $newContractor->address = $address;
-        $newContractor->modules = [];
+        if (!empty($data->address)) {
+            $address = $this->addressService->create([
+                'city' => $data->address['city'],
+                'street' => $data->address['street'],
+                'build' => $data->address['build'],
+            ]);
+            $contractorData['address_id'] = $address->id;
+        }
 
-        return $newContractor;
+        $contractor = $this->contractorRepository->create($contractorData);
+        return $this->contractorRepository->getById($contractor->id);
+    }
+
+    /**
+     * Обновить котрагента.
+     * @param Request $data
+     * @return Contractor
+     */
+    public function update(Request $data)
+    {
+        if (!empty($data->address)) {
+            if ($data->address['id'] == 0) {
+                $address = $this->addressService->create([
+                    'city' => $data->address['city'],
+                    'street' => $data->address['street'],
+                    'build' => $data->address['build'],
+                ]);
+                $data->address_id = $address->id;
+            } else {
+                $this->addressService->update($data->address['id'], [
+                    'city' => $data->address['city'],
+                    'street' => $data->address['street'],
+                    'build' => $data->address['build'],
+                ]);
+            }
+        }
+
+        $contractor = $this->contractorRepository->getById($data->id);
+        $this->contractorRepository->update($contractor, $data);
+        return $this->contractorRepository->getById($data->id);
     }
 
     /**

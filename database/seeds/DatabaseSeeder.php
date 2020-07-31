@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LayersSeeder::class);
         $this->call(ElementsSeeder::class);
         $this->call(SequenceUpdate::class);
+        $this->call(DirectorySeeder::class);
     }
 }

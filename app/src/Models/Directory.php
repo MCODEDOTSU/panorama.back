@@ -3,36 +3,17 @@
 namespace App\src\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class Person
+ * Class Directory
  * @package App\src\Models
  */
-class Person extends Model
+class Directory extends Model
 {
-    protected $table = 'person';
+    protected $table = 'directories';
 
     protected $fillable = [
-        'id', 'firstname', 'lastname', 'middlename', 'date_of_birth', 'address_id', 'phones', 'note'
+        'id', 'name', 'title'
     ];
-    /**
-     * @return HasMany
-     * К ФЛ могут быть привязаны несколько пользователей
-     */
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
-
-    /**
-     * @return BelongsTo
-     * Адрес ФЛ
-     */
-    public function address()
-    {
-        return $this->belongsTo(Address::class);
-    }
 
 }

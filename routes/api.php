@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Аутентификация
 Route::post('login', 'Auth\LoginController@login');
-Route::post('register', 'Auth\UserController@register');
+//Route::post('register', 'Auth\UserController@register');
 //Route::post('register', 'Auth\RegisterController@create');
 
 Route::group([ 'middleware' => 'auth:api' ], function() {
@@ -15,13 +15,13 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     /**
      * Модули
      */
-    Route::get('modules', 'ModuleController@getModules');
-    Route::get('all_modules', 'ModuleController@getAllModules');
+    // Route::get('modules', 'ModuleController@getModules');
+    // Route::get('all_modules', 'ModuleController@getAllModules');
 
     /**
      * Редактор контрагентов
      */
-    Route::prefix('/manager/contractor')->namespace('Manager')->group(function () {
+    Route::prefix('/contractor')->namespace('Manager')->group(function () {
         Route::get('/', 'ContractorController@getAll');
         Route::get('/{id}', 'ContractorController@getById');
         Route::put('/{id}', 'ContractorController@update');

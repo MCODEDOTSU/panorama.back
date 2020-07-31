@@ -23,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'contractor_id', 'firstname', 'lastname', 'middlename', 'post', 'photo',
+        'name', 'email', 'password', 'contractor_id', 'post', 'photo', 'person_id'
     ];
 
     /**
@@ -42,6 +42,15 @@ class User extends Authenticatable
     public function contractor()
     {
         return $this->belongsTo(Contractor::class, 'contractor_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Пользователь привязан к ФЛ
+     */
+    public function person()
+    {
+        return $this->belongsTo(Contractor::class, 'person_id');
     }
 
     public function AauthAcessToken(){

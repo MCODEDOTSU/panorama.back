@@ -2,86 +2,65 @@
 
 namespace App\src\Repositories\Info;
 
-use App\src\Models\User;
+use App\src\Models\Person;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 
-class UserRepository
+class PersonRepository
 {
-    protected $user;
+    protected $person;
 
     /**
-     * UserRepository constructor.
-     * @param $user
+     * PersonRepository constructor.
+     * @param $person
      */
-    public function __construct(User $user)
+    public function __construct(Person $person)
     {
-        $this->user = $user;
-    }
-
-    /**
-     * @param $email
-     * @return mixed
-     * Получить пользователя по email
-     */
-    public function getUserByEmail($email)
-    {
-        return $this->user->where('email', $email)->first();
-    }
-
-    /**
-     * Получить пользователей для контрагента
-     * @param $contractorId
-     * @return ResponseFactory|Response
-     */
-    public function getAllByContractor($contractorId)
-    {
-        return $this->user->where('contractor_id', $contractorId)->get();
+        $this->person = $person;
     }
 
     /**
      * @param $request
-     * @param $person_id
-     * @return User
-     * Создать пользователя
+     * @return Person
+     * Создать физическое лицо
      */
-    public function create($request, $person_id)
+    public function create($request)
     {
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'post' => $request->post,
-            'photo' => $request->photo,
-            'role' => $request->role,
-            'password' => bcrypt($request->password),
-            'contractor_id' => $request->contractor_id,
-            'person_id' => $person_id,
+        $person = new Person([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'middlename' => $request->middlename,
+            'date_of_birth' => $request->date_of_birth,
+            'address_id' => $request->address_id,
+            'phones' => $request->phones,
+            'note' => $request->note,
         ]);
 
-        $user->save();
+        $person->save();
 
-        return $user;
+        return $person;
     }
 
     /**
-     * @param User $user
      * @param $data
-     * @return User
-     * Обновить пользователя
+     * @param $person_id
+     * @return Person
+     * Обновить физическое лицо
      */
-    public function update(User $user, $data)
+    public function update($data, $person_id)
     {
-        $user->name = $data['email'];
-        $user->email = $data['email'];
-        $user->post = $data['post'];
-        $user->photo = $data['photo'];
-        $user->role = $data['role'];
-        if (!empty($data['password'])) {
-            $user->password = bcrypt($data['password']);
-        }
-        $user->save();
+        $person = $this->module->find($person_id);
 
-        return $user;
+        $person->firstname = $data['firstname'];
+        $person->lastname = $data['lastname'];
+        $person->middlename = $data['middlename'];
+        $person->date_of_birth = $data['date_of_birth'];
+        $person->address_id = $data['address_id'];
+        $person->phones = $data['phones'];
+        $person->note = $data['note'];
+        $person->save();
+
+        return $person;
     }
 
     /**
@@ -91,7 +70,7 @@ class UserRepository
      */
     public function getById(int $id)
     {
-        return $this->user->find($id);
+        return $this->person->find($id);
     }
 
     /**
@@ -101,7 +80,7 @@ class UserRepository
      */
     public function delete(int $id)
     {
-        $record = $this->user->find($id);
+        $record = $this->person->find($id);
         $record->delete();
         return ['id' => $id];
     }

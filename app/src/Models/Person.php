@@ -4,37 +4,23 @@ namespace App\src\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property mixed name
- * @property mixed full_name
- * @property mixed inn
- * @property mixed kpp
- * @method create($data)
- * @method static find(int $id)
+ * Class Person
+ * @package App\src\Models
  */
-class Contractor extends Model
+class Person extends Model
 {
-    protected $table = 'contractors';
+    protected $table = 'person';
 
     protected $fillable = [
-        'id', 'name', 'full_name', 'inn', 'kpp', 'address_id', 'logo'
+        'id', 'firstname', 'lastname', 'middlename', 'date_of_birth', 'address_id', 'phones', 'note'
     ];
 
     /**
-     * @return BelongsToMany
-     * Получить привилегии / модули контрагента
-     */
-    public function modules()
-    {
-        return $this->belongsToMany(Module::class, 'privileges');
-    }
-
-    /**
      * @return HasMany
-     * К контрагенту могут быть привязаны несколько пользователей
+     * К ФЛ могут быть привязаны несколько пользователей
      */
     public function users()
     {
@@ -43,7 +29,7 @@ class Contractor extends Model
 
     /**
      * @return BelongsTo
-     * Адрес контрагента
+     * Адрес ФЛ
      */
     public function address()
     {

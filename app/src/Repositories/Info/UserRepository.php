@@ -2,7 +2,6 @@
 
 namespace App\src\Repositories\Info;
 
-
 use App\src\Models\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
@@ -42,22 +41,21 @@ class UserRepository
 
     /**
      * @param $request
+     * @param $person_id
      * @return User
      * Создать пользователя
      */
-    public function create($request)
+    public function create($request, $person_id)
     {
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'middlename' => $request->middlename,
             'post' => $request->post,
             'photo' => $request->photo,
             'role' => $request->role,
             'password' => bcrypt($request->password),
             'contractor_id' => $request->contractor_id,
+            'person_id' => $person_id,
         ]);
 
         $user->save();
@@ -75,9 +73,6 @@ class UserRepository
     {
         $user->name = $data['email'];
         $user->email = $data['email'];
-        $user->firstname = $data['firstname'];
-        $user->lastname = $data['lastname'];
-        $user->middlename = $data['middlename'];
         $user->post = $data['post'];
         $user->photo = $data['photo'];
         $user->role = $data['role'];

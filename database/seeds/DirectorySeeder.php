@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ContractorSeeder extends Seeder
+class DirectorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,21 +15,18 @@ class ContractorSeeder extends Seeder
         $data = [
             [
                 'id' => 1,
-                'name' => 'Администратор',
-                'full_name' => 'Администратор',
-                'inn' => '301711648261',
+                'name' => 'contractors',
+                'title' => 'Организации',
             ],
             [
                 'id' => 2,
-                'name' => 'ООО "РЕАЛЬНЫЙ ГОРОД"',
-                'full_name' => 'ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "РЕАЛЬНЫЙ ГОРОД"',
-                'inn' => '3019015479',
-                'kpp' => '301901001',
+                'name' => 'persons',
+                'title' => 'Физические Лица',
             ],
         ];
 
         foreach ($data as $value) {
-            DB::table('contractors')->insert($value);
+            DB::table('directories')->insert($value);
         }
     }
 }
