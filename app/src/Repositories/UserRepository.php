@@ -26,7 +26,9 @@ class UserRepository
      */
     public function getUserByEmail($email)
     {
-        return $this->user->where('email', $email)->first();
+        return $this->user
+            ->with('person')
+            ->where('email', $email)->first();
     }
 
     /**
@@ -36,7 +38,9 @@ class UserRepository
      */
     public function getAllByContractor($contractorId)
     {
-        return $this->user->where('contractor_id', $contractorId)->get();
+        return $this->user
+            ->with('person')
+            ->where('contractor_id', $contractorId)->get();
     }
 
     /**
@@ -100,7 +104,7 @@ class UserRepository
      */
     public function getById(int $id)
     {
-        return $this->user->find($id);
+        return $this->user->with('person')->find($id);
     }
 
     /**
