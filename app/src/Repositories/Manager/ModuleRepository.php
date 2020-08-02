@@ -36,6 +36,7 @@ class ModuleRepository
         return $this->module
             ->with('layers')
             ->with('contractors')
+            ->with('parentContractors')
             ->get();
     }
 
@@ -78,6 +79,14 @@ class ModuleRepository
         $record = $this->module->find($id);
         $record->delete();
         return ['id' => $id];
+    }
+
+    /**
+     * Доступ к модулям по родительскому контрагенту
+     */
+    public function getParentAccessibleModules()
+    {
+
     }
 
 }
