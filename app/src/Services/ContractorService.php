@@ -99,6 +99,11 @@ class ContractorService
         }
 
         $contractor = $this->contractorRepository->getById($data->id);
+
+        if ($data->parent_id == $contractor->id) {
+            throw new \Exception("Id Контрагента и id присваемого родительского контрагента не могут совпадать");
+        }
+
         $this->contractorRepository->update($contractor, $data);
         return $this->contractorRepository->getById($data->id);
     }

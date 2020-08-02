@@ -72,6 +72,7 @@ class ContractorRepository
             $contractor->address_id = $data->address_id;
         }
         $contractor->logo = $data->logo;
+        $contractor->parent_id = $data->parent_id;
         $contractor->save();
         return $contractor;
     }
