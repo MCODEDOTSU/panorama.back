@@ -37,16 +37,17 @@ class LayerRepository
     /**
      * Список слоёв для контрагента.
      * @param $contractorId
+     * @param $parentContractorId
      * @return Collection
      */
-    public function getAllToContractor($contractorId): Collection
+    public function getAllToContractor($contractorId, $parentContractorId): Collection
     {
         return $this->layer
             ->with('module')
             ->with('elements')
-            ->whereHas('module', function ($query) use ($contractorId) {
-                $query->whereHas('contractors', function ($query) use ($contractorId) {
-                    $query->where('contractor_id', '=', $contractorId);
+            ->whereHas('module', function ($query) use ($contractorId, $parentContractorId) {
+                $query->whereHas('contractors', function ($query) use ($contractorId, $parentContractorId) {
+                    $query->whereIn('contractor_id', [$contractorId, $parentContractorId]);
                 });
             })
             ->orderBy('id', 'asc')

@@ -42,7 +42,13 @@ class LayerService
     public function getAllToContractor()
     {
         $user = Auth::user();
-        return $this->layerRepository->getAllToContractor($user->contractor_id);
+
+        // Получить слои доступные через родительского контрагента
+        // Получить родительского контрагента
+        $userContractor = $user->contractor()->first();
+
+        // Получить слои доступные контрагенту напрямую
+        return $this->layerRepository->getAllToContractor($user->contractor_id, $userContractor->parent_id);
     }
 
     /**
