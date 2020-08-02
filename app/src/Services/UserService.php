@@ -3,10 +3,9 @@
 namespace App\src\Services;
 
 use App\src\Models\User;
+use App\src\Repositories\ContractorRepository;
 use App\src\Services\MailServices\UserMailService;
 use App\src\Repositories\UserRepository;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Image;
 
@@ -14,26 +13,33 @@ class UserService
 {
     protected $userRepository;
     protected $mailService;
+    protected $contractorRepository;
 
     /**
      * UserService constructor.
      * @param UserRepository $userRepository
      * @param UserMailService $mailService
+     * @param ContractorRepository $contractorRepository
      */
-    public function __construct(UserRepository $userRepository, UserMailService $mailService)
+    public function __construct(UserRepository $userRepository, UserMailService $mailService, ContractorRepository $contractorRepository)
     {
         $this->userRepository = $userRepository;
         $this->mailService = $mailService;
+        $this->contractorRepository = $contractorRepository;
     }
 
     /**
      * Получить пользователей для контрагента
      * @param $contractorId
-     * @return ResponseFactory|Response
+     * @return User[]|Builder[]|Collection
      */
     public function getAllByContractor($contractorId)
     {
-        return $this->userRepository->getAllByContractor($contractorId);
+        // Определить дочерних контрагентов, пользователи которых тоже включены
+        $childContractors =  $this->contractorRepository->getChildrenContractors($contractorId)->pluck('id');
+        $allContractors = $childContractors->prepend((int)$contractorId);
+
+        return $this->userRepository->getAllByContractor($allContractors);
     }
 
     /**

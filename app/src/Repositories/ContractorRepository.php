@@ -115,4 +115,11 @@ class ContractorRepository
         return $this->getById($contractorId);
     }
 
+    public function getChildrenContractors($parentContractorId)
+    {
+        return $this->contractor
+            ->where('parent_id', '=', $parentContractorId)
+            ->get();
+    }
+
 }

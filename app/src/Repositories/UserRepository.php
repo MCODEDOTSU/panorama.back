@@ -3,8 +3,7 @@
 namespace App\src\Repositories;
 
 use App\src\Models\User;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 
 class UserRepository
 {
@@ -33,14 +32,16 @@ class UserRepository
 
     /**
      * Получить пользователей для контрагента
-     * @param $contractorId
-     * @return ResponseFactory|Response
+     * @param Collection $contractorsIds
+     * @return User[]|Builder[]|Collection
      */
-    public function getAllByContractor($contractorId)
+    public function getAllByContractor(Collection $contractorsIds)
     {
         return $this->user
             ->with('person')
-            ->where('contractor_id', $contractorId)->get();
+            ->with('contractor')
+            ->whereIn('contractor_id', $contractorsIds)
+            ->get();
     }
 
     /**
