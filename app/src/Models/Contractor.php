@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property mixed full_name
  * @property mixed inn
  * @property mixed kpp
+ * @property mixed|null parent_id
  * @method create($data)
  * @method static find(int $id)
  */

@@ -165,4 +165,13 @@ class ContractorService
         ];
     }
 
+    public function detachParentContractor($contractor)
+    {
+        $contractorToFind = $this->getById($contractor->id);
+        $contractorToFind->parent_id = null;
+        $contractorToFind->update();
+
+        return $contractorToFind;
+    }
+
 }
