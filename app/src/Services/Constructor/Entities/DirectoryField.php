@@ -6,11 +6,11 @@ namespace App\src\Services\Constructor\Entities;
 
 class DirectoryField extends AbstractField implements FieldInterface
 {
-    public $type = 'string';
+    public $type = 'integer';
 
     public function setDefaultValue()
     {
-        return 'Не указано';
+        return 0;
     }
 
     /**
