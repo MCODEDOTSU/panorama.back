@@ -22,8 +22,13 @@ class DirectoryController extends Controller
         $this->service = $directoryService;
     }
 
+    /**
+     * @param $entityName
+     * entityName => Наименование связанной таблицы
+     * @return
+     */
     public function getEntities($entityName)
     {
-        return [];
+        return $this->service->getEntities($entityName);
     }
 }
