@@ -5,7 +5,7 @@ namespace App\src\Repositories;
 use App\src\Models\Address;
 use Illuminate\Support\Collection;
 
-class AddressRepository
+class AddressRepository extends AbstractRepository
 {
     protected $address;
 
@@ -16,6 +16,7 @@ class AddressRepository
     public function __construct(Address $address)
     {
         $this->address = $address;
+        $this->model = $address;
     }
 
     /**
@@ -27,17 +28,6 @@ class AddressRepository
     {
         return $this->address->find($id);
     }
-
-    /**
-     * @param $data
-     * @return Address
-     * Создать адрес
-     */
-    public function create($data): Address
-    {
-        return $this->address->create($data);
-    }
-
 
     /**
      * @param $addressId

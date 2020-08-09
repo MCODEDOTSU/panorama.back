@@ -5,7 +5,7 @@ namespace App\src\Repositories;
 use App\src\Models\Contractor;
 use Illuminate\Support\Collection;
 
-class ContractorRepository
+class ContractorRepository extends AbstractRepository
 {
     protected $contractor;
 
@@ -16,6 +16,7 @@ class ContractorRepository
     public function __construct(Contractor $contractor)
     {
         $this->contractor = $contractor;
+        $this->model = $contractor;
     }
 
     /**
@@ -44,16 +45,6 @@ class ContractorRepository
             ->with('address')
             ->orderBy('id', 'asc')
             ->get();
-    }
-
-    /**
-     * @param $data
-     * @return Contractor
-     * Создать контрагента
-     */
-    public function create($data): Contractor
-    {
-        return $this->contractor->create($data);
     }
 
     /**

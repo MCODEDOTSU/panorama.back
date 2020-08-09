@@ -3,6 +3,7 @@
 
 namespace App\src\Repositories;
 
+use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractRepository
 {
@@ -11,5 +12,10 @@ abstract class AbstractRepository
     public function getAll()
     {
         return $this->model->get();
+    }
+
+    public function create($data): Model
+    {
+        return $this->model->create($data);
     }
 }
