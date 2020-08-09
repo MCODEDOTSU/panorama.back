@@ -4,7 +4,6 @@ namespace App\src\Services\Constructor\Entities;
 
 use Exception;
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Log;
 
 class FieldsResolver
 {

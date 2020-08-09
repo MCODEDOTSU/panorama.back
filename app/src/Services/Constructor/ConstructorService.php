@@ -150,8 +150,8 @@ class ConstructorService
     /***
      * Добавляем новые поля в таблицу
      * @param array $column
-     * @param Blueprint $updatedTable
      * @param $layerId
+     * @param Blueprint $table
      */
     private function parseSingleColumn(array $column, $layerId, Blueprint $table)
     {
