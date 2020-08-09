@@ -2,6 +2,7 @@
 
 namespace App\src\Services\Constructor;
 
+use App\Exceptions\CustomException;
 use App\src\Repositories\Constructor\AdditionalInfoRepository;
 use App\src\Services\Constructor\Entities\FieldsResolver;
 use Illuminate\Support\Facades\DB;
@@ -194,7 +195,7 @@ class AdditionalInfoService
      * Загрузить
      * @param $data
      * @return mixed
-     * @throws \App\Exceptions\CustomException
+     * @throws CustomException
      */
     public function uploadFiles($data)
     {
@@ -204,7 +205,7 @@ class AdditionalInfoService
         $currentCount = (int)$data->current_count;
 
         if ($constructorMetadata->type != 'doc_field') {
-            throw new \App\Exceptions\CustomException('Something Went Wrong.');
+            throw new CustomException('Something Went Wrong.');
         }
 
         $errors = [];
