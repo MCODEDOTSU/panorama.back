@@ -143,6 +143,8 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
 
 });
 
+Route::get('/directory', 'Constructor\DirectoryController@getAll');
+
 /**
  * GIS
  */

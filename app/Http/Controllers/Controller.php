@@ -10,4 +10,15 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected $service;
+
+    public function getAll()
+    {
+        try {
+            return response($this->service->getAll(), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
 }
