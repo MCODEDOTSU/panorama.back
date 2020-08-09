@@ -144,6 +144,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
 });
 
 Route::get('/directory', 'Constructor\DirectoryController@get');
+Route::get('/directory/entities/{entity_name}', 'Constructor\DirectoryController@getEntities');
 
 /**
  * GIS

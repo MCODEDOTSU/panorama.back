@@ -22,4 +22,8 @@ class DirectoryController extends Controller
         $this->service = $directoryService;
     }
 
+    public function getEntities($entityName)
+    {
+        return [];
+    }
 }
