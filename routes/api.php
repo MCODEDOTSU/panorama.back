@@ -10,7 +10,6 @@ Route::post('login', 'Auth\LoginController@login');
 Route::group([ 'middleware' => 'auth:api' ], function() {
 
     Route::get('logout', 'Auth\LoginController@logout');
-    Route::get('user', 'UserController@getUser');
 
     /**
      * Модули
@@ -30,7 +29,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::get('/{id}/attach/module/{module_id}', 'ContractorController@attachModule');
         Route::get('/{id}/detach/module/{module_id}', 'ContractorController@detachModule');
         Route::post('/upload', 'ContractorController@uploadLogo');
-        Route::post('/detach_parent_contractor', 'ContractorController@detachParentContractor');
+        // Route::post('/detach_parent_contractor', 'ContractorController@detachParentContractor');
     });
 
     /**
@@ -48,6 +47,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
      * Пользователи
      */
     Route::prefix('/user')->group(function () {
+        Route::get('/', 'UserController@getUser');
         Route::get('/{contractor_id}', 'UserController@getAllByContractor');
         Route::post('/', 'UserController@create');
         Route::put('/', 'UserController@update');

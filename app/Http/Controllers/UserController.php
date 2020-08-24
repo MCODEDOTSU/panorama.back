@@ -37,6 +37,9 @@ class UserController
         // Контрагент
         $authedUser->contractor = $authedUser->contractor()->first();
 
+        // Персона
+        $authedUser->person = $authedUser->person()->first();
+
         // Адрес организации
         $authedUser->contractor_address = $authedUser->contractor->address()->first();
 
