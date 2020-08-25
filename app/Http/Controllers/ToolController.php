@@ -27,7 +27,7 @@ class ToolController
         $export = new InvoicesExport($request->data);
         $filename = date('Ymd-His') . '.xlsx';
         Excel::store($export, "public/export/$filename");
-        return [ "public/storage/export/$filename" ];
+        return [ "storage/export/$filename" ];
     }
 
 }
