@@ -11,6 +11,12 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
 
     Route::get('logout', 'Auth\LoginController@logout');
 
+    Route::post('export', 'ToolController@export');
+
+    Route::prefix('/export')->group(function () {
+        Route::post('/excel', 'ToolController@exportExcel');
+    });
+
     /**
      * Модули
      */

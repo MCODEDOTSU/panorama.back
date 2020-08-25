@@ -139,8 +139,4 @@ class UserController
         }
     }
 
-    public function info() {
-        echo phpinfo();
-    }
-
 }
