@@ -67,6 +67,7 @@ class PersonController extends Controller
 
     /**
      * Изменить ФЛ.
+     * @param int $id
      * @param Request $request
      * @return ResponseFactory|Response
      */
