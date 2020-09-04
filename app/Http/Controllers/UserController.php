@@ -125,18 +125,5 @@ class UserController
         }
     }
 
-    /**
-     * Загрузка фотографии пользователя на сервер
-     * @param Request $request
-     * @return ResponseFactory|Response
-     */
-    public function uploadPhoto(Request $request)
-    {
-        try {
-            return response($this->userService->uploadPhoto($request->file('file')), 200);
-        } catch (Exception $ex) {
-            return response(['error' => $ex->getMessage()], 500);
-        }
-    }
 
 }

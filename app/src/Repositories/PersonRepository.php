@@ -58,6 +58,8 @@ class PersonRepository
             'date_of_birth' => $data->date_of_birth,
             'phones' => $data->phones,
             'note' => $data->note,
+            'post' => $data->post,
+            'photo' => $data->photo,
         ];
 
         if (!empty($data->address_id)) {
@@ -87,6 +89,8 @@ class PersonRepository
         }
         $person->phones = $data->phones;
         $person->note = $data->note;
+        $person->photo = $data->photo;
+        $person->post = $data->post;
 
         $person->save();
         return $this->getById($id);

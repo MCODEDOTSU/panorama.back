@@ -24,6 +24,13 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     // Route::get('all_modules', 'ModuleController@getAllModules');
 
     /**
+     * Регионы
+     */
+    Route::prefix('/regions')->group(function () {
+        Route::get('/', 'RegionController@index');
+    });
+
+    /**
      * Контрагенты
      */
     Route::prefix('/contractor')->group(function () {
@@ -47,6 +54,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::post('/', 'PersonController@create');
         Route::put('/{id}', 'PersonController@update');
         Route::delete('/{id}', 'PersonController@delete');
+        Route::post('/upload', 'PersonController@uploadPhoto');
     });
 
     /**
@@ -58,7 +66,6 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::post('/', 'UserController@create');
         Route::put('/', 'UserController@update');
         Route::delete('/{id}', 'UserController@delete');
-        Route::post('/upload', 'UserController@uploadPhoto');
     });
 
     /**

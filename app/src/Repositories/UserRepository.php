@@ -54,8 +54,6 @@ class UserRepository
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
-            'post' => $request->post,
-            'photo' => $request->photo,
             'role' => $request->role,
             'password' => bcrypt($request->password),
             'contractor_id' => $request->contractor_id,
@@ -82,8 +80,6 @@ class UserRepository
         $user->name = $data['email'];
         $user->email = $data['email'];
         $user->post = $data['post'];
-        $user->photo = $data['photo'];
-        $user->role = $data['role'];
 
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);

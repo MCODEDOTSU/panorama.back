@@ -15,6 +15,11 @@ class Address extends Model
     protected $table = 'address';
 
     protected $fillable = [
-        'id', 'index', 'region', 'city', 'street', 'build'
+        'id', 'index', 'region_id', 'district', 'city', 'street', 'build'
     ];
+
+    public function region()
+    {
+        return $this->belongsTo('App\src\Models\Region');
+    }
 }
