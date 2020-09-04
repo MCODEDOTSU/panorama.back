@@ -137,13 +137,13 @@ class ContractorController extends Controller
         }
     }
 
-    public function detachParentContractor(Request $contractor)
-    {
-        try {
-            return response($this->contractorService->detachParentContractor($contractor), 200);
-        } catch (Exception $ex) {
-            return response(['error' => $ex->getMessage()], 500);
-        }
-    }
+//    public function detachParentContractor(Request $contractor)
+//    {
+//        try {
+//            return response($this->contractorService->detachParentContractor($contractor), 200);
+//        } catch (Exception $ex) {
+//            return response(['error' => $ex->getMessage()], 500);
+//        }
+//    }
 
 }

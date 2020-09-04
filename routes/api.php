@@ -10,13 +10,25 @@ Route::post('login', 'Auth\LoginController@login');
 Route::group([ 'middleware' => 'auth:api' ], function() {
 
     Route::get('logout', 'Auth\LoginController@logout');
-    Route::get('user', 'UserController@getUser');
+
+    Route::post('export', 'ToolController@export');
+
+    Route::prefix('/export')->group(function () {
+        Route::post('/excel', 'ToolController@exportExcel');
+    });
 
     /**
      * Модули
      */
     // Route::get('modules', 'ModuleController@getModules');
     // Route::get('all_modules', 'ModuleController@getAllModules');
+
+    /**
+     * Регионы
+     */
+    Route::prefix('/regions')->group(function () {
+        Route::get('/', 'RegionController@index');
+    });
 
     /**
      * Контрагенты
@@ -30,7 +42,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::get('/{id}/attach/module/{module_id}', 'ContractorController@attachModule');
         Route::get('/{id}/detach/module/{module_id}', 'ContractorController@detachModule');
         Route::post('/upload', 'ContractorController@uploadLogo');
-        Route::post('/detach_parent_contractor', 'ContractorController@detachParentContractor');
+        // Route::post('/detach_parent_contractor', 'ContractorController@detachParentContractor');
     });
 
     /**
@@ -42,17 +54,18 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::post('/', 'PersonController@create');
         Route::put('/{id}', 'PersonController@update');
         Route::delete('/{id}', 'PersonController@delete');
+        Route::post('/upload', 'PersonController@uploadPhoto');
     });
 
     /**
      * Пользователи
      */
     Route::prefix('/user')->group(function () {
+        Route::get('/', 'UserController@getUser');
         Route::get('/{contractor_id}', 'UserController@getAllByContractor');
         Route::post('/', 'UserController@create');
         Route::put('/', 'UserController@update');
         Route::delete('/{id}', 'UserController@delete');
-        Route::post('/upload', 'UserController@uploadPhoto');
     });
 
     /**

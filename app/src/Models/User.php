@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'contractor_id', 'post', 'photo', 'role', 'person_id'
+        'name', 'email', 'password', 'contractor_id', 'role', 'person_id'
     ];
 
     /**
@@ -51,7 +51,7 @@ class User extends Authenticatable
      */
     public function person()
     {
-        return $this->belongsTo(Contractor::class, 'person_id');
+        return $this->belongsTo(Person::class, 'person_id');
     }
 
     public function AauthAcessToken(){

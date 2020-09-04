@@ -63,7 +63,7 @@ class ContractorRepository extends AbstractRepository
             $contractor->address_id = $data->address_id;
         }
         $contractor->logo = $data->logo;
-        $contractor->parent_id = $data->parent_id;
+        $contractor->parent_id = $data->parent_id == 'null' ? null : $data->parent_id;
         $contractor->save();
         return $contractor;
     }

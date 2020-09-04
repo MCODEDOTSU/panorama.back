@@ -78,6 +78,7 @@ class ContractorService
      * Обновить котрагента.
      * @param Request $data
      * @return Contractor
+     * @throws \Exception
      */
     public function update(Request $data)
     {
@@ -101,7 +102,7 @@ class ContractorService
         $contractor = $this->contractorRepository->getById($data->id);
 
         if ($data->parent_id == $contractor->id) {
-            throw new \Exception("Id Контрагента и id присваемого родительского контрагента не могут совпадать");
+            throw new \Exception("ID контрагента и ID присваемого родительского контрагента не могут совпадать");
         }
 
         $this->contractorRepository->update($contractor, $data);
@@ -165,13 +166,13 @@ class ContractorService
         ];
     }
 
-    public function detachParentContractor($contractor)
-    {
-        $contractorToFind = $this->getById($contractor->id);
-        $contractorToFind->parent_id = null;
-        $contractorToFind->update();
-
-        return $contractorToFind;
-    }
+//    public function detachParentContractor($contractor)
+//    {
+//        $contractorToFind = $this->getById($contractor->id);
+//        $contractorToFind->parent_id = null;
+//        $contractorToFind->update();
+//
+//        return $contractorToFind;
+//    }
 
 }

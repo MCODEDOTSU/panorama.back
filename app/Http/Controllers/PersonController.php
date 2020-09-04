@@ -67,6 +67,7 @@ class PersonController extends Controller
 
     /**
      * Изменить ФЛ.
+     * @param int $id
      * @param Request $request
      * @return ResponseFactory|Response
      */
@@ -88,6 +89,20 @@ class PersonController extends Controller
     {
         try {
             return response($this->personService->delete($id), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Загрузка фотографию на сервер
+     * @param Request $request
+     * @return ResponseFactory|Response
+     */
+    public function uploadPhoto(Request $request)
+    {
+        try {
+            return response($this->personService->uploadPhoto($request->file('file')), 200);
         } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }

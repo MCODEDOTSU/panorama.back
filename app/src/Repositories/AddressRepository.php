@@ -26,7 +26,7 @@ class AddressRepository extends AbstractRepository
      */
     public function getById($id): Address
     {
-        return $this->address->find($id);
+        return $this->address->with('region')->find($id);
     }
 
     /**
@@ -39,10 +39,13 @@ class AddressRepository extends AbstractRepository
     {
         $record = $this->address::find($addressId);
         $record->index = $data['index'];
-        $record->region = $data['region'];
+        $record->district = $data['district'];
         $record->city = $data['city'];
         $record->street = $data['street'];
         $record->build = $data['build'];
+        if (!empty($data['region_id'])) {
+            $record->region_id = $data['region_id'];
+        }
         $record->save();
         return $record;
     }

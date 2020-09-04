@@ -37,6 +37,9 @@ class UserController
         // Контрагент
         $authedUser->contractor = $authedUser->contractor()->first();
 
+        // Персона
+        $authedUser->person = $authedUser->person()->first();
+
         // Адрес организации
         $authedUser->contractor_address = $authedUser->contractor->address()->first();
 
@@ -122,22 +125,5 @@ class UserController
         }
     }
 
-    /**
-     * Загрузка фотографии пользователя на сервер
-     * @param Request $request
-     * @return ResponseFactory|Response
-     */
-    public function uploadPhoto(Request $request)
-    {
-        try {
-            return response($this->userService->uploadPhoto($request->file('file')), 200);
-        } catch (Exception $ex) {
-            return response(['error' => $ex->getMessage()], 500);
-        }
-    }
-
-    public function info() {
-        echo phpinfo();
-    }
 
 }

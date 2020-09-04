@@ -89,29 +89,4 @@ class UserService
         return true;
     }
 
-    /**
-     * Загрузить фотографию пользователя
-     * @param $file
-     * @return mixed
-     */
-    public function uploadPhoto($file)
-    {
-        $path = $file->hashName('images/users');
-        list($width, $height) = getimagesize($file);
-        $image = Image::make($file);
-
-        if($width > 256 || $height > 256) {
-            $image->fit(256, 256, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-        }
-
-        Storage::put("public/$path", (string)$image->encode());
-        list($width, $height) = getimagesize("storage/$path");
-
-        return [
-            'filename' => "storage/$path",
-        ];
-    }
-
 }

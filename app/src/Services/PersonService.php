@@ -8,6 +8,7 @@ use App\src\Services\AddressService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Image;
 
 /**
  * Class PersonService
@@ -57,14 +58,9 @@ class PersonService
     public function create(Request $data)
     {
         if (!empty($data->address)) {
-            $address = $this->addressService->create([
-                'city' => $data->address['city'],
-                'street' => $data->address['street'],
-                'build' => $data->address['build'],
-            ]);
+            $address = $this->addressService->create($data->address);
             $data->address_id = $address->id;
         }
-
         return $this->personRepository->create($data);
     }
 
@@ -77,22 +73,13 @@ class PersonService
     public function update(int $id, Request $data)
     {
         if (!empty($data->address)) {
-            if (empty($data->address['id']) || $data->address['id'] == 0) {
-                $address = $this->addressService->create([
-                    'city' => $data->address['city'],
-                    'street' => $data->address['street'],
-                    'build' => $data->address['build'],
-                ]);
+            if (empty($data->address_id) || $data->address_id == 0) {
+                $address = $this->addressService->create($data->address);
                 $data->address_id = $address->id;
             } else {
-                $this->addressService->update($data->address['id'], [
-                    'city' => $data->address['city'],
-                    'street' => $data->address['street'],
-                    'build' => $data->address['build'],
-                ]);
+                $this->addressService->update($data->address_id, $data->address);
             }
         }
-
         return $this->personRepository->update($id, $data);
     }
 
@@ -104,6 +91,31 @@ class PersonService
     public function delete(int $id)
     {
         return $this->personRepository->delete($id);
+    }
+
+    /**
+     * Загрузить фотографию пользователя
+     * @param $file
+     * @return mixed
+     */
+    public function uploadPhoto($file)
+    {
+        $path = $file->hashName('images/users');
+        list($width, $height) = getimagesize($file);
+        $image = Image::make($file);
+
+        if($width > 256 || $height > 256) {
+            $image->fit(256, 256, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+        }
+
+        Storage::put("public/$path", (string)$image->encode());
+        list($width, $height) = getimagesize("storage/$path");
+
+        return [
+            'filename' => "storage/$path",
+        ];
     }
 
 }
