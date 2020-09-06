@@ -79,12 +79,9 @@ class UserRepository
     {
         $user->name = $data['email'];
         $user->email = $data['email'];
-        $user->post = $data['post'];
-
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);
         }
-
         if (!empty($data['person_id'])) {
             $user->person_id = $data['person_id'];
         }

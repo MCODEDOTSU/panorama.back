@@ -62,11 +62,7 @@ class ContractorService
         ];
 
         if (!empty($data->address)) {
-            $address = $this->addressService->create([
-                'city' => $data->address['city'],
-                'street' => $data->address['street'],
-                'build' => $data->address['build'],
-            ]);
+            $address = $this->addressService->create($data->address);
             $contractorData['address_id'] = $address->id;
         }
 
@@ -83,19 +79,11 @@ class ContractorService
     public function update(Request $data)
     {
         if (!empty($data->address)) {
-            if ($data->address['id'] == 0) {
-                $address = $this->addressService->create([
-                    'city' => $data->address['city'],
-                    'street' => $data->address['street'],
-                    'build' => $data->address['build'],
-                ]);
+            if (empty($data->address_id) || $data->address_id == 0) {
+                $address = $this->addressService->create($data->address);
                 $data->address_id = $address->id;
             } else {
-                $this->addressService->update($data->address['id'], [
-                    'city' => $data->address['city'],
-                    'street' => $data->address['street'],
-                    'build' => $data->address['build'],
-                ]);
+                $this->addressService->update($data->address_id, $data->address);
             }
         }
 
