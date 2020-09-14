@@ -18,6 +18,16 @@ class Person extends Model
         'id', 'firstname', 'lastname', 'middlename', 'date_of_birth', 'address_id', 'phones', 'note', 'post', 'photo'
     ];
 
+    protected $casts = [
+        'phones' => 'object',
+        'note' => 'object',
+    ];
+
+    protected $attributes = [
+        'phones' => '{}',
+        'note' => '{}',
+    ];
+
     /**
      * @return HasMany
      * К ФЛ могут быть привязаны несколько пользователей
