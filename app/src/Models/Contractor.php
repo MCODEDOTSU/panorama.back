@@ -51,4 +51,22 @@ class Contractor extends Model
         return $this->belongsTo(Address::class);
     }
 
+    /**
+     * ТОСы
+     * @return BelongsTo
+     */
+    public function toses()
+    {
+        return $this->belongsTo(ContractorTos::class, 'id', 'contractor_id');
+    }
+
+    /**
+     * ТСЖ
+     * @return BelongsTo
+     */
+    public function tszhes()
+    {
+        return $this->belongsTo(ContractorTszh::class, 'id', 'contractor_id');
+    }
+
 }

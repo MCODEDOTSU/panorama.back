@@ -46,6 +46,26 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     });
 
     /**
+     * ТОСы
+     */
+    Route::prefix('/tos')->group(function () {
+        Route::get('/', 'ContractorTosController@getAll');
+        Route::post('/', 'ContractorTosController@create');
+        Route::put('/{id}', 'ContractorTosController@update');
+        Route::delete('/{id}', 'ContractorTosController@delete');
+    });
+
+    /**
+     * ТСЖ
+     */
+    Route::prefix('/tszh')->group(function () {
+        Route::get('/', 'ContractorTszhController@getAll');
+        Route::post('/', 'ContractorTszhController@create');
+        Route::put('/{id}', 'ContractorTszhController@update');
+        Route::delete('/{id}', 'ContractorTszhController@delete');
+    });
+
+    /**
      * Физические лица
      */
     Route::prefix('/person')->group(function () {
