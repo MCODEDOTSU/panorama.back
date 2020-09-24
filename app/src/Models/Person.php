@@ -15,7 +15,7 @@ class Person extends Model
     protected $table = 'persons';
 
     protected $fillable = [
-        'id', 'firstname', 'lastname', 'middlename', 'date_of_birth', 'address_id', 'phones', 'note', 'post', 'photo'
+        'id', 'firstname', 'lastname', 'middlename', 'date_of_birth', 'fias_address_id', 'phones', 'note', 'post', 'photo'
     ];
 
     protected $casts = [
@@ -43,7 +43,7 @@ class Person extends Model
      */
     public function address()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(FiasAddress::class);
     }
 
 }

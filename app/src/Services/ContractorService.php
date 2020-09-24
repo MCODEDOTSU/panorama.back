@@ -4,7 +4,7 @@ namespace App\src\Services;
 
 use App\src\Models\Contractor;
 use App\src\Repositories\ContractorRepository;
-use App\src\Services\AddressService;
+use App\src\Services\FiasAddressService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -18,10 +18,10 @@ class ContractorService
     /**
      * ContractorService constructor.
      * @param ContractorRepository $contractorRepository
-     * @param AddressService $addressService
+     * @param FiasAddressService $addressService
      */
     public function __construct(ContractorRepository $contractorRepository,
-                                AddressService $addressService)
+                                FiasAddressService $addressService)
     {
         $this->contractorRepository = $contractorRepository;
         $this->addressService = $addressService;
@@ -61,9 +61,9 @@ class ContractorService
             'logo' => $data->logo,
         ];
 
-        if (!empty($data->address)) {
-            $address = $this->addressService->create($data->address);
-            $contractorData['address_id'] = $address->id;
+        // Если был найден и выбран адрес
+        if (!empty($data->address->fias_id)) {
+            $contractorData['fias_address_id'] = $this->addressService->findOrCreate($data->address);
         }
 
         $contractor = $this->contractorRepository->create($contractorData);
@@ -78,16 +78,12 @@ class ContractorService
      */
     public function update(Request $data)
     {
-        if (!empty($data->address)) {
-            if (empty($data->address_id) || $data->address_id == 0) {
-                $address = $this->addressService->create($data->address);
-                $data->address_id = $address->id;
-            } else {
-                $this->addressService->update($data->address_id, $data->address);
-            }
-        }
-
         $contractor = $this->contractorRepository->getById($data->id);
+
+        // Если адрес был изменён
+        if (!empty($data->address->fias_id) && $data->address->fias_id != $contractor->address->fias_id) {
+            $data->fias_address_id = $this->addressService->findOrCreate($data->address);
+        }
 
         if ($data->parent_id == $contractor->id) {
             throw new \Exception("ID контрагента и ID присваемого родительского контрагента не могут совпадать");
@@ -153,14 +149,5 @@ class ContractorService
             'filename' => "storage/$path",
         ];
     }
-
-//    public function detachParentContractor($contractor)
-//    {
-//        $contractorToFind = $this->getById($contractor->id);
-//        $contractorToFind->parent_id = null;
-//        $contractorToFind->update();
-//
-//        return $contractorToFind;
-//    }
 
 }

@@ -21,7 +21,7 @@ class Contractor extends Model
     protected $table = 'contractors';
 
     protected $fillable = [
-        'id', 'name', 'full_name', 'inn', 'kpp', 'address_id', 'logo', 'parent_id'
+        'id', 'name', 'full_name', 'inn', 'kpp', 'fias_address_id', 'logo', 'parent_id'
     ];
 
     /**
@@ -48,7 +48,7 @@ class Contractor extends Model
      */
     public function address()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(FiasAddress::class);
     }
 
     /**

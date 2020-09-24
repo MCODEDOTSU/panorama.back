@@ -4,7 +4,7 @@ namespace App\src\Services;
 
 use App\src\Models\Person;
 use App\src\Repositories\PersonRepository;
-use App\src\Services\AddressService;
+use App\src\Services\FiasAddressService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -22,10 +22,10 @@ class PersonService
     /**
      * PersonService constructor.
      * @param PersonRepository $personRepository
-     * @param AddressService $addressService
+     * @param FiasAddressService $addressService
      */
     public function __construct(PersonRepository $personRepository,
-                                AddressService $addressService)
+                                FiasAddressService $addressService)
     {
         $this->personRepository = $personRepository;
         $this->addressService = $addressService;
@@ -57,9 +57,9 @@ class PersonService
      */
     public function create(Request $data)
     {
-        if (!empty($data->address)) {
-            $address = $this->addressService->create($data->address);
-            $data->address_id = $address->id;
+        // Если был найден и выбран адрес
+        if (!empty($data->address->fias_id)) {
+            $data->fias_address_id = $this->addressService->findOrCreate($data->address);
         }
         return $this->personRepository->create($data);
     }
@@ -72,14 +72,13 @@ class PersonService
      */
     public function update(int $id, Request $data)
     {
-        if (!empty($data->address)) {
-            if (empty($data->address_id) || $data->address_id == 0) {
-                $address = $this->addressService->create($data->address);
-                $data->address_id = $address->id;
-            } else {
-                $this->addressService->update($data->address_id, $data->address);
-            }
+        $person = $this->personRepository->getById($id);
+
+        // Если адрес был изменён
+        if (!empty($data->address->fias_id) && $data->address->fias_id != $person->address->fias_id) {
+            $data->fias_address_id = $this->addressService->findOrCreate($data->address);
         }
+
         return $this->personRepository->update($id, $data);
     }
 
