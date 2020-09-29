@@ -6,7 +6,7 @@ use App\src\Models\FiasAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class FiasAddressRepository extends AbstractRepository
+class FiasAddressRepository
 {
     protected $address;
 
@@ -27,6 +27,16 @@ class FiasAddressRepository extends AbstractRepository
     public function getByFiasId(string $fiasId)
     {
         return $this->address->where('fias_id', $fiasId)->first();
+    }
+
+    /**
+     * Создать новый адрес в базе
+     * @param $data
+     * @return FiasAddress
+     */
+    public function create($data): FiasAddress
+    {
+        return $this->address->create($data);
     }
 
 }

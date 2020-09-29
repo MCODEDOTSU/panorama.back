@@ -24,7 +24,7 @@ class FiasAddressService
      */
     public function findOrCreate($data)
     {
-        $address = $this->addressRepository->getByFiasId($data->fias_id);
+        $address = $this->addressRepository->getByFiasId($data['fias_id']);
         return (!empty($address) ? $address : $this->create($data));
     }
 
@@ -35,7 +35,7 @@ class FiasAddressService
      */
     private function create($data)
     {
-        return $this->addressRepository->create($data->toArray());
+        return $this->addressRepository->create($data);
     }
 
 

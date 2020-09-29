@@ -62,8 +62,8 @@ class PersonRepository
             'photo' => $data->photo,
         ];
 
-        if (!empty($data->address_id)) {
-            $personData['address_id'] = $data->address_id;
+        if (!empty($data->fias_address_id)) {
+            $personData['fias_address_id'] = $data->fias_address_id;
         }
 
         $person = $this->person->create($personData);
@@ -84,8 +84,8 @@ class PersonRepository
         $person->lastname = $data->lastname;
         $person->middlename = $data->middlename;
         $person->date_of_birth = $data->date_of_birth;
-        if (!empty($data->address_id)) {
-            $person->address_id = $data->address_id;
+        if (!empty($data->fias_address_id)) {
+            $person->fias_address_id = $data->fias_address_id;
         }
         $person->phones = $data->phones;
         $person->note = $data->note;

@@ -43,7 +43,7 @@ class Person extends Model
      */
     public function address()
     {
-        return $this->belongsTo(FiasAddress::class);
+        return $this->belongsTo(FiasAddress::class, 'fias_address_id');
     }
 
 }

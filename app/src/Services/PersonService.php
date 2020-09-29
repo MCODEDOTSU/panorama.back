@@ -7,6 +7,7 @@ use App\src\Repositories\PersonRepository;
 use App\src\Services\FiasAddressService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Image;
 
@@ -58,8 +59,8 @@ class PersonService
     public function create(Request $data)
     {
         // Если был найден и выбран адрес
-        if (!empty($data->address->fias_id)) {
-            $data->fias_address_id = $this->addressService->findOrCreate($data->address);
+        if (!empty($data->address['fias_id'])) {
+            $data->fias_address_id = ($this->addressService->findOrCreate($data->address))->id;
         }
         return $this->personRepository->create($data);
     }
@@ -75,8 +76,8 @@ class PersonService
         $person = $this->personRepository->getById($id);
 
         // Если адрес был изменён
-        if (!empty($data->address->fias_id) && $data->address->fias_id != $person->address->fias_id) {
-            $data->fias_address_id = $this->addressService->findOrCreate($data->address);
+        if (!empty($data->address['fias_id']) && (empty($person->address) || $data->address['fias_id'] != $person->address['fias_id'])) {
+            $data->fias_address_id = ($this->addressService->findOrCreate($data->address))->id;
         }
 
         return $this->personRepository->update($id, $data);
