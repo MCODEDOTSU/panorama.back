@@ -41,6 +41,20 @@ class ContractorTszhRepository
     }
 
     /**
+     * @param $id
+     * @return ContractorTszh
+     */
+    public function getByAddress(string $fiasId)
+    {
+        return $this->contractorTszh
+            ->select('contractors.*')
+            ->join('contractors', 'contractors.id', '=', 'contractors_tszh.contractor_id')
+            ->join('fias_address', 'fias_address.id', '=', 'contractors.fias_address_id')
+            ->where('fias_address.fias_id', $fiasId)
+            ->first();
+    }
+
+    /**
      * @param $data
      * @return ContractorTszh
      */

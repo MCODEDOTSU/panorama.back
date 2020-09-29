@@ -75,4 +75,14 @@ class ContractorTszhService
         return $this->contractorTszhRepository->delete($id);
     }
 
+    /**
+     * Поиск ТСЖ по адресу.
+     * @param string $fiasId
+     * @return ContractorTszh
+     */
+    public function getByAddress(string $fiasId)
+    {
+        return $this->contractorTszhRepository->getByAddress($fiasId);
+    }
+
 }

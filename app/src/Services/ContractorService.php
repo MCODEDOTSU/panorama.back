@@ -62,8 +62,8 @@ class ContractorService
         ];
 
         // Если был найден и выбран адрес
-        if (!empty($data->address->fias_id)) {
-            $contractorData['fias_address_id'] = $this->addressService->findOrCreate($data->address);
+        if (!empty($data->address['fias_id'])) {
+            $contractorData['fias_address_id'] = ($this->addressService->findOrCreate($data->address))->id;
         }
 
         $contractor = $this->contractorRepository->create($contractorData);
@@ -81,8 +81,8 @@ class ContractorService
         $contractor = $this->contractorRepository->getById($data->id);
 
         // Если адрес был изменён
-        if (!empty($data->address->fias_id) && $data->address->fias_id != $contractor->address->fias_id) {
-            $data->fias_address_id = $this->addressService->findOrCreate($data->address);
+        if (!empty($data->address['fias_id']) && (empty($contractor->address) || $data->address['fias_id'] != $contractor->address['fias_id'])) {
+            $data->fias_address_id = ($this->addressService->findOrCreate($data->address))->id;
         }
 
         if ($data->parent_id == $contractor->id) {

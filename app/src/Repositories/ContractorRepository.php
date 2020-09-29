@@ -59,8 +59,8 @@ class ContractorRepository extends AbstractRepository
         $contractor->full_name = $data->full_name;
         $contractor->inn = $data->inn;
         $contractor->kpp = $data->kpp;
-        if (!empty($data->address_id)) {
-            $contractor->address_id = $data->address_id;
+        if (!empty($data->fias_address_id)) {
+            $contractor->fias_address_id = $data->fias_address_id;
         }
         $contractor->logo = $data->logo;
         $contractor->parent_id = $data->parent_id == 'null' ? null : $data->parent_id;

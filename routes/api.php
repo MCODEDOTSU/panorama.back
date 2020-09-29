@@ -63,6 +63,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::post('/', 'ContractorTszhController@create');
         Route::put('/{id}', 'ContractorTszhController@update');
         Route::delete('/{id}', 'ContractorTszhController@delete');
+        Route::get('/fias/{fias_id}', 'ContractorTszhController@getByAddress');
     });
 
     /**

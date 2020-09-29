@@ -76,4 +76,18 @@ class ContractorTszhController extends Controller
         }
     }
 
+    /**
+     * Поиск ТСЖ по адресу
+     * @param string $fiasId
+     * @return ResponseFactory|Response
+     */
+    public function getByAddress(string $fiasId)
+    {
+        try {
+            return response($this->contractorTszhService->getByAddress($fiasId), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
 }
