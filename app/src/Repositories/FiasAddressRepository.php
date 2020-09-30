@@ -24,9 +24,12 @@ class FiasAddressRepository
      * @param string $fiasId
      * @return mixed
      */
-    public function getByFiasId(string $fiasId)
+    public function getAddressByFlat(string $fiasId, string $flat = null)
     {
-        return $this->address->where('fias_id', $fiasId)->first();
+        return $this->address
+            ->where('fias_id', $fiasId)
+            ->where('flat', $flat)
+            ->first();
     }
 
     /**

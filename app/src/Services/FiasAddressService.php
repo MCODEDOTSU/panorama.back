@@ -3,6 +3,7 @@
 namespace App\src\Services;
 
 use App\src\Repositories\FiasAddressRepository;
+use Illuminate\Support\Facades\Log;
 
 class FiasAddressService
 {
@@ -24,7 +25,7 @@ class FiasAddressService
      */
     public function findOrCreate($data)
     {
-        $address = $this->addressRepository->getByFiasId($data['fias_id']);
+        $address = $this->addressRepository->getAddressByFlat($data['fias_id'], $data['flat']);
         return (!empty($address) ? $address : $this->create($data));
     }
 

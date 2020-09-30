@@ -76,7 +76,7 @@ class PersonService
         $person = $this->personRepository->getById($id);
 
         // Если адрес был изменён
-        if (!empty($data->address['fias_id']) && (empty($person->address) || $data->address['fias_id'] != $person->address['fias_id'])) {
+        if (!empty($data->address['fias_id'])) {
             $data->fias_address_id = ($this->addressService->findOrCreate($data->address))->id;
         }
 

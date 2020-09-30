@@ -81,7 +81,7 @@ class ContractorService
         $contractor = $this->contractorRepository->getById($data->id);
 
         // Если адрес был изменён
-        if (!empty($data->address['fias_id']) && (empty($contractor->address) || $data->address['fias_id'] != $contractor->address['fias_id'])) {
+        if (!empty($data->address['fias_id'])) {
             $data->fias_address_id = ($this->addressService->findOrCreate($data->address))->id;
         }
 
