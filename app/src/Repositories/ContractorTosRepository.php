@@ -24,7 +24,7 @@ class ContractorTosRepository
     public function getAll(): Collection
     {
         return $this->contractorTos
-            ->with('contractor')
+            ->with('fullContractor')
             ->orderBy('id', 'asc')
             ->get();
     }

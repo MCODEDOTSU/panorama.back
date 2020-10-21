@@ -100,21 +100,19 @@ class PersonService
      */
     public function uploadPhoto($file)
     {
-        $path = $file->hashName('images/users');
-        list($width, $height) = getimagesize($file);
-        $image = Image::make($file);
+        $filename = $file->getClientOriginalName();
+        $path = 'images/users';
 
-        if($width > 256 || $height > 256) {
-            $image->fit(256, 256, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-        }
+        Image::make($file)->encode('jpg')->save(public_path("storage/$path/$filename"));
 
-        Storage::put("public/$path", (string)$image->encode());
-        list($width, $height) = getimagesize("storage/$path");
+        $thumbnail = Image::make($file)->encode('jpg');
+        $thumbnail->fit(256, 256, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $thumbnail->save(public_path("storage/thumbnail/$path/$filename"));
 
         return [
-            'filename' => "storage/$path",
+            'filename' => "$path/$filename",
         ];
     }
 

@@ -15,7 +15,22 @@ class Person extends Model
     protected $table = 'persons';
 
     protected $fillable = [
-        'id', 'firstname', 'lastname', 'middlename', 'date_of_birth', 'fias_address_id', 'phones', 'note', 'post', 'photo'
+        'id',
+        'firstname',
+        'lastname',
+        'middlename',
+        'date_of_birth',
+        'fias_address_id',
+        'phones',
+        'note',
+        'post',
+        'photo',
+        'passport_series',
+        'passport_number',
+        'passport_issued_by',
+        'passport_issued_when',
+        'passport_department_number',
+        'own',
     ];
 
     protected $casts = [

@@ -31,4 +31,13 @@ class ContractorTos extends Model
         return $this->belongsTo(Contractor::class, 'contractor_id');
     }
 
+    /**
+     * Адрес
+     * @return BelongsTo
+     */
+    public function fullContractor()
+    {
+        return $this->contractor()->with('address');
+    }
+
 }

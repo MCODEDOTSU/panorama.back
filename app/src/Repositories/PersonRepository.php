@@ -60,6 +60,12 @@ class PersonRepository
             'note' => $data->note,
             'post' => $data->post,
             'photo' => $data->photo,
+            'passport_series' => $data->passport_series,
+            'passport_number' => $data->passport_number,
+            'passport_issued_by' => $data->passport_issued_by,
+            'passport_issued_when' => $data->passport_issued_when,
+            'passport_department_number' => $data->passport_department_number,
+            'own' => $data->own,
         ];
 
         if (!empty($data->fias_address_id)) {
@@ -91,6 +97,12 @@ class PersonRepository
         $person->note = $data->note;
         $person->photo = $data->photo;
         $person->post = $data->post;
+        $person->passport_series = $data->passport_series;
+        $person->passport_number = $data->passport_number;
+        $person->passport_issued_by = $data->passport_issued_by;
+        $person->passport_issued_when = $data->passport_issued_when;
+        $person->passport_department_number = $data->passport_department_number;
+        $person->own = $data->own;
 
         $person->save();
         return $this->getById($id);
