@@ -27,6 +27,9 @@ class PersonRepository
         return $this->person
             ->with('users')
             ->with('address')
+            ->orderBy('lastname', 'asc')
+            ->orderBy('firstname', 'asc')
+            ->orderBy('middlename', 'asc')
             ->orderBy('id', 'asc')
             ->get();
     }
