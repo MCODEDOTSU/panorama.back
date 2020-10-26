@@ -110,11 +110,11 @@ class PersonService
             $constraint->aspectRatio();
         });
 
-        if (!file_exists("storage/thumbnail/$path")) {
-            mkdir("storage/thumbnail/$path", 666, true);
-        }
-
-        $thumbnail->save(public_path("storage/thumbnail/$path/$filename"));
+//        if (!file_exists("storage/thumbnail/$path")) {
+//            mkdir("storage/thumbnail/$path", 666, true);
+//        }
+//
+//        $thumbnail->save(public_path("storage/thumbnail/$path/$filename"));
 
         return [
             'filename' => "$path/$filename",
