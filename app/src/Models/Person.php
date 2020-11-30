@@ -31,6 +31,7 @@ class Person extends Model
         'passport_issued_when',
         'passport_department_number',
         'own',
+        'status',
     ];
 
     protected $casts = [

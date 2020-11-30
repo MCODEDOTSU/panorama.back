@@ -69,6 +69,7 @@ class PersonRepository
             'passport_issued_when' => $data->passport_issued_when,
             'passport_department_number' => $data->passport_department_number,
             'own' => $data->own,
+            'status' => $data->status,
         ];
 
         if (!empty($data->fias_address_id)) {
@@ -106,6 +107,7 @@ class PersonRepository
         $person->passport_issued_when = $data->passport_issued_when;
         $person->passport_department_number = $data->passport_department_number;
         $person->own = $data->own;
+        $person->status = $data->status;
 
         $person->save();
         return $this->getById($id);
