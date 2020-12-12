@@ -62,7 +62,7 @@ class ContractorService
         ];
 
         // Если был найден и выбран адрес
-        if (!empty($data->address['fias_id'])) {
+        if (!empty($data->addresses)) {
             $contractorData['fias_address_id'] = ($this->addressService->findOrCreate($data->address))->id;
         }
 
