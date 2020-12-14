@@ -30,7 +30,6 @@ class ContractorRepository extends AbstractRepository
             ->with('modules')
             ->with('users')
             ->with('address')
-            ->with('addresses')
             ->find($id);
     }
 
@@ -44,7 +43,6 @@ class ContractorRepository extends AbstractRepository
             ->with('modules')
             ->with('users')
             ->with('address')
-            ->with('addresses')
             ->orderBy('id', 'asc')
             ->get();
     }

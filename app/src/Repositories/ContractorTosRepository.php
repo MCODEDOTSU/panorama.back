@@ -3,6 +3,7 @@
 namespace App\src\Repositories;
 
 use App\src\Models\ContractorTos;
+use App\src\Models\FiasAddress;
 use Illuminate\Support\Collection;
 
 class ContractorTosRepository
@@ -25,6 +26,7 @@ class ContractorTosRepository
     {
         return $this->contractorTos
             ->with('fullContractor')
+            ->with('addresses')
             ->orderBy('id', 'asc')
             ->get();
     }
@@ -36,8 +38,23 @@ class ContractorTosRepository
     public function getById($id): ContractorTos
     {
         return $this->contractorTos
-            ->with('contractor')
+            ->with('fullContractor')
+            ->with('addresses')
             ->find($id);
+    }
+
+    /**
+     * @param string $fiasId
+     * @return ContractorTos
+     */
+    public function getByAddress(string $fiasId): ContractorTos
+    {
+        return $this->contractorTos
+            ->with('fullContractor')
+            ->whereHas('addresses', function ($query) use($fiasId) {
+                $query->where('fias_id', $fiasId);
+            })
+            ->first();
     }
 
     /**
@@ -71,5 +88,29 @@ class ContractorTosRepository
         $record = $this->contractorTos::find($id);
         $record->delete();
         return ['id' => $id];
+    }
+
+    /**
+     * Добавить адрес в список адресов для ТОС
+     * @param ContractorTos $tos
+     * @param FiasAddress $address
+     * @return FiasAddress
+     */
+    public function addAddress(ContractorTos $tos, FiasAddress $address): FiasAddress
+    {
+        $tos->addresses()->save($address);
+        return $address;
+    }
+
+    /**
+     * Удалить адрес из списка адресов ТОС
+     * @param ContractorTos $tos
+     * @param FiasAddress $address
+     * @return FiasAddress
+     */
+    public function deleteAddress(ContractorTos $tos, FiasAddress $address): FiasAddress
+    {
+        $tos->addresses()->detach([$address->id]);
+        return $address;
     }
 }

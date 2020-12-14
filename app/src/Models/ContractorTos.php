@@ -40,4 +40,13 @@ class ContractorTos extends Model
         return $this->contractor()->with('address');
     }
 
+    /**
+     * Список адресов
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function addresses()
+    {
+        return $this->morphToMany(FiasAddress::class, 'addressable');
+    }
+
 }

@@ -36,7 +36,7 @@ class ContractorTszhRepository
     public function getById($id): ContractorTszh
     {
         return $this->contractorTszh
-            ->with('contractor')
+            ->with('fullContractor')
             ->find($id);
     }
 

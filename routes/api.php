@@ -50,9 +50,13 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
      */
     Route::prefix('/tos')->group(function () {
         Route::get('/', 'ContractorTosController@getAll');
+        Route::get('/{id}', 'ContractorTosController@getById');
         Route::post('/', 'ContractorTosController@create');
         Route::put('/{id}', 'ContractorTosController@update');
         Route::delete('/{id}', 'ContractorTosController@delete');
+        Route::post('/address/{tos}', 'ContractorTosController@addAddress');
+        Route::delete('/address/{tos}/{address}', 'ContractorTosController@deleteAddress');
+        Route::get('/fias/{fias_id}', 'ContractorTosController@getByAddress');
     });
 
     /**
@@ -60,6 +64,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
      */
     Route::prefix('/tszh')->group(function () {
         Route::get('/', 'ContractorTszhController@getAll');
+        Route::get('/{id}', 'ContractorTszhController@getById');
         Route::post('/', 'ContractorTszhController@create');
         Route::put('/{id}', 'ContractorTszhController@update');
         Route::delete('/{id}', 'ContractorTszhController@delete');

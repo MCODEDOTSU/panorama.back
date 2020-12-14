@@ -69,14 +69,4 @@ class Contractor extends Model
         return $this->belongsTo(ContractorTszh::class, 'id', 'contractor_id');
     }
 
-    /**
-     * Список адресов контрагента
-     *
-     * @return BelongsToMany
-     */
-    public function addresses()
-    {
-        return $this->belongsToMany(FiasAddress::class, 'contractor_addresses', 'contractor_id', 'address_id');
-    }
-
 }

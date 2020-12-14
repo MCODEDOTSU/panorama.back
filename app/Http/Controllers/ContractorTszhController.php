@@ -37,6 +37,20 @@ class ContractorTszhController extends Controller
     }
 
     /**
+     * Получить по ИД
+     * @param $id
+     * @return ResponseFactory|Response
+     */
+    public function getById($id)
+    {
+        try {
+            return response($this->contractorTszhService->getById($id), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
      * @param Request $request
      * @return ResponseFactory|Response
      */
