@@ -2,13 +2,13 @@
 
 namespace App\src\Services;
 
+use App\src\Models\History;
 use App\src\Models\Person;
+use App\src\Repositories\HistoryRepository;
 use App\src\Repositories\PersonRepository;
-use App\src\Services\FiasAddressService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Image;
 
 /**
@@ -52,7 +52,8 @@ class PersonService
     }
 
     /**
-     * Создать ФЛ.
+     * Создать ФЛ
+     *
      * @param Request $data
      * @return Person
      */
@@ -62,25 +63,32 @@ class PersonService
         if (!empty($data->address['fias_id'])) {
             $data->fias_address_id = ($this->addressService->findOrCreate($data->address))->id;
         }
-        return $this->personRepository->create($data);
+        $person = $this->personRepository->create($data);
+
+        $this->addHistory($person, 'Запись создана', 'system');
+
+        return $person;
     }
 
     /**
-     * Обновить ФЛ.
+     * Обновить ФЛ
+     *
      * @param int $id
      * @param Request $data
      * @return Person
      */
     public function update(int $id, Request $data)
     {
-        $person = $this->personRepository->getById($id);
-
         // Если адрес был изменён
         if (!empty($data->address['fias_id'])) {
             $data->fias_address_id = ($this->addressService->findOrCreate($data->address))->id;
         }
 
-        return $this->personRepository->update($id, $data);
+        $person = $this->personRepository->update($id, $data);
+
+        $this->addHistory($person, 'Запись изменена', 'system');
+
+        return $this->getById($id);
     }
 
     /**
@@ -113,6 +121,38 @@ class PersonService
         return [
             'filename' => "$path/$filename",
         ];
+    }
+
+    /**
+     * Добавить запись в историю
+     *
+     * @param Person $person
+     * @param $text
+     * @return History
+     */
+    public function addHistory(Person $person, $text, $type = 'user')
+    {
+        $history = HistoryRepository::create([
+            'text' => $text,
+            'type' => $type,
+            'create_user_id' => (Auth::user())->id
+        ]);
+        return $this->personRepository->addHistory($person, $history);
+    }
+
+    /**
+     * Удалить запись из истории
+     *
+     * @param Person $person
+     * @param History $history
+     * @return History
+     */
+    public function deleteHistory(Person $person, History $history)
+    {
+        if ($history->type === 'system') {
+            return false;
+        }
+        return $this->personRepository->deleteHistory($person, $history);
     }
 
 }

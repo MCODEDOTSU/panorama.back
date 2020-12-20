@@ -57,6 +57,7 @@ class UserRepository
             'role' => $request->role,
             'password' => bcrypt($request->password),
             'contractor_id' => $request->contractor_id,
+            'post' => $request->post,
         ];
 
         if (!empty($request->person_id)) {
@@ -79,6 +80,7 @@ class UserRepository
     {
         $user->name = $data['email'];
         $user->email = $data['email'];
+        $user->post = $data['post'];
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);
         }

@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\src\Models\History;
+use App\src\Models\Person;
+use App\src\Repositories\HistoryRepository;
 use App\src\Services\PersonService;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class PersonController
@@ -25,7 +29,8 @@ class PersonController extends Controller
     }
 
     /**
-     * Получить список всех ФЛ.
+     * Получить список всех ФЛ
+     *
      * @return ResponseFactory|Response
      */
     public function getAll()
@@ -38,7 +43,8 @@ class PersonController extends Controller
     }
 
     /**
-     * Получить ФЛ по ИД.
+     * Получить ФЛ по ИД
+     *
      * @param $id
      * @return ResponseFactory|Response
      */
@@ -52,7 +58,8 @@ class PersonController extends Controller
     }
 
     /**
-     * Создать ФЛ.
+     * Создать ФЛ
+     *
      * @param Request $request
      * @return ResponseFactory|Response
      */
@@ -66,7 +73,8 @@ class PersonController extends Controller
     }
 
     /**
-     * Изменить ФЛ.
+     * Изменить ФЛ
+     *
      * @param int $id
      * @param Request $request
      * @return ResponseFactory|Response
@@ -81,7 +89,8 @@ class PersonController extends Controller
     }
 
     /**
-     * Удалить ФЛ.
+     * Удалить ФЛ
+     *
      * @param int $id
      * @return ResponseFactory|Response
      */
@@ -96,6 +105,7 @@ class PersonController extends Controller
 
     /**
      * Загрузка фотографию на сервер
+     *
      * @param Request $request
      * @return ResponseFactory|Response
      */
@@ -103,6 +113,38 @@ class PersonController extends Controller
     {
         try {
             return response($this->personService->uploadPhoto($request->file('file')), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Добавить запись в историю
+     *
+     * @param Person $person
+     * @param Request $request
+     * @return ResponseFactory|Response
+     */
+    public function addHistory(Person $person, Request $request)
+    {
+        try {
+            return response($this->personService->addHistory($person, $request->text), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Удалить запись из истории
+     *
+     * @param Person $person
+     * @param History $history
+     * @return History
+     */
+    public function deleteHistory(Person $person, History $history)
+    {
+        try {
+            return response($this->personService->deleteHistory($person, $history), 200);
         } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }

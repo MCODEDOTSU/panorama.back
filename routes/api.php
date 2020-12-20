@@ -81,6 +81,8 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
         Route::put('/{id}', 'PersonController@update');
         Route::delete('/{id}', 'PersonController@delete');
         Route::post('/upload', 'PersonController@uploadPhoto');
+        Route::post('/history/{person}', 'PersonController@addHistory');
+        Route::delete('/history/{person}/{history}', 'PersonController@deleteHistory');
     });
 
     /**

@@ -2,9 +2,14 @@
 
 namespace App\src\Repositories;
 
+use App\src\Models\History;
 use App\src\Models\Person;
 use Illuminate\Support\Collection;
 
+/**
+ * Class PersonRepository
+ * @package App\src\Repositories
+ */
 class PersonRepository
 {
     protected $person;
@@ -19,7 +24,8 @@ class PersonRepository
     }
 
     /**
-     * Все ФЛ.
+     * Все ФЛ
+     *
      * @return Collection
      */
     public function getAll(): Collection
@@ -27,6 +33,7 @@ class PersonRepository
         return $this->person
             ->with('users')
             ->with('address')
+            ->with('history')
             ->orderBy('lastname', 'asc')
             ->orderBy('firstname', 'asc')
             ->orderBy('middlename', 'asc')
@@ -35,7 +42,8 @@ class PersonRepository
     }
 
     /**
-     * ФЛ по ИД.
+     * ФЛ по ИД
+     *
      * @param $id
      * @return Person
      */
@@ -44,11 +52,13 @@ class PersonRepository
         return $this->person
             ->with('users')
             ->with('address')
+            ->with('history')
             ->find($id);
     }
 
     /**
-     * Создать ФЛ.
+     * Создать ФЛ
+     *
      * @param $data
      * @return Person
      */
@@ -82,6 +92,7 @@ class PersonRepository
 
     /**
      * Изменить
+     *
      * @param int $id
      * @param $data
      * @return Person
@@ -114,7 +125,8 @@ class PersonRepository
     }
 
     /**
-     * Удалить ФД.
+     * Удалить ФЛ
+     *
      * @param $id
      * @return array
      */
@@ -123,6 +135,32 @@ class PersonRepository
         $person = $this->person::find($id);
         $person->delete();
         return ['id' => $id];
+    }
+
+    /**
+     * Добавить запись в историю
+     *
+     * @param Person $person
+     * @param History $history
+     * @return History
+     */
+    public function addHistory(Person $person, History $history): History
+    {
+        $person->history()->save($history);
+        return $history;
+    }
+
+    /**
+     * Удалить запись из истории
+     *
+     * @param Person $person
+     * @param History $history
+     * @return History
+     */
+    public function deleteHistory(Person $person, History $history): History
+    {
+        $person->history()->delete($history);
+        return $history;
     }
 
 }

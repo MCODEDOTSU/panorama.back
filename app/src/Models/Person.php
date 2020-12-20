@@ -62,4 +62,14 @@ class Person extends Model
         return $this->belongsTo(FiasAddress::class, 'fias_address_id');
     }
 
+    /**
+     * История ФЛ
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function history()
+    {
+        return $this->morphToMany(History::class, 'historyable');
+    }
+
 }
