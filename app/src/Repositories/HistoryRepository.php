@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
  */
 class HistoryRepository
 {
+
     /**
      * Создать
      *
@@ -32,6 +33,9 @@ class HistoryRepository
     public static function update(int $id, $data)
     {
         $history = History::find($id);
+        if ($history->type === 'system') {
+            return false;
+        }
         $history->text = $data->text;
         $history->update_user_id = $data->update_user_id;
         $history->save();
@@ -42,13 +46,12 @@ class HistoryRepository
      * Удалить
      *
      * @param $id
-     * @return array
+     * @return mixed
      */
     public static function delete(int $id)
     {
         $history = History::find($id);
         $history->delete();
-        return ['id' => $id];
     }
 
 }

@@ -69,7 +69,7 @@ class Person extends Model
      */
     public function history()
     {
-        return $this->morphToMany(History::class, 'historyable');
+        return $this->morphToMany(History::class, 'historyable')->orderBy('created_at', 'DESC');
     }
 
 }

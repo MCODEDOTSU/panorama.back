@@ -18,7 +18,7 @@ class CreateHistoryTable extends Migration
             $table->text('text');
             $table->integer('create_user_id')->unsigned();
             $table->foreign('create_user_id')->references('id')->on('users');
-            $table->integer('update_user_id')->unsigned();
+            $table->integer('update_user_id')->unsigned()->nullable();
             $table->foreign('update_user_id')->references('id')->on('users');
             $table->enum('type', ['user', 'system'])->default('user');
             $table->timestamps();

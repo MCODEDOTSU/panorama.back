@@ -125,10 +125,26 @@ class PersonController extends Controller
      * @param Request $request
      * @return ResponseFactory|Response
      */
-    public function addHistory(Person $person, Request $request)
+    public function createHistory(Person $person, Request $request)
     {
         try {
-            return response($this->personService->addHistory($person, $request->text), 200);
+            return response($this->personService->createHistory($person, $request->text), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Изменить запись в истории
+     *
+     * @param Person $person
+     * @param Request $request
+     * @return ResponseFactory|Response
+     */
+    public function updateHistory(Person $person, Request $request)
+    {
+        try {
+            return response($this->personService->updateHistory($person, $request->id, $request->text), 200);
         } catch (Exception $ex) {
             return response(['error' => $ex->getMessage()], 500);
         }

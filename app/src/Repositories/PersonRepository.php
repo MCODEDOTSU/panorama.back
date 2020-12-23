@@ -33,7 +33,7 @@ class PersonRepository
         return $this->person
             ->with('users')
             ->with('address')
-            ->with('history')
+            ->with('history.create_user')
             ->orderBy('lastname', 'asc')
             ->orderBy('firstname', 'asc')
             ->orderBy('middlename', 'asc')
@@ -52,7 +52,7 @@ class PersonRepository
         return $this->person
             ->with('users')
             ->with('address')
-            ->with('history')
+            ->with('history.create_user')
             ->find($id);
     }
 
@@ -142,12 +142,11 @@ class PersonRepository
      *
      * @param Person $person
      * @param History $history
-     * @return History
+     * @return void
      */
-    public function addHistory(Person $person, History $history): History
+    public function createHistory(Person $person, History $history)
     {
         $person->history()->save($history);
-        return $history;
     }
 
     /**
@@ -155,12 +154,11 @@ class PersonRepository
      *
      * @param Person $person
      * @param History $history
-     * @return History
+     * @return void
      */
-    public function deleteHistory(Person $person, History $history): History
+    public function deleteHistory(Person $person, $history)
     {
-        $person->history()->delete($history);
-        return $history;
+        $person->history()->detach([$history->id]);
     }
 
 }

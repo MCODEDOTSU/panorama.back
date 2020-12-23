@@ -65,7 +65,7 @@ class PersonService
         }
         $person = $this->personRepository->create($data);
 
-        $this->addHistory($person, 'Запись создана', 'system');
+        $this->createHistory($person, 'Запись создана', 'system');
 
         return $person;
     }
@@ -86,7 +86,7 @@ class PersonService
 
         $person = $this->personRepository->update($id, $data);
 
-        $this->addHistory($person, 'Запись изменена', 'system');
+        $this->createHistory($person, 'Запись изменена', 'system');
 
         return $this->getById($id);
     }
@@ -128,16 +128,35 @@ class PersonService
      *
      * @param Person $person
      * @param $text
-     * @return History
+     * @param string $type
+     * @return
      */
-    public function addHistory(Person $person, $text, $type = 'user')
+    public function createHistory(Person $person, $text, $type = 'user')
     {
         $history = HistoryRepository::create([
             'text' => $text,
             'type' => $type,
             'create_user_id' => (Auth::user())->id
         ]);
-        return $this->personRepository->addHistory($person, $history);
+        $this->personRepository->createHistory($person, $history);
+        return ($this->getById($person->id))->history;
+    }
+
+    /**
+     * Изменить запись в истории
+     *
+     * @param Person $person
+     * @param int $historyId
+     * @param string $text
+     * @return History
+     */
+    public function updateHistory(Person $person, int $historyId, string $text)
+    {
+        HistoryRepository::update($historyId, [
+            'text' => $text,
+            'update_user_id' => (Auth::user())->id,
+        ]);
+        return ($this->getById($person->id))->history;
     }
 
     /**
@@ -150,9 +169,11 @@ class PersonService
     public function deleteHistory(Person $person, History $history)
     {
         if ($history->type === 'system') {
-            return false;
+            return 'false';
         }
-        return $this->personRepository->deleteHistory($person, $history);
+        $this->personRepository->deleteHistory($person, $history);
+        HistoryRepository::delete($history->id);
+        return ($this->getById($person->id))->history;
     }
 
 }
