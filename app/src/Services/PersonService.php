@@ -176,4 +176,14 @@ class PersonService
         return ($this->getById($person->id))->history;
     }
 
+    /**
+     * Получить именинников
+     *
+     * @return mixed
+     */
+    public function birthday()
+    {
+        return $this->personRepository->birthday();
+    }
+
 }

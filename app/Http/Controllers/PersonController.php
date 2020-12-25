@@ -166,4 +166,18 @@ class PersonController extends Controller
         }
     }
 
+    /**
+     * Получить именинников
+     *
+     * @return ResponseFactory|Response
+     */
+    public function birthday()
+    {
+        try {
+            return response($this->personService->birthday(), 200);
+        } catch (Exception $ex) {
+            return response(['error' => $ex->getMessage()], 500);
+        }
+    }
+
 }

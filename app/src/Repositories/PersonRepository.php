@@ -4,7 +4,9 @@ namespace App\src\Repositories;
 
 use App\src\Models\History;
 use App\src\Models\Person;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class PersonRepository
@@ -159,6 +161,27 @@ class PersonRepository
     public function deleteHistory(Person $person, $history)
     {
         $person->history()->detach([$history->id]);
+    }
+
+    /**
+     * Получить именинников
+     *
+     * @param string $type
+     * @return mixed
+     */
+    public function birthday()
+    {
+        return DB::select("SELECT
+            id, lastname, firstname, middlename, date_of_birth, photo, status, phones, note,
+            CASE
+                WHEN date_of_birth_2 < current_date THEN date_of_birth_2 + interval '1 year'
+                ELSE date_of_birth_2
+            END AS birthday
+            FROM persons, make_date(extract(year from current_date)::int, extract(month from date_of_birth)::int, extract(day from date_of_birth)::int) as date_of_birth_2
+            WHERE extract(doy from current_date) <= extract(doy from date_of_birth_2) AND extract(doy from current_date) + 7 >=  extract(doy from date_of_birth_2)
+            ORDER BY birthday
+            LIMIT 10"
+        );
     }
 
 }

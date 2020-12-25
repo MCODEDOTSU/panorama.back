@@ -75,6 +75,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
      * Физические лица
      */
     Route::prefix('/person')->group(function () {
+        Route::get('/birthday/', 'PersonController@birthday');
         Route::get('/', 'PersonController@getAll');
         Route::get('/{id}', 'PersonController@getById');
         Route::post('/', 'PersonController@create');
